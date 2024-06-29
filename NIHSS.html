@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NIHSS 計算器</title>
+    <style>
+        body { font-family: "Microsoft JhengHei", Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .item { margin-bottom: 20px; }
+        select { margin-bottom: 10px; width: 100%; }
+        button { margin-top: 20px; }
+        #output { white-space: pre-wrap; }
+    </style>
+</head>
+<body>
+    <h1>NIHSS 計算器</h1>
+    
+    <div id="nihssItems"></div>
+    
+    <button onclick="calculateScore()">計算分數</button>
+    
+    <h2>輸出結果：</h2>
+    <div id="output"></div>
+
+    <script>
+        const nihssItems = [
+            {
+                name: "意識水平",
+                scores: [
+                    { value: 0, description: "清醒:反應敏銳" },
+                    { value: 1, description: "嗜睡:經輕微刺激喚醒,回答問題,反應皆正常" },
+                    { value: 2, description: "渾沌(半昏迷):對重覆或強烈疼痛刺激才有反應" },
+                    { value: 3, description: "昏迷:僅有反射性反應" }
+                ]
+            },
+            {
+                name: "意識問答",
+                scores: [
+                    { value: 0, description: "答對兩個" },
+                    { value: 1, description: "答對一個(或on endo, dysarthria)" },
+                    { value: 2, description: "兩個都答錯(或aphasia, stupor)" }
+                ]
+            },
+            {
+                name: "意識指令",
+                scores: [
+                    { value: 0, description: "兩個都做對" },
+                    { value: 1, description: "只做對一個" },
+                    { value: 2, description: "兩個都做錯" }
+                ]
+            },
+            {
+                name: "凝視",
+                scores: [
+                    { value: 0, description: "正常" },
+                    { value: 1, description: "部分麻痺(或CN3,4,6麻痺)" },
+                    { value: 2, description: "完全偏向一邊: 頭眼運動反射時仍完全偏向一側" }
+                ]
+            },
+            {
+                name: "視野",
+                scores: [
+                    { value: 0, description: "正常" },
+                    { value: 1, description: "部分偏盲" },
+                    { value: 2, description: "完全偏盲:兩眼同側視野5度以上,看不見手指運動" },
+                    { value: 3, description: "兩側完全偏盲:不論任何原因單眼全盲時,以另一眼計分,兩眼偏盲程度不一致時,以較佳者計分" }
+                ]
+            },
+            {
+                name: "面部麻痺",
+                scores: [
+                    { value: 0, description: "正常" },
+                    { value: 1, description: "輕度麻痺: 鼻唇溝皺折消失" },
+                    { value: 2, description: "部分麻痺: 下臉面完全癱瘓" },
+                    { value: 3, description: "半側完全麻痺: 上下臉面完全癱瘓" }
+                ]
+            },
+            {
+                name: "左側上肢運動",
+                scores: [
+                    { value: 0, description: "正常: 上抬達10秒以上" },
+                    { value: 1, description: "輕度無力: 上抬未達10秒" },
+                    { value: 2, description: "無法抵抗加重力" },
+                    { value: 3, description: "無法抵抗重力" },
+                    { value: 4, description: "無法動彈" },
+                    { value: 96, description: "UN 不計分=截肢,關節融合"}
+                ]
+            },
+            {
+                name: "右側上肢運動",
+                scores: [
+                    { value: 0, description: "正常: 上抬達10秒以上" },
+                    { value: 1, description: "輕度無力: 上抬未達10秒" },
+                    { value: 2, description: "無法抵抗加重力" },
+                    { value: 3, description: "無法抵抗重力" },
+                    { value: 4, description: "無法動彈" },
+                    { value: 96, description: "UN 不計分=截肢,關節融合"}
+                ]
+            },
+            {
+                name: "左側下肢運動",
+                scores: [
+                    { value: 0, description: "正常: 平躺時上抬30度,達5秒以上" },
+                    { value: 1, description: "輕度無力: 平躺時上抬30度,未達5秒" },
+                    { value: 2, description: "無法抵抗加重力" },
+                    { value: 3, description: "無法抵抗重力" },
+                    { value: 4, description: "無法動彈" },
+                    { value: 96, description: "UN 不計分=截肢,關節融合"}
+                ]
+            },
+            {
+                name: "右側下肢運動",
+                scores: [
+                    { value: 0, description: "正常: 平躺時上抬30度,達5秒以上" },
+                    { value: 1, description: "輕度無力: 平躺時上抬30度,未達5秒" },
+                    { value: 2, description: "無法抵抗加重力" },
+                    { value: 3, description: "無法抵抗重力" },
+                    { value: 4, description: "無法動彈" },
+                    { value: 96, description: "UN 不計分=截肢,關節融合"}
+                ]
+            },
+            {
+                name: "肢體協調",
+                scores: [
+                    { value: 0, description: "正常" },
+                    { value: 1, description: "僅有上肢或下肢有協調障礙" },
+                    { value: 2, description: "上下肢或兩側均有協調障礙" }
+                ]
+            },
+            {
+                name: "感覺",
+                scores: [
+                    { value: 0, description: "正常；無感覺喪失" },
+                    { value: 1, description: "輕度至中度感覺喪失" },
+                    { value: 2, description: "完全喪失感覺:完全無感覺,coma病人" }
+                ]
+            },
+            {
+                name: "語言",
+                scores: [
+                    { value: 0, description: "無失語症；正常" },
+                    { value: 1, description: "輕至中度障礙" },
+                    { value: 2, description: "嚴重障礙:包括意識木僵,無法合作,完全運動性失語症或完全感覺性失語症者" },
+                    { value: 3, description: "完全無法言語:包括意識昏迷無反應者" }
+                ]
+            },
+            {
+                name: "構音障礙",
+                scores: [
+                    { value: 0, description: "正常" },
+                    { value: 1, description: "輕至中度障礙:某些字發音不清楚,速度慢,但能理解" },
+                    { value: 2, description: "完全無法構音:發音皆不清楚且無法理解,含完全失語症" },
+                    { value: 96, description: "on endo tube(不計分)"}
+                ]
+            },
+            {
+                name: "忽視",
+                scores: [
+                    { value: 0, description: "無障礙" },
+                    { value: 1, description: "部分忽視:患側的視覺,聽覺,觸覺,空間感覺,和注意力其中一項對刺激反應消失" },
+                    { value: 2, description: "完全忽視:上述患側知覺感官反應消失二項以上者" }
+                ]
+            }
+        ];
+
+        function createSelects() {
+            const container = document.getElementById("nihssItems");
+            nihssItems.forEach((item, index) => {
+                const itemDiv = document.createElement("div");
+                itemDiv.className = "item";
+                const label = document.createElement("label");
+                label.htmlFor = `item${index}`;
+                label.textContent = item.name + "：";
+                itemDiv.appendChild(label);
+                
+                const select = document.createElement("select");
+                select.id = `item${index}`;
+                item.scores.forEach(score => {
+                    const option = document.createElement("option");
+                    option.value = score.value;
+                    option.textContent = `${score.value} - ${score.description}`;
+                    select.appendChild(option);
+                });
+                itemDiv.appendChild(select);
+                
+                container.appendChild(itemDiv);
+            });
+        }
+
+        function calculateScore() {
+            let totalScore = 0;
+            const results = {};
+            
+            nihssItems.forEach((item, index) => {
+                const select = document.getElementById(`item${index}`);
+                const score = parseInt(select.value);
+                const description = select.options[select.selectedIndex].text.split(' - ')[1];
+                if (score !== 96) { // Exclude UN(96) scores from the total
+                    totalScore += score;
+                }
+                results[item.name] = `${score} - ${description}`;
+            });
+            
+            results["總分"] = totalScore;
+            
+            const markdown = generateMarkdown(results);
+            const json = JSON.stringify(results, null, 2);
+            
+            document.getElementById("output").textContent = `Markdown 輸出：\n\n${markdown}\n\nJSON 輸出：\n\n${json}`;
+        }
+
+        function generateMarkdown(results) {
+            let markdown = "# NIHSS 結果\n\n";
+            for (const [key, value] of Object.entries(results)) {
+                if (key === "總分") {
+                    markdown += `\n## ${key}：${value}\n`;
+                } else {
+                    markdown += `- **${key}**：${value}\n`;
+                }
+            }
+            return markdown;
+        }
+
+        createSelects();
+    </script>
+</body>
+</html>
