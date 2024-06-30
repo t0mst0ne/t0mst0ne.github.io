@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>臨床失智評量表 (CDR) 計算器</title>
+    <style>
+        body { font-family: "Microsoft JhengHei", Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        fieldset { margin-bottom: 20px; }
+        .radio-group { display: flex; flex-direction: column; }
+        .result { font-weight: bold; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h1>臨床失智評量表 (CDR) 計算器</h1>
+    <form id="cdrForm">
+        <fieldset>
+            <legend>記憶力</legend>
+            <div class="radio-group">
+                <label><input type="radio" name="memory" value="0" required> 0 (無):沒有記憶力減退或稍微減退。沒有經常性健忘</label>
+                <label><input type="radio" name="memory" value="0.5"> 0.5 (可疑): 經常性的輕度遺忘，事情只能部分想起；“良性＂健忘症</label>
+                <label><input type="radio" name="memory" value="1"> 1 (輕度):中度記憶減退；對於最近的事尤其不容易記得；會影響日常生活</label>
+                <label><input type="radio" name="memory" value="2"> 2 (中度):嚴重記憶力減退只有高度重複學過的事務才會記得；新學的東西都很快會忘記</label>
+                <label><input type="radio" name="memory" value="3"> 3 (重度):記憶力嚴重減退只能記得片段</label>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>定向力</legend>
+            <div class="radio-group">
+                <label><input type="radio" name="orientation" value="0" required> 0 (無): 完全定向</label>
+                <label><input type="radio" name="orientation" value="0.5"> 0.5 (可疑): 完全定向，但對時間關係有輕微困難</label>
+                <label><input type="radio" name="orientation" value="1"> 1 (輕度): 涉及時間關聯性時，有中度困難。檢查時，對地點仍有定向力；但在某些場合可能仍有地理定向力的障礙</label>
+                <label><input type="radio" name="orientation" value="2"> 2 (中度): 對時間關係嚴重困難；通常對時間定向不清，經常對地點定向不清</label>
+                <label><input type="radio" name="orientation" value="3"> 3 (重度): 只對人物定向</label>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>判斷力與解決問題能力</legend>
+            <div class="radio-group">
+                <label><input type="radio" name="judgment" value="0" required> 0 (無): 解決日常問題、處理商業和財務事務能力良好；判斷力與過去表現相當</label>
+                <label><input type="radio" name="judgment" value="0.5"> 0.5 (可疑): 解決問題、相似性和差異性方面有輕微障礙</label>
+                <label><input type="radio" name="judgment" value="1"> 1 (輕度): 處理問題、相似性和差異性方面有中度困難；社交判斷力通常保持</label>
+                <label><input type="radio" name="judgment" value="2"> 2 (中度): 處理問題、相似性和差異性方面嚴重受損；社交判斷力通常受損</label>
+                <label><input type="radio" name="judgment" value="3"> 3 (重度): 無法做出判斷或解決問題</label>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>社區動能力</legend>
+            <div class="radio-group">
+                <label><input type="radio" name="community" value="0" required> 0 (無): 和平常一樣能獨立處理有關、工作、購物、業務、財務、參加義工及社團的事務</label>
+                <label><input type="radio" name="community" value="0.5"> 0.5 (可疑): 這些活動略有障礙</label>
+                <label><input type="radio" name="community" value="1"> 1 (輕度):雖然還能從事有些活動。但無法單獨參與。對一般偶而的檢查，外觀上還似正常 </label>
+                <label><input type="radio" name="community" value="2"> 2 (中度): 不會掩飾自己無力獨自處理工作、購物等活動的窘境。被帶出來外面活動時，外觀還似正常</label>
+                <label><input type="radio" name="community" value="3"> 3 (重度):不會掩飾自己無力獨自處理工作、購物等活動的窘境。外觀上明顯可知病情嚴重，無法在外活動</label>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>家居生活與嗜好</legend>
+            <div class="radio-group">
+                <label><input type="radio" name="home" value="0" required> 0 (無): 家庭生活、嗜好和智力興趣維持良好</label>
+                <label><input type="radio" name="home" value="0.5"> 0.5 (可疑): 家庭生活、嗜好和智力興趣略有障礙</label>
+                <label><input type="radio" name="home" value="1"> 1 (輕度): 居家生活確已出現輕度之障礙，較困難之家事已經不做；比較複雜之嗜好及興趣都已放棄</label>
+                <label><input type="radio" name="home" value="2"> 2 (中度): 只有簡單家事還能做興趣很少，也很難維持</label>
+                <label><input type="radio" name="home" value="3"> 3 (重度): 無法做家事</label>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>自我照顧能力</legend>
+            <div class="radio-group">
+                <label><input type="radio" name="care" value="0" required> 0 (無): 完全能夠自我照顧</label>
+                <label><input type="radio" name="care" value="1"> 1 (輕度): 需旁人督促或提醒</label>
+                <label><input type="radio" name="care" value="2"> 2 (中度): 穿衣、個人衛生、及個人事物之料理，都需要幫忙</label>
+                <label><input type="radio" name="care" value="3"> 3 (重度): 需要完全照顧</label>
+            </div>
+        </fieldset>
+
+        <button type="submit">計算 CDR 分數</button>
+    </form>
+    <div id="result" class="result"></div>
+<script>
+function calculateCDR(memory, orientation, judgment, community, home, care) {
+    const scores = [memory, orientation, judgment, community, home, care];
+    const secondaryScores = scores.slice(1);
+    const countSecondary = (value) => secondaryScores.filter(score => score === value).length;
+
+    if (countSecondary(memory) >= 3) return memory;
+    if (memory === 0.5 && countSecondary(1) + countSecondary(2) + countSecondary(3) >= 3) return 1;
+    if (memory === 0) return secondaryScores.filter(score => score >= 0.5).length >= 2 ? 0.5 : 0;
+    if (memory === 0.5) return 0.5;
+    if (memory >= 1) {
+        const majorityScore = [0, 0.5, 1, 2, 3].reduce((a, b) => countSecondary(b) > countSecondary(a) ? b : a);
+        return Math.max(0.5, majorityScore);
+    }
+    return [0, 0.5, 1, 2, 3].reduce((a, b) => countSecondary(b) > countSecondary(a) ? b : a);
+}
+
+document.getElementById('cdrForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    const domains = ['memory', 'orientation', 'judgment', 'community', 'home', 'care'];
+    const scores = domains.map(name => parseFloat(formData.get(name)));
+    const cdrScore = calculateCDR(...scores);
+    const sumOfBoxes = scores.reduce((a, b) => a + b, 0);
+    
+    let resultHTML = `<p>CDR 總分: ${cdrScore}</p>`;
+    resultHTML += `<p>CDR-SOB (各項總和): ${sumOfBoxes}</p>`;
+    resultHTML += '<h3>各領域分數：</h3><ul>';
+    
+    const domainDescriptions = {
+        memory: '記憶力',
+        orientation: '定向力',
+        judgment: '判斷力與解決問題能力',
+        community: '社區動能力',
+        home: '家居生活與嗜好',
+        care: '自我照顧能力'
+    };
+    
+    domains.forEach((domain, index) => {
+        resultHTML += `<li>${domainDescriptions[domain]}: ${scores[index]}</li>`;
+    });
+    
+    resultHTML += '</ul>';
+    
+    document.getElementById('result').innerHTML = resultHTML;
+});
+</script>
+</body>
+</html>
