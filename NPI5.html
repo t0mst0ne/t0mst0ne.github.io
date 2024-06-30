@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NPI Score Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #000;
+            padding: 8px;
+            text-align: center;
+        }
+        .summary {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        .radio-group {
+            display: flex;
+            justify-content: center;
+        }
+        .radio-group label {
+            margin-right: 10px;
+        }
+        .left-align {
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <h1>神經精神症狀量表 (NPI) 計分器</h1>
+    <form id="npiForm">
+        <table>
+            <thead>
+                <tr>
+                    <th rowspan="2">項目</th>
+                    <th colspan="2">有無此症狀</th>
+                    <th colspan="4">頻率</th>
+                    <th colspan="3">嚴重性</th>
+                </tr>
+                <tr>
+                    <th>是</th>
+                    <th>否</th>
+                    <th>偶爾</th>
+                    <th>時常</th>
+                    <th>經常</th>
+                    <th>常常</th>
+                    <th>輕</th>
+                    <th>中</th>
+                    <th>重</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>妄想</td>
+                    <td><input type="radio" name="delusions_present" value="1"></td>
+                    <td><input type="radio" name="delusions_present" value="0"></td>
+                    <td><input type="radio" name="delusions_frequency" value="0"></td>
+                    <td><input type="radio" name="delusions_frequency" value="1"></td>
+                    <td><input type="radio" name="delusions_frequency" value="2"></td>
+                    <td><input type="radio" name="delusions_frequency" value="3"></td>
+                    <td><input type="radio" name="delusions_severity" value="0"></td>
+                    <td><input type="radio" name="delusions_severity" value="1"></td>
+                    <td><input type="radio" name="delusions_severity" value="2"></td>
+                </tr>
+                <tr>
+                    <td>幻覺</td>
+                    <td><input type="radio" name="hallucinations_present" value="1"></td>
+                    <td><input type="radio" name="hallucinations_present" value="0"></td>
+                    <td><input type="radio" name="hallucinations_frequency" value="0"></td>
+                    <td><input type="radio" name="hallucinations_frequency" value="1"></td>
+                    <td><input type="radio" name="hallucinations_frequency" value="2"></td>
+                    <td><input type="radio" name="hallucinations_frequency" value="3"></td>
+                    <td><input type="radio" name="hallucinations_severity" value="0"></td>
+                    <td><input type="radio" name="hallucinations_severity" value="1"></td>
+                    <td><input type="radio" name="hallucinations_severity" value="2"></td>
+                </tr>
+                <tr>
+                    <td>激動 / 攻擊行為</td>
+                    <td><input type="radio" name="agitation_present" value="1"></td>
+                    <td><input type="radio" name="agitation_present" value="0"></td>
+                    <td><input type="radio" name="agitation_frequency" value="0"></td>
+                    <td><input type="radio" name="agitation_frequency" value="1"></td>
+                    <td><input type="radio" name="agitation_frequency" value="2"></td>
+                    <td><input type="radio" name="agitation_frequency" value="3"></td>
+                    <td><input type="radio" name="agitation_severity" value="0"></td>
+                    <td><input type="radio" name="agitation_severity" value="1"></td>
+                    <td><input type="radio" name="agitation_severity" value="2"></td>
+                </tr>
+                <tr>
+                    <td>憂鬱 / 情緒不佳</td>
+                    <td><input type="radio" name="depression_present" value="1"></td>
+                    <td><input type="radio" name="depression_present" value="0"></td>
+                    <td><input type="radio" name="depression_frequency" value="0"></td>
+                    <td><input type="radio" name="depression_frequency" value="1"></td>
+                    <td><input type="radio" name="depression_frequency" value="2"></td>
+                    <td><input type="radio" name="depression_frequency" value="3"></td>
+                    <td><input type="radio" name="depression_severity" value="0"></td>
+                    <td><input type="radio" name="depression_severity" value="1"></td>
+                    <td><input type="radio" name="depression_severity" value="2"></td>
+                </tr>
+                <tr>
+                    <td>焦慮</td>
+                    <td><input type="radio" name="anxiety_present" value="1"></td>
+                    <td><input type="radio" name="anxiety_present" value="0"></td>
+                    <td><input type="radio" name="anxiety_frequency" value="0"></td>
+                    <td><input type="radio" name="anxiety_frequency" value="1"></td>
+                    <td><input type="radio" name="anxiety_frequency" value="2"></td>
+                    <td><input type="radio" name="anxiety_frequency" value="3"></td>
+                    <td><input type="radio" name="anxiety_severity" value="0"></td>
+                    <td><input type="radio" name="anxiety_severity" value="1"></td>
+                    <td><input type="radio" name="anxiety_severity" value="2"></td>
+                </tr>
+                <tr>
+                    <td>怡然自得 / 欣快感</td>
+                    <td><input type="radio" name="euphoria_present" value="1"></td>
+                    <td><input type="radio" name="euphoria_present" value="0"></td>
+                    <td><input type="radio" name="euphoria_frequency" value="0"></td>
+                    <td><input type="radio" name="euphoria_frequency" value="1"></td>
+                    <td><input type="radio" name="euphoria_frequency" value="2"></td>
+                    <td><input type="radio" name="euphoria_frequency" value="3"></td>
+                    <td><input type="radio" name="euphoria_severity" value="0"></td>
+                    <td><input type="radio" name="euphoria_severity" value="1"></td>
+                    <td><input type="radio" name="euphoria_severity" value="2"></td>
+                </tr>
+                <tr>
+                    <td>冷漠 / 毫不在意</td>
+                    <td><input type="radio" name="apathy_present" value="1"></td>
+                    <td><input type="radio" name="apathy_present" value="0"></td>
+                    <td><input type="radio" name="apathy_frequency" value="0"></td>
+                    <td><input type="radio" name="apathy_frequency" value="1"></td>
+                    <td><input type="radio" name="apathy_frequency" value="2"></td>
+                    <td><input type="radio" name="apathy_frequency" value="3"></td>
+                    <td><input type="radio" name="apathy_severity" value="0"></td>
+                    <td><input type="radio" name="apathy_severity" value="1"></td>
+                    <td><input type="radio" name="apathy_severity" value="2"></td>
+                </tr>
+                <tr>
+                    <td>言行失控</td>
+                    <td><input type="radio" name="disinhibition_present" value="1"></td>
+                    <td><input type="radio" name="disinhibition_present" value="0"></td>
+                    <td><input type="radio" name="disinhibition_frequency" value="0"></td>
+                    <td><input type="radio" name="disinhibition_frequency" value="1"></td>
+                    <td><input type="radio" name="disinhibition_frequency" value="2"></td>
+                    <td><input type="radio" name="disinhibition_frequency" value="3"></td>
+                    <td><input type="radio" name="disinhibition_severity" value="0"></td>
+                    <td><input type="radio" name="disinhibition_severity" value="1"></td>
+                    <td><input type="radio" name="disinhibition_severity" value="2"></td>
+                </tr>
+                <tr>
+                    <td>暴躁易怒 / 情緒易變</td>
+                    <td><input type="radio" name="irritability_present" value="1"></td>
+                    <td><input type="radio" name="irritability_present" value="0"></td>
+                    <td><input type="radio" name="irritability_frequency" value="0"></td>
+                    <td><input type="radio" name="irritability_frequency" value="1"></td>
+                    <td><input type="radio" name="irritability_frequency" value="2"></td>
+                    <td><input type="radio" name="irritability_frequency" value="3"></td>
+                    <td><input type="radio" name="irritability_severity" value="0"></td>
+                    <td><input type="radio" name="irritability_severity" value="1"></td>
+                    <td><input type="radio" name="irritability_severity" value="2"></td>
+                </tr>
+                <tr>
+                    <td>異常動作 (主要指重複性動作)</td>
+                    <td><input type="radio" name="aberrant_motor_behavior_present" value="1"></td>
+                    <td><input type="radio" name="aberrant_motor_behavior_present" value="0"></td>
+                    <td><input type="radio" name="aberrant_motor_behavior_frequency" value="0"></td>
+                    <td><input type="radio" name="aberrant_motor_behavior_frequency" value="1"></td>
+                    <td><input type="radio" name="aberrant_motor_behavior_frequency" value="2"></td>
+                    <td><input type="radio" name="aberrant_motor_behavior_frequency" value="3"></td>
+                    <td><input type="radio" name="aberrant_motor_behavior_severity" value="0"></td>
+                    <td><input type="radio" name="aberrant_motor_behavior_severity" value="1"></td>
+                    <td><input type="radio" name="aberrant_motor_behavior_severity" value="2"></td>
+                </tr>
+            </tbody>
+        </table>
+        <button type="button" onclick="calculateScores()" class="left-align">計算分數</button>
+    </form>
+    <div class="summary" id="summary"></div>
+
+    <script>
+        function calculateScores() {
+            const form = document.getElementById('npiForm');
+            let totalFrequency = 0;
+            let totalSeverity = 0;
+            let summaryText = '';
+
+            const domains = [
+                'delusions', 'hallucinations', 'agitation', 'depression', 'anxiety', 
+                'euphoria', 'apathy', 'disinhibition', 'irritability', 'aberrant_motor_behavior'
+            ];
+
+            const domainNames = {
+                'delusions': '妄想',
+                'hallucinations': '幻覺',
+                'agitation': '激動 / 攻擊行為',
+                'depression': '憂鬱 / 情緒不佳',
+                'anxiety': '焦慮',
+                'euphoria': '怡然自得 / 欣快感',
+                'apathy': '冷漠 / 毫不在意',
+                'disinhibition': '言行失控',
+                'irritability': '暴躁易怒 / 情緒易變',
+                'aberrant_motor_behavior': '異常動作 (主要指重複性動作)'
+            };
+
+            domains.forEach(domain => {
+                const present = form.querySelector(`input[name="${domain}_present"]:checked`);
+                const frequency = form.querySelector(`input[name="${domain}_frequency"]:checked`);
+                const severity = form.querySelector(`input[name="${domain}_severity"]:checked`);
+
+                if (present && present.value === "1" && frequency && severity) {
+                    totalFrequency += parseInt(frequency.value);
+                    totalSeverity += parseInt(severity.value);
+                    summaryText += `<p>${domainNames[domain]}: 頻率 ${frequency.value}，嚴重性 ${severity.value}</p>`;
+                }
+            });
+
+            document.getElementById('summary').innerHTML = `
+                <p>總頻率分數: ${totalFrequency}</p>
+                <p>總嚴重性分數: ${totalSeverity}</p>
+                ${summaryText}
+            `;
+        }
+    </script>
+</body>
+</html>
