@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Muscle Pattern Table with MAS</title>
+    <title>Muscle Pattern Table with Summary</title>
     <style>
         table {
             border-collapse: collapse;
@@ -20,6 +20,13 @@
         }
         select {
             width: 100%;
+        }
+        pre {
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 5px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
         }
     </style>
 </head>
@@ -199,7 +206,8 @@
             </select></td>
         </tr>
     </table>
-   <div id="summary"></div>
+
+    <div id="summary"></div>
     <div id="markdownOutput"></div>
     <div id="jsonOutput"></div>
 
@@ -231,13 +239,20 @@
             var now = new Date();
             var dateTimeString = now.toLocaleString();
 
+            // HTML summary
+            var summaryHtml = "<h3>Summary of Non-Zero MAS:</h3><ul>";
+            for (var i = 0; i < summary.length; i++) {
+                summaryHtml += "<li>" + summary[i].pattern + " - " + summary[i].muscle + ": MAS " + summary[i].mas + "</li>";
+            }
+            summaryHtml += "</ul><p>Date and Time: " + dateTimeString + "</p>";
+            document.getElementById("summary").innerHTML = summaryHtml;
+
             // Markdown output
             var markdownOutput = "## Summary of Non-Zero MAS\n\n";
             for (var i = 0; i < summary.length; i++) {
                 markdownOutput += "- " + summary[i].pattern + " - " + summary[i].muscle + ": MAS " + summary[i].mas + "\n";
             }
             markdownOutput += "\n**Date and Time:** " + dateTimeString + "\n";
-
             document.getElementById("markdownOutput").innerHTML = "<h3>Markdown Output:</h3><pre>" + markdownOutput + "</pre>";
 
             // JSON output
@@ -245,7 +260,6 @@
                 summary: summary,
                 dateTime: dateTimeString
             };
-
             document.getElementById("jsonOutput").innerHTML = "<h3>JSON Output:</h3><pre>" + JSON.stringify(jsonOutput, null, 2) + "</pre>";
         }
 
