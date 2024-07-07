@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Muscle Pattern Table with MAS</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        select {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <table id="muscleTable">
+        <tr>
+            <th>Pattern</th>
+            <th>Muscle</th>
+            <th>MAS</th>
+        </tr>
+        <tr>
+            <td>Flexed elbow</td>
+            <td>Biceps</td>
+            <td><select onchange="updateSummary()">
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="1+">1+</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+            </select></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>Brachialis</td>
+            <td><select onchange="updateSummary()">
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="1+">1+</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+            </select></td>
+        </tr>
+        <tr>
+            <td>Pronated forearm</td>
+            <td>Pronator teres(PT)</td>
+            <td><select onchange="updateSummary()">
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="1+">1+</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+            </select></td>
+        </tr>
+        <tr>
+            <td>Flexed wrist</td>
+            <td>Flexor carpal radialis FCR</td>
+            <td><select onchange="updateSummary()">
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="1+">1+</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+            </select></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>Palmaris longus</td>
+            <td><select onchange="updateSummary()">
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="1+">1+</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+            </select></td>
+        </tr>
+        <tr>
+            <td>Clenched fist</td>
+            <td>Flexor digitorum superficialis (FDS)</td>
+            <td><select onchange="updateSummary()">
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="1+">1+</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+            </select></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>Flexor digitorum profundus (FDP)</td>
+            <td><select onchange="updateSummary()">
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="1+">1+</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+            </select></td>
+        </tr>
+        <tr>
+            <td>Eqinovarus foot</td>
+            <td>Gastrocnemiud-medial</td>
+            <td><select onchange="updateSummary()">
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="1+">1+</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+            </select></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>Gastrocnemiud-lateral</td>
+            <td><select onchange="updateSummary()">
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="1+">1+</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+            </select></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>Soleus</td>
+            <td><select onchange="updateSummary()">
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="1+">1+</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+            </select></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>Tibial posterior (TP)</td>
+            <td><select onchange="updateSummary()">
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="1+">1+</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+            </select></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>Flexor digitorum longus (FDL)</td>
+            <td><select onchange="updateSummary()">
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="1+">1+</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+            </select></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>Flexor hallucis longus (FHL)</td>
+            <td><select onchange="updateSummary()">
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="1+">1+</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+            </select></td>
+        </tr>
+        <tr>
+            <td>Flexor toe</td>
+            <td>1st dorsal interosseous</td>
+            <td><select onchange="updateSummary()">
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="1+">1+</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+            </select></td>
+        </tr>
+    </table>
+   <div id="summary"></div>
+    <div id="markdownOutput"></div>
+    <div id="jsonOutput"></div>
+
+    <script>
+        function updateSummary() {
+            var table = document.getElementById("muscleTable");
+            var summary = [];
+            var currentPattern = "";
+
+            for (var i = 1; i < table.rows.length; i++) {
+                var patternCell = table.rows[i].cells[0];
+                var muscleCell = table.rows[i].cells[1];
+                var masCell = table.rows[i].cells[2].getElementsByTagName('select')[0];
+                var masValue = masCell.value;
+
+                if (patternCell.innerText !== "") {
+                    currentPattern = patternCell.innerText;
+                }
+
+                if (masValue !== '0') {
+                    summary.push({
+                        pattern: currentPattern,
+                        muscle: muscleCell.innerText,
+                        mas: masValue
+                    });
+                }
+            }
+
+            var now = new Date();
+            var dateTimeString = now.toLocaleString();
+
+            // Markdown output
+            var markdownOutput = "## Summary of Non-Zero MAS\n\n";
+            for (var i = 0; i < summary.length; i++) {
+                markdownOutput += "- " + summary[i].pattern + " - " + summary[i].muscle + ": MAS " + summary[i].mas + "\n";
+            }
+            markdownOutput += "\n**Date and Time:** " + dateTimeString + "\n";
+
+            document.getElementById("markdownOutput").innerHTML = "<h3>Markdown Output:</h3><pre>" + markdownOutput + "</pre>";
+
+            // JSON output
+            var jsonOutput = {
+                summary: summary,
+                dateTime: dateTimeString
+            };
+
+            document.getElementById("jsonOutput").innerHTML = "<h3>JSON Output:</h3><pre>" + JSON.stringify(jsonOutput, null, 2) + "</pre>";
+        }
+
+        // Initial call to set up the summary
+        updateSummary();
+    </script>
+</body>
+</html>
