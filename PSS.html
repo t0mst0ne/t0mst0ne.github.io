@@ -103,15 +103,15 @@
             <td><input type="number" value="0" onchange="calculateTotal()" data-limb="lower"></td>
         </tr>
         <tr>
-            <td colspan="2"><strong>Total score - Upper Limb</strong></td>
+            <td colspan="2"><strong>Total unit - Upper Limb</strong></td>
             <td id="totalUpper">0</td>
         </tr>
         <tr>
-            <td colspan="2"><strong>Total score - Lower Limb</strong></td>
+            <td colspan="2"><strong>Total unit - Lower Limb</strong></td>
             <td id="totalLower">0</td>
         </tr>
         <tr>
-            <td colspan="2"><strong>Total score - Overall</strong></td>
+            <td colspan="2"><strong>Total unit - Overall</strong></td>
             <td id="totalOverall">0</td>
         </tr>
     </table>
@@ -155,7 +155,7 @@
                 summaryHtml += "<li>" + summaryUpper[i] + "</li>";
             }
             summaryHtml += "</ul>";
-            summaryHtml += "<p><strong>Total Upper Limb Score:</strong> " + totalUpper + "</p>";
+            summaryHtml += "<p><strong>Total Upper Limb unit:</strong> " + totalUpper + "</p>";
 
             summaryHtml += "<h4>Lower Limb</h4>";
             summaryHtml += "<ul>";
@@ -163,7 +163,7 @@
                 summaryHtml += "<li>" + summaryLower[i] + "</li>";
             }
             summaryHtml += "</ul>";
-            summaryHtml += "<p><strong>Total Lower Limb Score:</strong> " + totalLower + "</p>";
+            summaryHtml += "<p><strong>Total Lower Limb unit:</strong> " + totalLower + "</p>";
 
             document.getElementById("summary").innerHTML = summaryHtml;
         }
