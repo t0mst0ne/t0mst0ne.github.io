@@ -118,13 +118,13 @@
 
     <div id="summary"></div>
 
-<script>
+    <script>
         function calculateTotal() {
             var table = document.getElementById("muscleTable");
             var totalUpper = 0;
             var totalLower = 0;
-            var upperSummary = [];
-            var lowerSummary = [];
+            var summaryUpper = [];
+            var summaryLower = [];
 
             for (var i = 1; i < table.rows.length - 3; i++) {
                 var muscleCell = table.rows[i].cells[1];
@@ -133,10 +133,10 @@
 
                 if (value > 0) {
                     if (unitCell.getAttribute('data-limb') === 'upper') {
-                        upperSummary.push(muscleCell.innerText + ": " + value);
+                        summaryUpper.push(muscleCell.innerText + ": " + value);
                         totalUpper += value;
                     } else {
-                        lowerSummary.push(muscleCell.innerText + ": " + value);
+                        summaryLower.push(muscleCell.innerText + ": " + value);
                         totalLower += value;
                     }
                 }
@@ -146,30 +146,24 @@
             document.getElementById("totalLower").innerHTML = totalLower;
             document.getElementById("totalOverall").innerHTML = totalUpper + totalLower;
 
-            // Display rearranged summary
-            var summaryHtml = "<h3>Summary:</h3>";
+            // Display summary
+            var summaryHtml = "<h3>Summary of Non-Zero Units:</h3>";
             
-            // Upper Limb Summary
+            summaryHtml += "<h4>Upper Limb</h4>";
+            summaryHtml += "<ul>";
+            for (var i = 0; i < summaryUpper.length; i++) {
+                summaryHtml += "<li>" + summaryUpper[i] + "</li>";
+            }
+            summaryHtml += "</ul>";
             summaryHtml += "<p><strong>Total Upper Limb Score:</strong> " + totalUpper + "</p>";
-            if (upperSummary.length > 0) {
-                summaryHtml += "<h4> Muscles:</h4>";
-                summaryHtml += "<ul>";
-                for (var i = 0; i < upperSummary.length; i++) {
-                    summaryHtml += "<li>" + upperSummary[i] + "</li>";
-                }
-                summaryHtml += "</ul>";
-            }
 
-            // Lower Limb Summary
-            summaryHtml += "<p><strong>Total Lower Limb Score:</strong> " + totalLower + "</p>";
-            if (lowerSummary.length > 0) {
-                summaryHtml += "<h4> Muscles:</h4>";
-                summaryHtml += "<ul>";
-                for (var i = 0; i < lowerSummary.length; i++) {
-                    summaryHtml += "<li>" + lowerSummary[i] + "</li>";
-                }
-                summaryHtml += "</ul>";
+            summaryHtml += "<h4>Lower Limb</h4>";
+            summaryHtml += "<ul>";
+            for (var i = 0; i < summaryLower.length; i++) {
+                summaryHtml += "<li>" + summaryLower[i] + "</li>";
             }
+            summaryHtml += "</ul>";
+            summaryHtml += "<p><strong>Total Lower Limb Score:</strong> " + totalLower + "</p>";
 
             document.getElementById("summary").innerHTML = summaryHtml;
         }
