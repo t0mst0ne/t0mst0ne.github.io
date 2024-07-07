@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Muscle Pattern Table with Summary</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        input[type="number"] {
+            width: 50px;
+        }
+    </style>
+</head>
+<body>
+    <table id="muscleTable">
+        <tr>
+            <th>Pattern</th>
+            <th>Muscle</th>
+            <th>Unit</th>
+        </tr>
+        <!-- Upper Limb Muscles -->
+        <tr>
+            <td>Flexed elbow</td>
+            <td>Biceps</td>
+            <td><input type="number" value="0" onchange="calculateTotal()" data-limb="upper"></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>Brachialis</td>
+            <td><input type="number" value="0" onchange="calculateTotal()" data-limb="upper"></td>
+        </tr>
+        <tr>
+            <td>Pronated forearm</td>
+            <td>Pronator teres(PT)</td>
+            <td><input type="number" value="0" onchange="calculateTotal()" data-limb="upper"></td>
+        </tr>
+        <tr>
+            <td>Flexed wrist</td>
+            <td>Flexor carpal radialis FCR</td>
+            <td><input type="number" value="0" onchange="calculateTotal()" data-limb="upper"></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>Palmaris longus</td>
+            <td><input type="number" value="0" onchange="calculateTotal()" data-limb="upper"></td>
+        </tr>
+        <tr>
+            <td>Clenched fist</td>
+            <td>Flexor digitorum superficialis (FDS)</td>
+            <td><input type="number" value="0" onchange="calculateTotal()" data-limb="upper"></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>Flexor digitorum profundus (FDP)</td>
+            <td><input type="number" value="0" onchange="calculateTotal()" data-limb="upper"></td>
+        </tr>
+        <!-- Lower Limb Muscles -->
+        <tr>
+            <td>Eqinovarus foot</td>
+            <td>Gastrocnemiud-medial</td>
+            <td><input type="number" value="0" onchange="calculateTotal()" data-limb="lower"></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>Gastrocnemiud-lateral</td>
+            <td><input type="number" value="0" onchange="calculateTotal()" data-limb="lower"></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>Soleus</td>
+            <td><input type="number" value="0" onchange="calculateTotal()" data-limb="lower"></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>Tibial posterior (TP)</td>
+            <td><input type="number" value="0" onchange="calculateTotal()" data-limb="lower"></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>Flexor digitorum longus (FDL)</td>
+            <td><input type="number" value="0" onchange="calculateTotal()" data-limb="lower"></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>Flexor hallucis longus (FHL)</td>
+            <td><input type="number" value="0" onchange="calculateTotal()" data-limb="lower"></td>
+        </tr>
+        <tr>
+            <td>Flexor toe</td>
+            <td>1st dorsal interosseous</td>
+            <td><input type="number" value="0" onchange="calculateTotal()" data-limb="lower"></td>
+        </tr>
+        <tr>
+            <td colspan="2"><strong>Total score - Upper Limb</strong></td>
+            <td id="totalUpper">0</td>
+        </tr>
+        <tr>
+            <td colspan="2"><strong>Total score - Lower Limb</strong></td>
+            <td id="totalLower">0</td>
+        </tr>
+        <tr>
+            <td colspan="2"><strong>Total score - Overall</strong></td>
+            <td id="totalOverall">0</td>
+        </tr>
+    </table>
+
+    <div id="summary"></div>
+
+<script>
+        function calculateTotal() {
+            var table = document.getElementById("muscleTable");
+            var totalUpper = 0;
+            var totalLower = 0;
+            var upperSummary = [];
+            var lowerSummary = [];
+
+            for (var i = 1; i < table.rows.length - 3; i++) {
+                var muscleCell = table.rows[i].cells[1];
+                var unitCell = table.rows[i].cells[2].getElementsByTagName('input')[0];
+                var value = parseFloat(unitCell.value) || 0;
+
+                if (value > 0) {
+                    if (unitCell.getAttribute('data-limb') === 'upper') {
+                        upperSummary.push(muscleCell.innerText + ": " + value);
+                        totalUpper += value;
+                    } else {
+                        lowerSummary.push(muscleCell.innerText + ": " + value);
+                        totalLower += value;
+                    }
+                }
+            }
+
+            document.getElementById("totalUpper").innerHTML = totalUpper;
+            document.getElementById("totalLower").innerHTML = totalLower;
+            document.getElementById("totalOverall").innerHTML = totalUpper + totalLower;
+
+            // Display rearranged summary
+            var summaryHtml = "<h3>Summary:</h3>";
+            
+            // Upper Limb Summary
+            summaryHtml += "<p><strong>Total Upper Limb Score:</strong> " + totalUpper + "</p>";
+            if (upperSummary.length > 0) {
+                summaryHtml += "<h4> Muscles:</h4>";
+                summaryHtml += "<ul>";
+                for (var i = 0; i < upperSummary.length; i++) {
+                    summaryHtml += "<li>" + upperSummary[i] + "</li>";
+                }
+                summaryHtml += "</ul>";
+            }
+
+            // Lower Limb Summary
+            summaryHtml += "<p><strong>Total Lower Limb Score:</strong> " + totalLower + "</p>";
+            if (lowerSummary.length > 0) {
+                summaryHtml += "<h4> Muscles:</h4>";
+                summaryHtml += "<ul>";
+                for (var i = 0; i < lowerSummary.length; i++) {
+                    summaryHtml += "<li>" + lowerSummary[i] + "</li>";
+                }
+                summaryHtml += "</ul>";
+            }
+
+            document.getElementById("summary").innerHTML = summaryHtml;
+        }
+    </script>
+</body>
+</html>
