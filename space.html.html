@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab Data Formatter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            box-sizing: border-box;
+            height: 200px;
+            font-family: monospace;
+        }
+        button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+        #outputText {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            background-color: #f8f8f8;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Lab Data Formatter</h1>
+        <textarea id="inputText" placeholder="Enter your lab data here..."></textarea>
+        <button onclick="formatText()">Format Text</button>
+        <h2>Formatted Output:</h2>
+        <div id="outputText" contenteditable="true"></div>
+    </div>
+    <script>
+        function formatText() {
+            const inputText = document.getElementById('inputText').value;
+            const dataEntries = inputText.split(/\s+(?=\d{8})/).map(entry => entry.trim());
+            
+            // Sort entries by date
+            dataEntries.sort((a, b) => a.slice(0, 8).localeCompare(b.slice(0, 8)));
+            
+            // Group entries by date
+            const groupedEntries = dataEntries.reduce((acc, entry) => {
+                const date = entry.slice(0, 8);
+                if (!acc[date]) {
+                    acc[date] = [];
+                }
+                acc[date].push(entry.slice(9));
+                return acc;
+            }, {});
+            
+            // Format output
+            let formattedOutput = '';
+            Object.entries(groupedEntries).forEach(([date, entries], index) => {
+                if (index > 0) {
+                    formattedOutput += '\n              ';
+                }
+                formattedOutput += `              [LAB] ${date} ${entries.join(' ')}`;
+            });
+            
+            document.getElementById('outputText').textContent = formattedOutput;
+        }
+    </script>
+</body>
+</html>
