@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>柯恩-曼斯菲爾德 激動情緒行為量表 (CMAI)</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .item {
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+        .item-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .score-buttons {
+            display: flex;
+            justify-content: space-between;
+        }
+        .score-button {
+            padding: 5px 10px;
+            border: none;
+            background-color: #e0e0e0;
+            cursor: pointer;
+            border-radius: 3px;
+            transition: background-color 0.3s;
+        }
+        .score-button.selected {
+            background-color: #4CAF50;
+            color: white;
+        }
+        #calculate {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        #results {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #e7f3fe;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>柯恩-曼斯菲爾德激越情緒行為量表 (CMAI)</h1>
+        <p>請根據過去兩週內觀察到的行為頻率進行評分。評分標準如下：</p>
+        <p>1 = 從未發生; 2 = 每週不到一次; 3 = 每週一到兩次; 4 = 每週數次; 5 = 每天一到兩次; 6 = 每天數次; 7 = 每小時數次</p>
+        
+        <div id="items-container"></div>
+
+        <button id="calculate" onclick="calculateScore()">計算總分</button>
+
+        <div id="results"></div>
+    </div>
+
+    <script>
+        const behaviorItems = [
+            '1. 打人(包括自己)', '2. 踢人', '3. 抓住他人', '4. 推人', '5. 投擲物品',
+            '6. 咬人', '7. 抓撓', '8. 吐口水', '9. 傷害自己或他人', '10. 撕毀物品或破壞財產',
+            '11. 做出不恰當的身體性接觸', '12. 來回踱步、漫無目的地遊蕩', '13. 穿著不當或脫衣', '14. 試圖前往不同地方', '15. 故意跌倒',
+            '16. 食用/飲用不當物質', '17. 不當處理物品', '18. 藏匿物品', '19. 囤積物品', '20. 做出重複性的舉動',
+            '21. 普遍性煩躁不安', '22. 尖叫', '23. 做出言語上的性挑逗', '24. 咒罵或言語攻擊', '25. 重複句子或問題',
+            '26. 發出奇怪的聲音(怪異的笑聲或哭聲)', '27. 抱怨', '28. 消極態度', '29. 持續無理由地要求關注或幫助'
+        ];
+
+        const container = document.getElementById('items-container');
+        behaviorItems.forEach((item, index) => {
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'item';
+            itemDiv.innerHTML = `
+                <div class="item-title">${item}</div>
+                <div class="score-buttons" data-item="${index}">
+                    ${[1,2,3,4,5,6,7].map(score => `
+                        <button class="score-button" onclick="selectScore(this, ${index}, ${score})">${score}</button>
+                    `).join('')}
+                </div>
+            `;
+            container.appendChild(itemDiv);
+        });
+
+        function selectScore(button, itemIndex, score) {
+            const buttons = button.parentElement.getElementsByClassName('score-button');
+            Array.from(buttons).forEach(btn => btn.classList.remove('selected'));
+            button.classList.add('selected');
+        }
+
+        function calculateScore() {
+            let total = 0;
+            const results = [];
+            const scoreButtons = document.getElementsByClassName('score-buttons');
+            Array.from(scoreButtons).forEach((buttonGroup, index) => {
+                const selectedButton = buttonGroup.querySelector('.selected');
+                if (selectedButton) {
+                    const score = parseInt(selectedButton.textContent);
+                    total += score;
+                    results.push(`${behaviorItems[index]}: ${score}`);
+                } else {
+                    results.push(`${behaviorItems[index]}: 未評分`);
+                }
+            });
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = results.join('<br>') + '<br><strong>總分: ' + total + '</strong>';
+        }
+    </script>
+</body>
+</html>
