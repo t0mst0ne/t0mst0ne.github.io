@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ABCD-2 分數計算器</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<h1>ABCD-2 分數計算器</h1>
+
+<table border="1">
+    <tr>
+        <th>項目</th>
+        <th>選擇</th>
+    </tr>
+    <tr>
+        <td>年齡 ≥ 60 歲</td>
+        <td>
+            <select id="age">
+                <option value="0">否</option>
+                <option value="1">是</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td>高血壓病史</td>
+        <td>
+            <select id="hypertension">
+                <option value="0">否</option>
+                <option value="1">是</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td>糖尿病病史</td>
+        <td>
+            <select id="diabetes">
+                <option value="0">否</option>
+                <option value="1">是</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td>臨床症狀 (Clinical features)</td>
+        <td>
+            <select id="symptoms">
+                <option value="0">其他症狀</option>
+                <option value="1">語言障礙無偏癱</option>
+                <option value="2">單側無力</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td>發作持續時間 (Duration of symptoms)</td>
+        <td>
+            <select id="duration">
+                <option value="0">&lt; 10 分鐘</option>
+                <option value="1">10-59 分鐘</option>
+                <option value="2">≥ 60 分鐘</option>
+            </select>
+        </td>
+    </tr>
+</table>
+
+<button onclick="calculateScore()">計算分數</button>
+
+<h2 id="result"></h2>
+
+<script>
+function calculateScore() {
+    let score = 0;
+
+    score += parseInt(document.getElementById("age").value);
+    score += parseInt(document.getElementById("hypertension").value);
+    score += parseInt(document.getElementById("diabetes").value);
+    score += parseInt(document.getElementById("symptoms").value);
+    score += parseInt(document.getElementById("duration").value);
+
+    document.getElementById("result").innerText = "ABCD-2 分數: " + score;
+}
+</script>
+
+</body>
+</html>
