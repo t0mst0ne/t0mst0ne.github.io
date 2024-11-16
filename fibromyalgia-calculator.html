@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>纖維肌痛症狀嚴重度計算器</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            background-color: #f5f5f5;
+        }
+        .calculator {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .symptom-group {
+            margin-bottom: 2rem;
+            padding: 1rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+        }
+        .symptom-title {
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: #2c3e50;
+        }
+        .radio-group {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .result {
+            margin-top: 2rem;
+            padding: 1rem;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            font-size: 1.2rem;
+        }
+        .severity-description {
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: #e9ecef;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <h1>纖維肌痛症狀嚴重度 (SS) 計算器</h1>
+        
+        <div class="symptom-group">
+            <div class="symptom-title">1. 疲倦感</div>
+            <div class="radio-group">
+                <label class="radio-option">
+                    <input type="radio" name="fatigue" value="0" checked> 0 - 沒有問題
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="fatigue" value="1"> 1 - 輕微
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="fatigue" value="2"> 2 - 中度
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="fatigue" value="3"> 3 - 嚴重
+                </label>
+            </div>
+        </div>
+
+        <div class="symptom-group">
+            <div class="symptom-title">2. 醒來時仍感疲倦</div>
+            <div class="radio-group">
+                <label class="radio-option">
+                    <input type="radio" name="waking" value="0" checked> 0 - 沒有問題
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="waking" value="1"> 1 - 輕微
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="waking" value="2"> 2 - 中度
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="waking" value="3"> 3 - 嚴重
+                </label>
+            </div>
+        </div>
+
+        <div class="symptom-group">
+            <div class="symptom-title">3. 認知功能問題</div>
+            <div class="radio-group">
+                <label class="radio-option">
+                    <input type="radio" name="cognitive" value="0" checked> 0 - 沒有問題
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="cognitive" value="1"> 1 - 輕微
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="cognitive" value="2"> 2 - 中度
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="cognitive" value="3"> 3 - 嚴重
+                </label>
+            </div>
+        </div>
+
+        <div class="symptom-group">
+            <div class="symptom-title">4. 整體身體症狀評估</div>
+            <div class="radio-group">
+                <label class="radio-option">
+                    <input type="radio" name="overall" value="0" checked> 0 - 沒有症狀
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="overall" value="1"> 1 - 少數症狀
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="overall" value="2"> 2 - 相當數量
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="overall" value="3"> 3 - 很多症狀
+                </label>
+            </div>
+        </div>
+
+        <div class="result">
+            總分 (SS): <span id="total">0</span> / 12
+        </div>
+
+        <div class="severity-description" id="severity-text">
+            目前狀態：症狀程度輕微
+        </div>
+    </div>
+
+    <script>
+        function calculateTotal() {
+            const fatigue = parseInt(document.querySelector('input[name="fatigue"]:checked').value);
+            const waking = parseInt(document.querySelector('input[name="waking"]:checked').value);
+            const cognitive = parseInt(document.querySelector('input[name="cognitive"]:checked').value);
+            const overall = parseInt(document.querySelector('input[name="overall"]:checked').value);
+            
+            const total = fatigue + waking + cognitive + overall;
+            document.getElementById('total').textContent = total;
+            
+            let severityText = "目前狀態：";
+            if (total <= 3) {
+                severityText += "症狀程度輕微";
+            } else if (total <= 6) {
+                severityText += "症狀程度中等";
+            } else if (total <= 9) {
+                severityText += "症狀程度較重";
+            } else {
+                severityText += "症狀程度嚴重";
+            }
+            
+            document.getElementById('severity-text').textContent = severityText;
+        }
+
+        // Add event listeners to all radio buttons
+        document.querySelectorAll('input[type="radio"]').forEach(radio => {
+            radio.addEventListener('change', calculateTotal);
+        });
+    </script>
+</body>
+</html>
