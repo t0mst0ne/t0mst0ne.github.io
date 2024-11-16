@@ -50,6 +50,32 @@
             background-color: #e9ecef;
             border-radius: 4px;
         }
+        .summary {
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: #fff;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            white-space: pre-wrap;
+            font-family: monospace;
+        }
+        .copy-button {
+            margin-top: 0.5rem;
+            padding: 0.5rem 1rem;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .copy-button:hover {
+            background-color: #0056b3;
+        }
+        .copy-confirmation {
+            color: #28a745;
+            margin-left: 1rem;
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -135,9 +161,46 @@
         <div class="severity-description" id="severity-text">
             目前狀態：症狀程度輕微
         </div>
+
+        <div class="summary" id="summary">
+纖維肌痛症狀評估摘要：
+- 疲倦感：0分 (沒有問題)
+- 醒來時仍感疲倦：0分 (沒有問題)
+- 認知功能問題：0分 (沒有問題)
+- 整體身體症狀：0分 (沒有症狀)
+總分 (SS)：0分 - 症狀程度輕微</div>
+        <button class="copy-button" onclick="copySummary()">複製摘要</button>
+        <span class="copy-confirmation" id="copyConfirmation">已複製！</span>
     </div>
 
     <script>
+        function getSeverityText(score) {
+            if (score <= 3) return "症狀程度輕微";
+            if (score <= 6) return "症狀程度中等";
+            if (score <= 9) return "症狀程度較重";
+            return "症狀程度嚴重";
+        }
+
+        function getScoreText(score, type) {
+            let description;
+            if (type === 'overall') {
+                switch(score) {
+                    case 0: description = "沒有症狀"; break;
+                    case 1: description = "少數症狀"; break;
+                    case 2: description = "相當數量症狀"; break;
+                    case 3: description = "很多症狀"; break;
+                }
+            } else {
+                switch(score) {
+                    case 0: description = "沒有問題"; break;
+                    case 1: description = "輕微"; break;
+                    case 2: description = "中度"; break;
+                    case 3: description = "嚴重"; break;
+                }
+            }
+            return `${score}分 (${description})`;
+        }
+
         function calculateTotal() {
             const fatigue = parseInt(document.querySelector('input[name="fatigue"]:checked').value);
             const waking = parseInt(document.querySelector('input[name="waking"]:checked').value);
@@ -147,18 +210,29 @@
             const total = fatigue + waking + cognitive + overall;
             document.getElementById('total').textContent = total;
             
-            let severityText = "目前狀態：";
-            if (total <= 3) {
-                severityText += "症狀程度輕微";
-            } else if (total <= 6) {
-                severityText += "症狀程度中等";
-            } else if (total <= 9) {
-                severityText += "症狀程度較重";
-            } else {
-                severityText += "症狀程度嚴重";
-            }
-            
+            const severityText = `目前狀態：${getSeverityText(total)}`;
             document.getElementById('severity-text').textContent = severityText;
+
+            // Update summary
+            const summaryText = `纖維肌痛症狀評估摘要：
+- 疲倦感：${getScoreText(fatigue)}
+- 醒來時仍感疲倦：${getScoreText(waking)}
+- 認知功能問題：${getScoreText(cognitive)}
+- 整體身體症狀：${getScoreText(overall, 'overall')}
+總分 (SS)：${total}分 - ${getSeverityText(total)}`;
+            
+            document.getElementById('summary').textContent = summaryText;
+        }
+
+        function copySummary() {
+            const summaryText = document.getElementById('summary').textContent;
+            navigator.clipboard.writeText(summaryText).then(() => {
+                const confirmation = document.getElementById('copyConfirmation');
+                confirmation.style.display = 'inline';
+                setTimeout(() => {
+                    confirmation.style.display = 'none';
+                }, 2000);
+            });
         }
 
         // Add event listeners to all radio buttons
