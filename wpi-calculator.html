@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>廣泛分部疼痛指標(WPI)計算器</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .pain-area {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+        }
+        .pain-area label {
+            margin-left: 8px;
+            flex: 1;
+        }
+        .summary {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+        }
+        .copy-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .copy-button:hover {
+            background-color: #0056b3;
+        }
+        .section {
+            margin: 15px 0;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+        }
+        h2 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>廣泛分部疼痛指標(WPI)計算器</h1>
+        
+        <div class="section">
+            <h2>左側部位</h2>
+            <div class="pain-area">
+                <input type="checkbox" id="left-shoulder" onchange="updateWPI()">
+                <label for="left-shoulder">肩胛帶</label>
+            </div>
+            <div class="pain-area">
+                <input type="checkbox" id="left-upper-arm" onchange="updateWPI()">
+                <label for="left-upper-arm">上臂</label>
+            </div>
+            <div class="pain-area">
+                <input type="checkbox" id="left-lower-arm" onchange="updateWPI()">
+                <label for="left-lower-arm">前臂</label>
+            </div>
+            <div class="pain-area">
+                <input type="checkbox" id="left-hip" onchange="updateWPI()">
+                <label for="left-hip">髖部</label>
+            </div>
+            <div class="pain-area">
+                <input type="checkbox" id="left-jaw" onchange="updateWPI()">
+                <label for="left-jaw">顎</label>
+            </div>
+            <div class="pain-area">
+                <input type="checkbox" id="left-thigh" onchange="updateWPI()">
+                <label for="left-thigh">大腿</label>
+            </div>
+            <div class="pain-area">
+                <input type="checkbox" id="left-calf" onchange="updateWPI()">
+                <label for="left-calf">小腿</label>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>右側部位</h2>
+            <div class="pain-area">
+                <input type="checkbox" id="right-shoulder" onchange="updateWPI()">
+                <label for="right-shoulder">肩胛帶</label>
+            </div>
+            <div class="pain-area">
+                <input type="checkbox" id="right-upper-arm" onchange="updateWPI()">
+                <label for="right-upper-arm">上臂</label>
+            </div>
+            <div class="pain-area">
+                <input type="checkbox" id="right-lower-arm" onchange="updateWPI()">
+                <label for="right-lower-arm">前臂</label>
+            </div>
+            <div class="pain-area">
+                <input type="checkbox" id="right-hip" onchange="updateWPI()">
+                <label for="right-hip">髖部</label>
+            </div>
+            <div class="pain-area">
+                <input type="checkbox" id="right-jaw" onchange="updateWPI()">
+                <label for="right-jaw">顎</label>
+            </div>
+            <div class="pain-area">
+                <input type="checkbox" id="right-thigh" onchange="updateWPI()">
+                <label for="right-thigh">大腿</label>
+            </div>
+            <div class="pain-area">
+                <input type="checkbox" id="right-calf" onchange="updateWPI()">
+                <label for="right-calf">小腿</label>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>軀幹部位</h2>
+            <div class="pain-area">
+                <input type="checkbox" id="neck" onchange="updateWPI()">
+                <label for="neck">頸部</label>
+            </div>
+            <div class="pain-area">
+                <input type="checkbox" id="chest" onchange="updateWPI()">
+                <label for="chest">胸部</label>
+            </div>
+            <div class="pain-area">
+                <input type="checkbox" id="abdomen" onchange="updateWPI()">
+                <label for="abdomen">腹部</label>
+            </div>
+            <div class="pain-area">
+                <input type="checkbox" id="upper-back" onchange="updateWPI()">
+                <label for="upper-back">上背</label>
+            </div>
+            <div class="pain-area">
+                <input type="checkbox" id="lower-back" onchange="updateWPI()">
+                <label for="lower-back">下背</label>
+            </div>
+        </div>
+
+        <div class="summary">
+            <h2>評估結果</h2>
+            <p id="wpi-score">WPI 分數：0</p>
+            <div id="detailed-summary"></div>
+            <button class="copy-button" onclick="copySummary()">複製摘要</button>
+        </div>
+    </div>
+
+    <script>
+        function updateWPI() {
+            const painAreas = document.querySelectorAll('input[type="checkbox"]');
+            let score = 0;
+            let painDetails = [];
+
+            painAreas.forEach(area => {
+                if (area.checked) {
+                    score++;
+                    painDetails.push(area.nextElementSibling.textContent.trim());
+                }
+            });
+
+            document.getElementById('wpi-score').textContent = `WPI 分數：${score}`;
+            
+            const detailedSummary = generateDetailedSummary(painDetails);
+            document.getElementById('detailed-summary').innerHTML = detailedSummary;
+        }
+
+        function generateDetailedSummary(painDetails) {
+            if (painDetails.length === 0) {
+                return '<p>未選擇任何疼痛部位</p>';
+            }
+
+            return `
+                <p>疼痛部位：${painDetails.join('、')}</p>
+            `;
+        }
+
+        function copySummary() {
+            const score = document.getElementById('wpi-score').textContent;
+            const details = document.getElementById('detailed-summary').textContent;
+            
+            const summary = `廣泛分部疼痛指標(WPI)評估結果：
+${score}
+${details}`;
+
+            navigator.clipboard.writeText(summary).then(() => {
+                alert('摘要已複製到剪貼簿！');
+            }).catch(err => {
+                console.error('複製失敗：', err);
+                alert('複製失敗，請手動複製。');
+            });
+        }
+    </script>
+</body>
+</html>
