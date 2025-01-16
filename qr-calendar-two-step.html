@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>兩步驟預約 QR Code 產生器</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            text-align: center;
+        }
+        .step {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #f9f9f9;
+        }
+        .step.active {
+            border-color: #4CAF50;
+            background: white;
+        }
+        .input-group {
+            margin: 20px 0;
+        }
+        input {
+            width: 80%;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+        }
+        .details {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 5px;
+            text-align: left;
+        }
+        .error {
+            color: red;
+            margin: 10px 0;
+            display: none;
+        }
+        #qrcode {
+            margin: 20px auto;
+        }
+        .step-number {
+            background: #4CAF50;
+            color: white;
+            width: 24px;
+            height: 24px;
+            display: inline-block;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>預約 QR Code 產生器</h1>
+    
+    <!-- Step 1 -->
+    <div id="step1" class="step active">
+        <h2><span class="step-number">1</span>解析預約資訊</h2>
+        <div class="input-group">
+            <input type="text" id="appointmentText" 
+                   placeholder="請輸入預約文字 (例如: 預約2025年4月10日星期四上午回診神經內科醫師看診)"
+                   value="預約2025年4月10日星期四上午回診神經內科醫師看診">
+            <button onclick="parseAppointment()">解析資訊</button>
+        </div>
+        <div id="error" class="error">無法解析日期資訊，請確認輸入格式正確</div>
+    </div>
+
+    <!-- Step 2 -->
+    <div id="step2" class="step">
+        <h2><span class="step-number">2</span>確認並產生 QR Code</h2>
+        <div class="details">
+            <h3>請確認解析結果：</h3>
+            <p>日期：<span id="parsedDate"></span></p>
+            <p>時間：<span id="parsedTime"></span></p>
+            <p>內容：<span id="parsedTitle"></span></p>
+            <button id="generateButton" onclick="generateQR()" disabled>產生 QR Code</button>
+            <button onclick="resetForm()">重新輸入</button>
+        </div>
+        <div id="qrcode"></div>
+    </div>
+
+    <script>
+        function parseChineseDate(text) {
+            const datePattern = /(\d{4})年\s*?(\d{1,2})月\s*?(\d{1,2})日/;
+            const match = text.match(datePattern);
+            
+            if (!match) return null;
+            
+            let [_, year, month, day] = match;
+            month = month.padStart(2, '0');
+            day = day.padStart(2, '0');
+            
+            return `${year}-${month}-${day}`;
+        }
+
+        function parseTime(text) {
+            if (text.includes('上午')) {
+                return '09:00';
+            } else if (text.includes('下午')) {
+                return '14:00';
+            }
+            return '09:00';
+        }
+
+        function parseAppointment() {
+            const text = document.getElementById('appointmentText').value;
+            const date = parseChineseDate(text);
+            
+            if (!date) {
+                document.getElementById('error').style.display = 'block';
+                return;
+            }
+
+            const time = parseTime(text);
+            
+            // Update parsed details
+            document.getElementById('parsedDate').textContent = date;
+            document.getElementById('parsedTime').textContent = time;
+            document.getElementById('parsedTitle').textContent = text;
+            
+            // Hide error and enable step 2
+            document.getElementById('error').style.display = 'none';
+            document.getElementById('step1').classList.remove('active');
+            document.getElementById('step2').classList.add('active');
+            document.getElementById('generateButton').disabled = false;
+        }
+
+        function generateQR() {
+            const text = document.getElementById('appointmentText').value;
+            const date = document.getElementById('parsedDate').textContent;
+            const time = document.getElementById('parsedTime').textContent;
+            
+            // Create start and end times (1 hour duration)
+            const startDate = new Date(`${date}T${time}`);
+            const endDate = new Date(startDate.getTime() + 60 * 60 * 1000);
+            
+            // Format dates for URL
+            const startStr = startDate.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+            const endStr = endDate.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+            
+            // Add reminders (1 and 2 days before)
+            const reminders = '&reminders=1440,2880';
+            
+            // Create Google Calendar URL
+            const calendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(text)}&dates=${startStr}/${endStr}${reminders}`;
+            
+            // Clear previous QR code and generate new one
+            document.getElementById('qrcode').innerHTML = '';
+            new QRCode(document.getElementById('qrcode'), {
+                text: calendarUrl,
+                width: 256,
+                height: 256
+            });
+        }
+
+        function resetForm() {
+            // Reset to step 1
+            document.getElementById('step1').classList.add('active');
+            document.getElementById('step2').classList.remove('active');
+            document.getElementById('generateButton').disabled = true;
+            document.getElementById('qrcode').innerHTML = '';
+            document.getElementById('error').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
