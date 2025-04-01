@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>功能性評估分期測驗 (FAST)</title>
+    <style>
+        body {
+            font-family: "Microsoft JhengHei", Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+        }
+        
+        h1, h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        
+        .container {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #4682B4;
+            color: white;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        
+        .stage-1 { background-color: #e8f5e9; }
+        .stage-2 { background-color: #e8f5e9; }
+        .stage-3 { background-color: #e8f5e9; }
+        .stage-4 { background-color: #fffde7; }
+        .stage-5 { background-color: #fffde7; }
+        .stage-6 { background-color: #fff8e1; }
+        .stage-7 { background-color: #ffebee; }
+        
+        button {
+            background-color: #4682B4;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+        
+        button:hover {
+            background-color: #36648B;
+        }
+        
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #f8f8f8;
+            display: none;
+        }
+        
+        .note {
+            font-size: 14px;
+            color: #666;
+            margin-top: 20px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>功能性評估分期測驗 (FAST)</h1>
+        <p>阿茲海默症功能性評估分期量表是最經過科學文獻驗證的阿茲海默症進程測量方法。</p>
+        
+        <table id="fastTable">
+            <thead>
+                <tr>
+                    <th>分期</th>
+                    <th>階段名稱</th>
+                    <th>特徵</th>
+                    <th>未治療預期持續時間 (月)</th>
+                    <th>心智年齡 (歲)</th>
+                    <th>MMSE (分數)</th>
+                    <th>勾選</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="stage-1">
+                    <td>1</td>
+                    <td>正常老化</td>
+                    <td>無任何缺損</td>
+                    <td>--</td>
+                    <td>成人</td>
+                    <td>29-30</td>
+                    <td><input type="radio" name="fast" value="1"></td>
+                </tr>
+                <tr class="stage-2">
+                    <td>2</td>
+                    <td>可能輕度認知障礙</td>
+                    <td>主觀功能缺損</td>
+                    <td>--</td>
+                    <td>--</td>
+                    <td>28-29</td>
+                    <td><input type="radio" name="fast" value="2"></td>
+                </tr>
+                <tr class="stage-3">
+                    <td>3</td>
+                    <td>輕度認知障礙</td>
+                    <td>客觀功能缺損干擾個人最複雜的任務</td>
+                    <td>84</td>
+                    <td>12+</td>
+                    <td>24-28</td>
+                    <td><input type="radio" name="fast" value="3"></td>
+                </tr>
+                <tr class="stage-4">
+                    <td>4</td>
+                    <td>輕度失智症</td>
+                    <td>IADL受影響，如繳費、烹飪、清潔、外出旅行</td>
+                    <td>24</td>
+                    <td>8-12</td>
+                    <td>19-20</td>
+                    <td><input type="radio" name="fast" value="4"></td>
+                </tr>
+                <tr class="stage-5">
+                    <td>5</td>
+                    <td>中度失智症</td>
+                    <td>需要幫助選擇適當的衣物</td>
+                    <td>18</td>
+                    <td>5-7</td>
+                    <td>15</td>
+                    <td><input type="radio" name="fast" value="5"></td>
+                </tr>
+                <tr class="stage-6">
+                    <td>6a</td>
+                    <td>中重度失智症</td>
+                    <td>需要幫助穿衣</td>
+                    <td>4.8</td>
+                    <td>5</td>
+                    <td>9</td>
+                    <td><input type="radio" name="fast" value="6a"></td>
+                </tr>
+                <tr class="stage-6">
+                    <td>6b</td>
+                    <td>中重度失智症</td>
+                    <td>需要幫助洗澡</td>
+                    <td>4.8</td>
+                    <td>4</td>
+                    <td>8</td>
+                    <td><input type="radio" name="fast" value="6b"></td>
+                </tr>
+                <tr class="stage-6">
+                    <td>6c</td>
+                    <td>中重度失智症</td>
+                    <td>需要幫助如廁</td>
+                    <td>4.8</td>
+                    <td>4</td>
+                    <td>5</td>
+                    <td><input type="radio" name="fast" value="6c"></td>
+                </tr>
+                <tr class="stage-6">
+                    <td>6d</td>
+                    <td>中重度失智症</td>
+                    <td>尿失禁</td>
+                    <td>3.6</td>
+                    <td>3-4</td>
+                    <td>3</td>
+                    <td><input type="radio" name="fast" value="6d"></td>
+                </tr>
+                <tr class="stage-6">
+                    <td>6e</td>
+                    <td>中重度失智症</td>
+                    <td>糞便失禁</td>
+                    <td>9.6</td>
+                    <td>2-3</td>
+                    <td>1</td>
+                    <td><input type="radio" name="fast" value="6e"></td>
+                </tr>
+                <tr class="stage-7">
+                    <td>7a</td>
+                    <td>重度失智症</td>
+                    <td>一天只能說5-6個詞</td>
+                    <td>12</td>
+                    <td>1.25</td>
+                    <td>0</td>
+                    <td><input type="radio" name="fast" value="7a"></td>
+                </tr>
+                <tr class="stage-7">
+                    <td>7b</td>
+                    <td>重度失智症</td>
+                    <td>只能清楚說出1個詞</td>
+                    <td>18</td>
+                    <td>1</td>
+                    <td>0</td>
+                    <td><input type="radio" name="fast" value="7b"></td>
+                </tr>
+                <tr class="stage-7">
+                    <td>7c</td>
+                    <td>重度失智症</td>
+                    <td>無法行走</td>
+                    <td>12</td>
+                    <td>1</td>
+                    <td>0</td>
+                    <td><input type="radio" name="fast" value="7c"></td>
+                </tr>
+                <tr class="stage-7">
+                    <td>7d</td>
+                    <td>重度失智症</td>
+                    <td>無法坐起</td>
+                    <td>12</td>
+                    <td>0.5-0.8</td>
+                    <td>0</td>
+                    <td><input type="radio" name="fast" value="7d"></td>
+                </tr>
+                <tr class="stage-7">
+                    <td>7e</td>
+                    <td>重度失智症</td>
+                    <td>無法微笑</td>
+                    <td>18</td>
+                    <td>0.2-0.4</td>
+                    <td>0</td>
+                    <td><input type="radio" name="fast" value="7e"></td>
+                </tr>
+                <tr class="stage-7">
+                    <td>7f</td>
+                    <td>重度失智症</td>
+                    <td>無法抬頭</td>
+                    <td>12+</td>
+                    <td>0-0.2</td>
+                    <td>0</td>
+                    <td><input type="radio" name="fast" value="7f"></td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <button onclick="generateResult()">產生報告</button>
+        
+        <div id="result"></div>
+        
+        <div class="note">
+            <h2>鑑別診斷指南</h2>
+            <p>使用 FAST 工具確定患者狀況的變化是由阿茲海默症或其他疾病引起。如果變化是由阿茲海默症進展引起，則 FAST 量表上的任何變化都將按順序發生——阿茲海默症相關變化不會跳過 FAST 階段。</p>
+            <p><strong>舉例：</strong>如果患者處於輕度失智症（FAST 階段 4），並喪失洗澡能力（FAST 6b），但仍能選擇衣物（FAST 5）並自行穿衣（FAST 6a），那麼他們跳過了 FAST 階段 5 和 6a，直接進入 FAST 階段 6b。這些變化不是由阿茲海默症進展引起的。可能是阿茲海默症診斷錯誤，或患者除阿茲海默症外還有其他失智症。另外，患者可能現有醫療問題加重、出現新的醫療問題，或其他照護或生活情況改變導致洗澡困難。</p>
+        </div>
+    </div>
+
+    <script>
+        function generateResult() {
+            const selected = document.querySelector('input[name="fast"]:checked');
+            const resultDiv = document.getElementById('result');
+            
+            if (!selected) {
+                alert('請選擇一個評估階段');
+                return;
+            }
+            
+            const stageValue = selected.value;
+            let stageName = '';
+            let characteristics = '';
+            
+            // 獲取選中階段的名稱和特徵
+            const rows = document.getElementById('fastTable').rows;
+            for (let i = 1; i < rows.length; i++) {
+                const cells = rows[i].cells;
+                const rowStageValue = cells[6].querySelector('input').value;
+                if (rowStageValue === stageValue) {
+                    stageName = cells[1].innerText;
+                    characteristics = cells[2].innerText;
+                    break;
+                }
+            }
+            
+            const today = new Date();
+            const formattedDate = `${today.getFullYear()}/${(today.getMonth()+1).toString().padStart(2, '0')}/${today.getDate().toString().padStart(2, '0')}`;
+            
+            const resultText = `功能性評估分期測驗 (FAST) 結果：
+評估日期：${formattedDate}
+階段：${stageValue}
+分類：${stageName}
+特徵：${characteristics}
+
+備註：FAST 是最經過科學文獻驗證的阿茲海默症進程測量方法。阿茲海默症相關變化不會跳過 FAST 階段。`;
+            
+            resultDiv.innerText = resultText;
+            resultDiv.style.display = 'block';
+            
+            // 自動選取結果文字以便複製
+            const range = document.createRange();
+            range.selectNode(resultDiv);
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(range);
+            
+            // 複製到剪貼簿
+            try {
+                document.execCommand('copy');
+                alert('結果已產生並複製到剪貼簿，可直接貼到病歷中');
+            } catch (err) {
+                alert('結果已產生，請手動複製');
+            }
+            window.getSelection().removeAllRanges();
+        }
+    </script>
+</body>
+</html>
