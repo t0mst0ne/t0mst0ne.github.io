@@ -3,36 +3,258 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HIS 4.0 彙總報告解析 V0321B</title>
+    <title>HIS 4.0 彙總報告整理 V0405D</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/2.1.0/chartjs-plugin-annotation.min.js"></script>
-    <!-- 新增 Chart.js Zoom 插件 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-zoom/2.0.1/chartjs-plugin-zoom.min.js"></script>
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        textarea { width: 100%; height: 200px; }
-        pre { background: #f4f4f4; padding: 10px; white-space: pre-wrap; }
-        .button-container { margin: 10px 0; }
-        button { 
-            margin-right: 10px; 
-            padding: 10px 20px; 
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f4f4f4;
+            overflow-x: hidden;
+        }
+
+        /* 主要佈局容器 */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+            flex-direction: row; /* 水平布局 */
+        }
+
+        /* 左側邊欄樣式 */
+        .sidebar {
+            width: 240px;
+            min-width: 240px;
+            flex-shrink: 0;
+            background-color: #2c3e50;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.2);
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        /* 標題區 */
+        .sidebar-header {
+            padding: 15px;
+            background-color: #1a2530;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            border-bottom: 1px solid #3d556b;
+        }
+
+        /* 按鈕容器 */
+        .action-buttons {
+            margin-top: 10;
+            padding: 15px 10px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            border-top: 1px solid #3d556b;
+            border-bottom: 1px solid #3d556b;
+        }
+
+        .action-buttons button {
+            padding: 10px;
             cursor: pointer;
-            background-color: #4CAF50;
+            background-color: #3498db;
             color: white;
             border: none;
             border-radius: 4px;
-        }
-        button:hover {
-            background-color: #45a049;
+            transition: all 0.2s;
+            text-align: left;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
         }
 
-        /* Chart styles preserved from original */
+        .action-buttons button:hover {
+            background-color: #2980b9;
+        }
+
+        .action-buttons button i {
+            margin-right: 8px;
+            font-size: 16px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .action-buttons .advanced-button {
+            background-color: #16a085;
+        }
+
+        .action-buttons .advanced-button:hover {
+            background-color: #138a72;
+        }
+
+        .action-buttons .danger-button {
+            background-color: #e74c3c;
+        }
+
+        .action-buttons .danger-button:hover {
+            background-color: #c0392b;
+        }
+
+        .tab-buttons {
+            display: flex;
+            flex-direction: row;
+            background-color: #2c3e50;
+            border-radius: 0 0 0 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            margin-bottom: 15px;
+            overflow-x: auto;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            width: 100%;
+            left: 0;
+            box-sizing: border-box;
+        }
+
+        .tab-button {
+            padding: 12px 20px;
+            background-color: transparent;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            color: #ecf0f1;
+            text-align: center;
+            font-size: 15px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            border-bottom: 3px solid transparent;
+            white-space: nowrap;
+        }
+
+        .tab-button:hover {
+            background-color: #34495e;
+        }
+
+        .tab-button.active {
+            background-color: #34495e;
+            color: #3498db;
+            border-bottom-color: #3498db;
+            font-weight: bold;
+        }
+
+        .tab-button i {
+            margin-right: 10px;
+            font-size: 18px;
+            width: 24px;
+            text-align: center;
+        }
+
+        /* 輸入區域工具欄 */
+        .input-controls {
+            margin-top: auto;
+            padding: 15px;
+            background-color: #1a2530;
+            border-top: 1px solid #3d556b;
+        }
+
+        .toggle-input-btn {
+            padding: 10px;
+            width: 100%;
+            background-color: #f39c12;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .toggle-input-btn:hover {
+            background-color: #d68910;
+        }
+
+        .toggle-input-btn i {
+            margin-right: 8px;
+        }
+
+        /* 主要內容區 */
+        /* 確保主內容區域有足夠的頂部內邊距 */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding-top: 0; /* 修改：移除頂部內邊距 */
+            padding-left: 20px;
+            padding-right: 20px;
+            padding-bottom: 20px;
+            transition: all 0.3s;
+        }
+
+        /* 輸入區域 */
+        .input-area {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            display: none; /* 默認隱藏 */
+            margin-top: 10px; /* 新增：增加頂部間距 */
+        }
+
+        textarea {
+            width: 100%;
+            height: 180px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+            font-family: monospace;
+            resize: vertical;
+        }
+
+        /* Tab內容區域 */
+        .tab-content {
+            display: none;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            min-height: 600px;
+            margin-top: 10px; /* 新增：增加頂部間距 */
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* 原始樣式保留 */
+        pre {
+            background: #f8f8f8;
+            padding: 10px;
+            white-space: pre-wrap;
+            border-radius: 4px;
+            border: 1px solid #eee;
+            font-family: monospace;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
         #chartContainer {
             margin-top: 20px;
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 20px;
         }
+
         .chart-wrapper {
             min-width: 250px;
             margin-bottom: 20px;
@@ -40,189 +262,59 @@
             border-radius: 8px;
             padding: 10px;
             cursor: move;
+            background-color: white;
         }
+
         .chart-title {
             font-weight: bold;
             text-align: center;
             margin-bottom: 10px;
         }
+
         @media (max-width: 992px) {
             #chartContainer {
                 grid-template-columns: repeat(2, 1fr);
             }
         }
+
         @media (max-width: 576px) {
             #chartContainer {
                 grid-template-columns: 1fr;
             }
         }
 
-        /* Tab styles preserved from original */
-        .tab-container {
-            margin-top: 20px;
+        /* 響應式設計 */
+        @media (max-width: 768px) {
+            .app-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+                min-width: 100%;
+                position: static;
+            }
+            
+            .tab-buttons {
+                width: 100%;
+                border-radius: 0;
+                overflow-x: auto;
+            }
+            
+            .tab-button {
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+            
+            .action-buttons {
+                margin-top: 0;
+                grid-template-columns: 1fr 1fr;
+                border-top: none;
+            }
         }
-        .tab-button {
-            background-color: #f1f1f1;
-            border: none;
-            outline: none;
-            cursor: pointer;
-            padding: 10px 20px;
-            margin-right: 2px;
-            color: #333;
-            font-weight: 500;
-        }
-        .tab-button:hover {
-            background-color: #ddd;
-        }
-        .tab-button.active {
-            background-color: #29ab97;
-            color: white;
-        }
-        .tab-content {
-            display: none;
-            padding: 15px;
-            border: 1px solid #ccc;
-            background-color: #fff;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-        }
-        .tab-content.active {
-            display: block;
-        }
-        
-        /* NEW STYLES FOR ANTIBIOTIC SENSITIVITY DISPLAY */
-        
-        /* Main container */
-        .sensitivity-analysis {
-            margin: 20px 0;
-            font-family: Arial, sans-serif;
-        }
-        /* Organism container */
-        .organism-container { font-size: 13px; }
-        
-        /* Organism selector */
-        .organism-selector {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        
-        .organism-button {
-            background-color: #f1f1f1;
-            border: 2px solid transparent;
-            border-radius: 4px;
-            padding: 10px 15px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: all 0.2s;
-        }
-        
-        .organism-button:hover {
-            background-color: #e9e9e9;
-        }
-        
-        .organism-button.active {
-            background-color: #1e88e5;
-            color: white;
-            border-color: #0d47a1;
-        }
-/* Antibiotic class card */
-        .antibiotic-class {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
-            overflow: hidden;
-        }
-        
-        .class-header {
-            padding: 12px 16px;
-            background-color: #f8f9fa;
-            border-bottom: 1px solid #e9ecef;
-            font-size: 13px;
-            font-weight: bold;
-        }
-        
-        .antibiotic-list {
-            padding: 16px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        
-        /* Individual antibiotic */
-        .antibiotic-item {
-            display: flex;
-            align-items: center;
-        }
-        
-        .antibiotic-name {
-            margin-right: 8px;
-            font-family: 'Courier New', monospace;
-            font-weight: bold;
-        }
-        
-        /* Sensitivity badges */
-        .sensitivity-badge {
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-weight: bold;
-            font-size: 15px;
-            min-width: 24px;
-            text-align: center;
-        }
-        
-        .sensitivity-S {
-            background-color: #e8f5e9;
-            color: #2e7d32;
-            border: 1px solid #81c784;
-        }
-        
-        .sensitivity-I {
-            background-color: #fff8e1;
-            color: #f57f17;
-            border: 1px solid #ffd54f;
-        }
-        
-        .sensitivity-R {
-            background-color: #ffebee;
-            color: #c62828;
-            border: 1px solid #ef9a9a;
-        }
-        
-        .sensitivity-SDD {
-            background-color: #e1f5fe;
-            color: #0277bd;
-            border: 1px solid #4fc3f7;
-        }
-        
-        .sensitivity-D {
-            background-color: #f3e5f5;
-            color: #6a1b9a;
-            border: 1px solid #ce93d8;
-        }
-        
-        /* Additional specimen info */
-        .specimen-info {
-            font-size: 12px;
-            color: #6c757d;
-            margin-left: 5px;
-        }
-        
-        /* MIC value display */
-        .mic-value {
-            font-size: 11px;
-            color: #6c757d;
-            margin-left: 4px;
-        }
-        
-        /* Add a slight fade effect on hover */
-        .antibiotic-item:hover {
-            background-color: rgba(0,0,0,0.02);
-            border-radius: 4px;
-        }
-        
-        /* Original styling for microbiological results */
+
+        /* 引用舊樣式以保持原有功能 */
         .sensitivity-S {
             color: #28a745;          /* 綠色: 敏感 */
             font-weight: bold;
@@ -265,225 +357,545 @@
             border-left: 3px solid #29ab97;
             background-color: rgba(41, 171, 151, 0.05);
         }
-        
-        /* 新增微生物標記的提示樣式 */
-        .micro-marker-legend {
+
+        /* 這邊引用所有藥敏相關樣式，確保功能正常 */
+        .sensitivity-analysis {
+            margin: 20px 0;
+            font-family: Arial, sans-serif;
+        }
+        .organism-container { font-size: 13px; }
+
+        .organism-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .organism-button {
+            background-color: #f1f1f1;
+            border: 2px solid transparent;
+            border-radius: 4px;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .organism-button:hover {
+            background-color: #e9e9e9;
+        }
+
+        .organism-button.active {
+            background-color: #1e88e5;
+            color: white;
+            border-color: #0d47a1;
+        }
+
+        .antibiotic-class {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .class-header {
+            padding: 12px 16px;
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .antibiotic-list {
+            padding: 16px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .antibiotic-item {
             display: flex;
             align-items: center;
+        }
+
+        .antibiotic-name {
+            margin-right: 8px;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+        }
+
+        .sensitivity-badge {
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 15px;
+            min-width: 24px;
+            text-align: center;
+        }
+
+        .sensitivity-badge.sensitivity-S {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #81c784;
+        }
+
+        .sensitivity-badge.sensitivity-I {
+            background-color: #fff8e1;
+            color: #f57f17;
+            border: 1px solid #ffd54f;
+        }
+
+        .sensitivity-badge.sensitivity-R {
+            background-color: #ffebee;
+            color: #c62828;
+            border: 1px solid #ef9a9a;
+        }
+
+        .sensitivity-badge.sensitivity-SDD {
+            background-color: #e1f5fe;
+            color: #0277bd;
+            border: 1px solid #4fc3f7;
+        }
+
+        .sensitivity-badge.sensitivity-D {
+            background-color: #f3e5f5;
+            color: #6a1b9a;
+            border: 1px solid #ce93d8;
+        }
+
+        .specimen-info {
+            font-size: 12px;
+            color: #6c757d;
+            margin-left: 5px;
+        }
+
+        .mic-value {
+            font-size: 11px;
+            color: #6c757d;
+            margin-left: 4px;
+        }
+
+        .antibiotic-item:hover {
+            background-color: rgba(0,0,0,0.02);
+            border-radius: 4px;
+        }
+
+        .sensitivity-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 15px;
+            margin-top: 15px;
+            margin-bottom: 20px;
+        }
+
+        .sensitivity-table th,
+        .sensitivity-table td {
+            padding: 6px;
+            border: 1px solid #ddd;
+        }
+
+        .sensitivity-table th {
+            background-color: #f1f1f1;
+            text-align: center;
+        }
+
+        .sensitivity-table thead th:first-child,
+        .sensitivity-table tbody td:first-child {
+            position: sticky;
+            left: 0;
+            z-index: 1;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+        }
+
+        .sensitivity-table thead th:first-child {
+            z-index: 2;
+        }
+
+        .sensitivity-table tbody tr:nth-child(odd) td:first-child {
+            background-color: #fff;
+        }
+
+        .sensitivity-table tbody tr:nth-child(even) td:first-child {
+            background-color: #f9f9f9;
+        }
+
+        .sensitivity-table tbody tr.class-header td {
+            background-color: #f8f9fa;
+            font-weight: bold;
+            position: relative;
+        }
+
+        .sensitivity-table .untested {
+            background-color: #f5f5f5;
+            color: #9e9e9e;
+            opacity: 0.5;
+        }
+
+        .sensitivity-table .sensitivity-S {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            font-weight: bold;
+        }
+
+        .sensitivity-table .sensitivity-I {
+            background-color: #fff8e1;
+            color: #f57f17;
+            font-weight: bold;
+        }
+
+        .sensitivity-table .sensitivity-R {
+            background-color: #ffebee;
+            color: #c62828;
+            font-weight: bold;
+        }
+
+        .sensitivity-table .sensitivity-SDD {
+            background-color: #e1f5fe;
+            color: #0277bd;
+            font-weight: bold;
+        }
+
+        .sensitivity-table .sensitivity-D {
+            background-color: #f3e5f5;
+            color: #6a1b9a;
+            font-weight: bold;
+        }
+
+        .sensitivity-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
             margin-top: 10px;
-            font-size: 13px;
-            color: #666;
+            font-size: 12px;
         }
-        
-        .micro-marker-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background-color: rgba(255, 99, 132, 0.8);
-            margin-right: 5px;
-            display: inline-block;
+
+        /* 新增彈出通知樣式 */
+        .toast-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            background-color: #2ecc71;
+            color: white;
+            border-radius: 4px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            z-index: 9999;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.3s;
         }
-/* 在 <style> 標籤內的 .micro-marker-dot 樣式之後添加以下樣式 */
-/* 新增藥敏表格樣式 */
-.sensitivity-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 15px;
-    margin-top: 15px;
-    margin-bottom: 20px;
-}
 
-.sensitivity-table th,
-.sensitivity-table td {
-    padding: 6px;
-    border: 1px solid #ddd;
-}
+        .toast-notification.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
-.sensitivity-table th {
-    background-color: #f1f1f1;
-    text-align: center;
-}
+        .toast-notification.error {
+            background-color: #e74c3c;
+        }
 
-.sensitivity-table thead th:first-child,
-.sensitivity-table tbody td:first-child {
-    position: sticky;
-    left: 0;
-    z-index: 1;
-    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
-}
-
-.sensitivity-table thead th:first-child {
-    z-index: 2;
-}
-
-.sensitivity-table tbody tr:nth-child(odd) td:first-child {
-    background-color: #fff;
-}
-
-.sensitivity-table tbody tr:nth-child(even) td:first-child {
-    background-color: #f9f9f9;
-}
-
-.sensitivity-table tbody tr.class-header td {
-    background-color: #f8f9fa;
-    font-weight: bold;
-    position: relative;
-}
-
-.sensitivity-table .untested {
-    background-color: #f5f5f5;
-    color: #9e9e9e;
-    opacity: 0.5;
-}
-
-.sensitivity-table .sensitivity-S {
-    background-color: #e8f5e9;
-    color: #2e7d32;
-    font-weight: bold;
-}
-
-.sensitivity-table .sensitivity-I {
-    background-color: #fff8e1;
-    color: #f57f17;
-    font-weight: bold;
-}
-
-.sensitivity-table .sensitivity-R {
-    background-color: #ffebee;
-    color: #c62828;
-    font-weight: bold;
-}
-
-.sensitivity-table .sensitivity-SDD {
-    background-color: #e1f5fe;
-    color: #0277bd;
-    font-weight: bold;
-}
-
-.sensitivity-table .sensitivity-D {
-    background-color: #f3e5f5;
-    color: #6a1b9a;
-    font-weight: bold;
-}
-
-.sensitivity-legend {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    margin-top: 10px;
-    font-size: 12px;
-}
-
-/* 增強微生物選擇器樣式 */
-#organismSelector {
-    max-width: 100%;
-    overflow-x: auto;
-    white-space: nowrap;
-    padding-bottom: 10px;
-    scrollbar-width: thin;
-}
-
-#antibioticResults {
-    overflow-x: auto;
-    max-width: 100%;
-    scrollbar-width: thin;
-}
-
-.selector-buttons {
-    margin-top: 10px;
-    margin-bottom: 15px;
-}
-
-.compare-button {
-    margin-left: 10px;
-    background-color: #1e88e5;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 8px 12px;
-    cursor: pointer;
-    font-size: 12px;
-}
-
-.select-all-button {
-    margin-left: 10px;
-    background-color: #4caf50;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 8px 12px;
-    cursor: pointer;
-    font-size: 12px;
-}
-
-.deselect-all-button {
-    margin-left: 10px;
-    background-color: #f44336;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 8px 12px;
-    cursor: pointer;
-    font-size: 12px;
-}
-
-/* 適配小螢幕 */
-@media (max-width: 768px) {
-    .sensitivity-table {
-        font-size: 11px;
-    }
-    
-    .sensitivity-table th,
-    .sensitivity-table td {
-        padding: 4px;
-    }
-}
+        /* 動畫效果 */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
     </style>
+    <!-- 加入Fontawesome圖標庫 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <h2>HIS 4.0 彙總報告解析 V0321B</h2>
-    <textarea id="inputReport" placeholder="請貼上原始報告"></textarea>
-    <div class="button-container">
-        <button onclick="clearAndParse()" title="清除輸入並貼上剪貼簿內容，然後自動解析" style="background-color: #2196F3;">清除+貼上+解析</button>
-        <button onclick="parseReport()" title="解析報告並整理微生物及趨勢圖">解析報告</button>
-        <button onclick="parseAndCopy()" title="解析報告並複製到剪貼簿">解析+複製</button>
-        <button onclick="toggleOrder()" title="上下反轉文字報告順序">上下對調</button>
-        <button onclick="clearInput()" title="清除輸入內容">清除內容</button>
-        <button onclick="resetAll()" title="重置所有數據和顯示" style="background-color: #f44336; float: right;">重置</button>
-    </div>
-    
-    <div class="tab-container">
-        <button class="tab-button active" onclick="openTab(event, 'textTab')">文字</button>
-        <button class="tab-button" onclick="openTab(event, 'chartTab')">趨勢</button>
-        <button class="tab-button" onclick="openTab(event, 'microTab')">微生物</button>
-        <button class="tab-button" onclick="openTab(event, 'sensitivityTab')">藥敏</button>
-    </div>
-    
-    <div id="textTab" class="tab-content active">
-        <pre id="output"></pre>
-    </div>
-    
-    <div id="chartTab" class="tab-content">
-        <div class="micro-marker-legend">
-            <span class="micro-marker-dot"></span> 標記表示此日期有微生物檢測結果，將滑鼠移到標記上可查看詳細資訊
-        </div>
-        <div id="chartContainer"></div>
-    </div>
-    
-    <div id="microTab" class="tab-content">
-        <div id="microbiologyResults" style="font-size: 16px; line-height: 1.5;"></div>
-    </div>
-    
-    <div id="sensitivityTab" class="tab-content">
-        <div class="sensitivity-analysis">
-            <h3>抗生素敏感性分析</h3>
+    <div class="app-container">
+        <!-- 左側邊欄 -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                HIS 4.0 彙總報告整理 0405D
+            </div>
+
+            <!-- 標籤頁按鈕 -->
+            <div class="tab-buttons">
+                <button class="tab-button active" onclick="openTab(event, 'textTab')">
+                    <i class="fas fa-align-left"></i> 文字
+                </button>
+                <button class="tab-button" onclick="openTab(event, 'chartTab')">
+                    <i class="fas fa-chart-line"></i> 趨勢
+                </button>
+                <button class="tab-button" onclick="openTab(event, 'microTab')">
+                    <i class="fas fa-bacterium"></i> 微生物
+                </button>
+                <button class="tab-button" onclick="openTab(event, 'sensitivityTab')">
+                    <i class="fas fa-tablets"></i> 藥敏
+                </button>
+                <button class="tab-button" onclick="openTab(event, 'summaryTab')">
+                    <i class="fas fa-table"></i> 表格
+                </button>
+            </div>
             
-            <div class="organism-selector" id="organismSelector"></div>
+            <!-- 操作按鈕 -->
+            <div class="action-buttons">
+                <button onclick="clearAndParse()" title="清除輸入並貼上剪貼簿內容，然後自動整理" class="advanced-button">
+                    <i class="fas fa-paste"></i> 貼上+整理
+                </button>
+                <button onclick="parseReport()" title="解析報告並整理微生物及趨勢圖">
+                    <i class="fas fa-magic"></i> 整理資料
+                </button>
+                <button onclick="parseAndCopy()" title="整理報告並複製到剪貼簿">
+                    <i class="fas fa-copy"></i> 整理+複製
+                </button>
+                <button onclick="letCopy()" title="複製文字報告到剪貼簿">
+                    <i class="far fa-copy"></i> 複製
+                </button>
+                <button onclick="toggleOrder()" title="上下反轉文字報告順序">
+                    <i class="fas fa-arrow-down-up-across-line"></i> 順序對調
+                </button>
+                <button onclick="clearInput()" title="清除輸入內容">
+                    <i class="fas fa-eraser"></i> 清除內容
+                </button>
+                <button onclick="resetAll()" title="重置所有數據和顯示" class="danger-button">
+                    <i class="fas fa-trash-alt"></i> 重置全部
+                </button>
+            </div>
             
-            <div id="antibioticResults"></div>
+            <!-- 輸入區控制 -->
+            <div class="input-controls">
+                <button class="toggle-input-btn" onclick="toggleInputArea()">
+                    <i class="fas fa-keyboard"></i> 顯示輸入區
+                </button>
+            </div>
+        </div>
+        
+        <!-- 主要內容區 -->
+        <div class="main-content">
+            <!-- 輸入區域 -->
+            <div class="input-area" id="inputAreaContainer">
+                <textarea id="inputReport" placeholder="請貼上原始報告"></textarea>
+            </div>
+            
+            <!-- 標籤頁內容 -->
+            <div id="textTab" class="tab-content active">
+                <pre id="output"></pre>
+            </div>
+            
+            <div id="chartTab" class="tab-content">
+                <div class="micro-marker-legend">
+                    <span class="micro-marker-dot"></span> 標記表示此日期有微生物檢測結果，將滑鼠移到標記上可查看詳細資訊
+                </div>
+                <div id="chartContainer"></div>
+            </div>
+            
+            <div id="microTab" class="tab-content">
+                <div id="microbiologyResults" style="font-size: 16px; line-height: 1.5;"></div>
+            </div>
+            
+            <div id="sensitivityTab" class="tab-content">
+                <div class="sensitivity-analysis">
+                    <h3>抗生素敏感性分析</h3>
+                    <div class="organism-selector" id="organismSelector"></div>
+                    <div id="antibioticResults"></div>
+                </div>
+            </div>
+            
+            <div id="summaryTab" class="tab-content">
+                <div id="summaryControls"></div>
+                <div id="summaryTableContainer"></div>
+            </div>
         </div>
     </div>
+
 <script>
+// 輸入區域的切換
+function toggleInputArea() {
+    const inputArea = document.getElementById('inputAreaContainer');
+    const toggleBtn = document.querySelector('.toggle-input-btn');
+    
+    if (inputArea.style.display === 'none' || !inputArea.style.display) {
+        inputArea.style.display = 'block';
+        toggleBtn.innerHTML = '<i class="fas fa-keyboard"></i> 隱藏輸入區';
+    } else {
+        inputArea.style.display = 'none';
+        toggleBtn.innerHTML = '<i class="fas fa-keyboard"></i> 顯示輸入區';
+    }
+}
+
+// 頁籤切換的新函數
+function openTab(evt, tabName) {
+    // 隱藏所有頁籤內容
+    const tabContents = document.getElementsByClassName("tab-content");
+    for (let i = 0; i < tabContents.length; i++) {
+        tabContents[i].classList.remove("active");
+    }
+    
+    // 取消所有頁籤按鈕的活動狀態
+    const tabButtons = document.getElementsByClassName("tab-button");
+    for (let i = 0; i < tabButtons.length; i++) {
+        tabButtons[i].classList.remove("active");
+    }
+    
+    // 顯示當前頁籤內容並將按鈕設為活動狀態
+    document.getElementById(tabName).classList.add("active");
+    evt.currentTarget.classList.add("active");
+    
+    // 如果切換到圖表頁籤，確保圖表正確顯示
+    if (tabName === 'chartTab' && labData.length > 0) {
+        setTimeout(() => {
+            // 防止圖表放大問題 - 先不觸發resize事件
+            const charts = document.querySelectorAll('#chartContainer canvas');
+            charts.forEach(canvas => {
+                const chart = Chart.getChart(canvas);
+                if (chart) {
+                    // 取消圖表的響應式設計，僅在此處理一次大小
+                    chart.options.responsive = false;
+                    chart.resize();
+                    // 重新啟用響應式設計
+                    chart.options.responsive = true;
+                }
+            });
+        }, 10);
+    }
+    
+    // 如果切換到表格頁籤且尚未初始化，進行初始化
+    if (tabName === 'summaryTab' && labData.length > 0) {
+        const summaryControls = document.getElementById('summaryControls');
+        if (!summaryControls.innerHTML.trim()) {
+            initSummaryTab();
+        }
+    }
+}
+
+// 顯示通知函數
+function showNotification(message, isError = false) {
+    // 移除舊通知
+    const oldToast = document.querySelector('.toast-notification');
+    if (oldToast) {
+        oldToast.remove();
+    }
+    
+    // 創建新通知
+    const toast = document.createElement('div');
+    toast.className = 'toast-notification' + (isError ? ' error' : '');
+    toast.textContent = message;
+    
+    // 添加到頁面
+    document.body.appendChild(toast);
+    
+    // 觸發動畫
+    setTimeout(() => {
+        toast.classList.add('show');
+    }, 10);
+    
+    // 2秒後消失
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => {
+            toast.remove();
+        }, 300);
+    }, 2000);
+}
+
+// 頁面載入完成後執行
+document.addEventListener('DOMContentLoaded', function() {
+    // 檢查本地存儲中是否有輸入區可見性設置
+    const inputAreaVisible = localStorage.getItem('inputAreaVisible') === 'true';
+    const inputArea = document.getElementById('inputAreaContainer');
+    const toggleBtn = document.querySelector('.toggle-input-btn');
+    
+    if (inputAreaVisible) {
+        inputArea.style.display = 'block';
+        toggleBtn.innerHTML = '<i class="fas fa-keyboard"></i> 隱藏輸入區';
+    } else {
+        inputArea.style.display = 'none';
+        toggleBtn.innerHTML = '<i class="fas fa-keyboard"></i> 顯示輸入區';
+    }
+    
+    // 添加輸入框可見性設置存儲功能
+    const originalToggleInputArea = toggleInputArea;
+    window.toggleInputArea = function() {
+        originalToggleInputArea();
+        
+        // 存儲設置到本地存儲
+        const isVisible = document.getElementById('inputAreaContainer').style.display === 'block';
+        localStorage.setItem('inputAreaVisible', isVisible);
+    };
+    
+    // 檢查手機模式
+    checkMobileMode();
+    
+    // 窗口大小改變時檢查手機模式
+    window.addEventListener('resize', checkMobileMode);
+});
+
+// 檢查是否應切換到手機模式
+function checkMobileMode() {
+    const appContainer = document.querySelector('.app-container');
+    if (window.innerWidth <= 768 && !appContainer.classList.contains('mobile-mode')) {
+        appContainer.classList.add('mobile-mode');
+        // 在手機模式下可能需要執行特定操作
+    } else if (window.innerWidth > 768 && appContainer.classList.contains('mobile-mode')) {
+        appContainer.classList.remove('mobile-mode');
+        // 切換回桌面模式時的操作
+    }
+}
+
+// 修改部分原始函數以添加通知
+// 注意：這些修改需要在原始函數定義之後執行
+function enhanceOriginalFunctions() {
+    if (typeof window.letCopy === 'function') {
+        const originalLetCopy = window.letCopy;
+        window.letCopy = async function() {
+            try {
+                await originalLetCopy();
+                showNotification('文字已成功複製到剪貼簿！');
+            } catch (err) {
+                showNotification('複製失敗：' + err.message, true);
+                console.error('複製失敗:', err);
+            }
+        };
+    }
+    
+    if (typeof window.parseAndCopy === 'function') {
+        const originalParseAndCopy = window.parseAndCopy;
+        window.parseAndCopy = async function() {
+            try {
+                await originalParseAndCopy();
+                showNotification('解析結果已複製到剪貼簿！');
+            } catch (err) {
+                showNotification('複製失敗：' + err.message, true);
+                console.error('複製失敗:', err);
+            }
+        };
+    }
+    
+    if (typeof window.clearAndParse === 'function') {
+        const originalClearAndParse = window.clearAndParse;
+        window.clearAndParse = async function() {
+            try {
+                await originalClearAndParse();
+                showNotification('剪貼簿內容已成功貼上並解析！');
+            } catch (err) {
+                showNotification('操作失敗：' + err.message, true);
+                console.error('自動貼上失敗:', err);
+            }
+        };
+    }
+    
+    if (typeof window.resetAll === 'function') {
+        const originalResetAll = window.resetAll;
+        window.resetAll = function() {
+            originalResetAll();
+            showNotification('所有數據已重置！');
+        };
+    }
+}
+
+// 在頁面載入後執行增強函數
+window.addEventListener('load', function() {
+    // 確保原始函數都已載入後再增強它們
+    setTimeout(enhanceOriginalFunctions, 100);
+});
+
+// 下面是原本橫式布局的邏輯代碼
 
 // Original JavaScript preserved
 let originalOutput = "";
@@ -614,6 +1026,7 @@ function clearInput () {
 }
 
 // 重置所有狀態
+// Update the resetAll function
 function resetAll() {
     // 清空輸入框
     document.getElementById("inputReport").value = "";
@@ -630,6 +1043,12 @@ function resetAll() {
     // 清空藥敏測試結果
     document.getElementById("antibioticResults").innerHTML = "<p>無藥敏測試結果</p>";
     document.getElementById("organismSelector").innerHTML = "";
+    
+    // 清空摘要表格
+    const summaryControls = document.getElementById('summaryControls');
+    const summaryTableContainer = document.getElementById('summaryTableContainer');
+    if (summaryControls) summaryControls.innerHTML = '';
+    if (summaryTableContainer) summaryTableContainer.innerHTML = '<p style="text-align: center; padding: 20px;">請在上方選擇檢驗項目並點擊「更新表格」按鈕</p>';
     
     // 重置數據
     labData = [];
@@ -661,6 +1080,7 @@ function resetAll() {
         document.body.removeChild(notification);
     }, 2000);
 }
+
 // 清理數值, 考慮原始資料有大於小於特定數值的極端值
 function cleanValue(testCode, value) {
     // 移除括號中的內容
@@ -1435,6 +1855,9 @@ function parseReport() {
     generateMicrobiologyResults();
     generateSensitivityAnalysis();
     
+    // Initialize the summary tab
+    initSummaryTab();
+    
     // 自動切換到藥敏標籤頁
     if (allAntibioticResults.length > 0) {
         openTab({ currentTarget: document.querySelector('.tab-button[onclick*="sensitivityTab"]') }, 'sensitivityTab');
@@ -1442,6 +1865,36 @@ function parseReport() {
     // 如果沒有藥敏結果但有微生物結果，則切換到微生物標籤頁
     else if (extractMicrobiologyData(text).length > 0) {
         openTab({ currentTarget: document.querySelector('.tab-button[onclick*="microTab"]') }, 'microTab');
+    }
+}
+
+// 複製按鈕
+async function letCopy() {
+    try {
+        // 獲取輸出區域的文本
+        const outputText = document.getElementById("output").textContent;
+        
+        // 檢查是否有內容可複製
+        if (!outputText.trim()) {
+            alert("目前沒有內容可複製！");
+            return;
+        }
+        
+        // 複製到剪貼板
+        await navigator.clipboard.writeText(outputText);
+        
+        // 提供成功反饋
+        const outputElement = document.getElementById("output");
+        const originalBg = outputElement.style.backgroundColor;
+        outputElement.style.backgroundColor = "#e8f5e9"; // 淡綠色閃爍
+        setTimeout(() => {
+            outputElement.style.backgroundColor = originalBg;
+        }, 500);
+        
+        alert("文字已複製到剪貼簿！");
+    } catch (err) {
+        alert("複製失敗，請手動複製結果。");
+        console.error('複製失敗:', err);
     }
 }
 
@@ -1458,6 +1911,10 @@ async function parseAndCopy() {
         generateCharts();
         generateMicrobiologyResults();
         generateSensitivityAnalysis();
+        
+        // Initialize the summary tab
+        initSummaryTab();
+        
         alert("解析結果已複製到剪貼簿！");
         
         // 自動切換到藥敏標籤頁
@@ -3610,6 +4067,358 @@ function getBaseDrugName(drug) {
 
 // 在頁面加載時初始化
 initSensitivityTab();
+
+// Initialize the summary tab
+function initSummaryTab() {
+    const summaryControls = document.getElementById('summaryControls');
+    const summaryTableContainer = document.getElementById('summaryTableContainer');
+    
+    // Clear previous content
+    summaryControls.innerHTML = '';
+    summaryTableContainer.innerHTML = '';
+    
+    // Create control panel
+    const controlPanel = document.createElement('div');
+    controlPanel.className = 'summary-control-panel';
+    controlPanel.style.padding = '10px';
+    controlPanel.style.backgroundColor = '#f8f9fa';
+    controlPanel.style.borderRadius = '8px';
+    controlPanel.style.marginBottom = '15px';
+    
+    // Create item selection
+    const itemSelection = document.createElement('div');
+    itemSelection.className = 'item-selection';
+    itemSelection.style.marginBottom = '15px';
+    
+    // Create test item selector label
+    const itemLabel = document.createElement('label');
+    itemLabel.textContent = '選擇檢驗項目: ';
+    itemLabel.style.marginRight = '10px';
+    itemLabel.style.fontWeight = 'bold';
+    
+    // Create multiselect dropdown
+    const itemSelect = document.createElement('select');
+    itemSelect.id = 'itemSelect';
+    itemSelect.multiple = true;
+    itemSelect.size = 5;
+    itemSelect.style.minWidth = '200px';
+    itemSelect.style.marginRight = '15px';
+    
+    // Get all unique test items from labData
+    const allTests = [...new Set(labData.map(item => item.test))];
+    
+    // Sort items: monitored items first, then alphabetically
+    allTests.sort((a, b) => {
+        const aMonitored = monitoredLabs.includes(a);
+        const bMonitored = monitoredLabs.includes(b);
+        
+        if (aMonitored && !bMonitored) return -1;
+        if (!aMonitored && bMonitored) return 1;
+        
+        // For monitored items, keep original order
+        if (aMonitored && bMonitored) {
+            return monitoredLabs.indexOf(a) - monitoredLabs.indexOf(b);
+        }
+        
+        // Alphabetical order for others
+        return a.localeCompare(b);
+    });
+    
+    // Add options to select
+    allTests.forEach(test => {
+        const option = document.createElement('option');
+        option.value = test;
+        option.textContent = test;
+        // Pre-select monitored items
+        if (monitoredLabs.includes(test)) {
+            option.selected = true;
+        }
+        itemSelect.appendChild(option);
+    });
+    
+    // Create buttons for selection control
+    const buttonContainer = document.createElement('div');
+    buttonContainer.style.display = 'inline-block';
+    buttonContainer.style.verticalAlign = 'top';
+    
+    const selectAllBtn = document.createElement('button');
+    selectAllBtn.textContent = '全選';
+    selectAllBtn.style.display = 'block';
+    selectAllBtn.style.margin = '0 0 5px 0';
+    selectAllBtn.style.padding = '5px 10px';
+    selectAllBtn.style.backgroundColor = '#4CAF50';
+    selectAllBtn.style.color = 'white';
+    selectAllBtn.style.border = 'none';
+    selectAllBtn.style.borderRadius = '4px';
+    selectAllBtn.style.cursor = 'pointer';
+    selectAllBtn.onclick = function() {
+        Array.from(itemSelect.options).forEach(opt => opt.selected = true);
+    };
+    
+    const deselectAllBtn = document.createElement('button');
+    deselectAllBtn.textContent = '取消全選';
+    deselectAllBtn.style.display = 'block';
+    deselectAllBtn.style.margin = '0 0 5px 0';
+    deselectAllBtn.style.padding = '5px 10px';
+    deselectAllBtn.style.backgroundColor = '#f44336';
+    deselectAllBtn.style.color = 'white';
+    deselectAllBtn.style.border = 'none';
+    deselectAllBtn.style.borderRadius = '4px';
+    deselectAllBtn.style.cursor = 'pointer';
+    deselectAllBtn.onclick = function() {
+        Array.from(itemSelect.options).forEach(opt => opt.selected = false);
+    };
+    
+    const monitoredOnlyBtn = document.createElement('button');
+    monitoredOnlyBtn.textContent = '僅選監控項目';
+    monitoredOnlyBtn.style.display = 'block';
+    monitoredOnlyBtn.style.margin = '0 0 5px 0';
+    monitoredOnlyBtn.style.padding = '5px 10px';
+    monitoredOnlyBtn.style.backgroundColor = '#2196F3';
+    monitoredOnlyBtn.style.color = 'white';
+    monitoredOnlyBtn.style.border = 'none';
+    monitoredOnlyBtn.style.borderRadius = '4px';
+    monitoredOnlyBtn.style.cursor = 'pointer';
+    monitoredOnlyBtn.onclick = function() {
+        Array.from(itemSelect.options).forEach(opt => {
+            opt.selected = monitoredLabs.includes(opt.value);
+        });
+    };
+    
+    buttonContainer.appendChild(selectAllBtn);
+    buttonContainer.appendChild(deselectAllBtn);
+    buttonContainer.appendChild(monitoredOnlyBtn);
+    
+    // Create refresh button
+    const refreshBtn = document.createElement('button');
+    refreshBtn.id = 'refreshSummary';
+    refreshBtn.textContent = '更新表格';
+    refreshBtn.style.display = 'block';
+    refreshBtn.style.margin = '10px 0';
+    refreshBtn.style.padding = '8px 16px';
+    refreshBtn.style.backgroundColor = '#007bff';
+    refreshBtn.style.color = 'white';
+    refreshBtn.style.border = 'none';
+    refreshBtn.style.borderRadius = '4px';
+    refreshBtn.style.cursor = 'pointer';
+    refreshBtn.style.fontWeight = 'bold';
+    refreshBtn.onclick = function() {
+        generateSummaryTable();
+    };
+    
+    // Assemble the selection controls
+    itemSelection.appendChild(itemLabel);
+    itemSelection.appendChild(itemSelect);
+    itemSelection.appendChild(buttonContainer);
+    
+    controlPanel.appendChild(itemSelection);
+    controlPanel.appendChild(refreshBtn);
+    
+    summaryControls.appendChild(controlPanel);
+    
+    // Add initial empty table message
+    summaryTableContainer.innerHTML = '<p style="text-align: center; padding: 20px;">請在上方選擇檢驗項目並點擊「更新表格」按鈕</p>';
+}
+
+// Generate the summary table based on selected items
+function generateSummaryTable() {
+    const summaryTableContainer = document.getElementById('summaryTableContainer');
+    const itemSelect = document.getElementById('itemSelect');
+    
+    // Get selected tests
+    const selectedTests = Array.from(itemSelect.selectedOptions).map(opt => opt.value);
+    
+    if (selectedTests.length === 0) {
+        summaryTableContainer.innerHTML = '<p style="text-align: center; padding: 20px; color: #f44336;">請至少選擇一個檢驗項目</p>';
+        return;
+    }
+    
+    // Filter labData for selected tests
+    const filteredData = labData.filter(item => selectedTests.includes(item.test));
+    
+    if (filteredData.length === 0) {
+        summaryTableContainer.innerHTML = '<p style="text-align: center; padding: 20px; color: #f44336;">所選項目沒有任何數據</p>';
+        return;
+    }
+    
+    // Group data by date
+    const groupedByDate = {};
+    filteredData.forEach(item => {
+        // Create a key using date and time (if available)
+        const timeStr = item.time ? ` ${item.time}` : '';
+        const dateTimeKey = `${item.date}${timeStr}`;
+        
+        if (!groupedByDate[dateTimeKey]) {
+            groupedByDate[dateTimeKey] = {
+                date: item.date,
+                time: item.time || '',
+                shortDate: item.shortDate,
+                tests: {}
+            };
+        }
+        
+        // Store test value using the test name as key
+        groupedByDate[dateTimeKey].tests[item.test] = {
+            value: item.value,
+            rawValue: item.rawValue
+        };
+    });
+    
+    // Convert to array and sort by date and time (newest first)
+    const sortedDates = Object.values(groupedByDate).sort((a, b) => {
+        // Convert to comparable datetime strings
+        const dateTimeA = `${a.date} ${a.time || '00:00'}`;
+        const dateTimeB = `${b.date} ${b.time || '00:00'}`;
+        
+        // Descending order (newest first)
+        return new Date(dateTimeB) - new Date(dateTimeA);
+    });
+    
+    // Create table
+    const table = document.createElement('table');
+    table.className = 'summary-table';
+    table.style.width = '100%';
+    table.style.borderCollapse = 'collapse';
+    table.style.marginBottom = '20px';
+    
+    // Create header
+    const thead = document.createElement('thead');
+    const headerRow = document.createElement('tr');
+    
+    // Date and time header
+    const dateHeader = document.createElement('th');
+    dateHeader.textContent = '日期時間';
+    dateHeader.style.padding = '10px';
+    dateHeader.style.backgroundColor = '#f1f1f1';
+    dateHeader.style.border = '1px solid #ddd';
+    dateHeader.style.position = 'sticky';
+    dateHeader.style.left = '0';
+    dateHeader.style.zIndex = '1';
+    headerRow.appendChild(dateHeader);
+    
+    // Test columns
+    selectedTests.forEach(test => {
+        const th = document.createElement('th');
+        th.textContent = `${test} (${getUnitForTest(test)})`;
+        th.style.padding = '10px';
+        th.style.backgroundColor = '#f1f1f1';
+        th.style.border = '1px solid #ddd';
+        th.setAttribute('data-test', test);
+        headerRow.appendChild(th);
+    });
+    
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
+    
+    // Create body
+    const tbody = document.createElement('tbody');
+    
+    // For each date, create a row
+    sortedDates.forEach(dateData => {
+        const row = document.createElement('tr');
+        
+        // Date cell
+        const dateCell = document.createElement('td');
+        dateCell.style.padding = '8px';
+        dateCell.style.border = '1px solid #ddd';
+        dateCell.style.backgroundColor = '#fff';
+        dateCell.style.position = 'sticky';
+        dateCell.style.left = '0';
+        dateCell.style.fontWeight = 'bold';
+        
+        // Format the date display
+        const timeStr = dateData.time ? ` ${dateData.time}` : '';
+        dateCell.textContent = `${dateData.date}${timeStr}`;
+        
+        row.appendChild(dateCell);
+        
+        // For each test, add a cell
+        selectedTests.forEach(test => {
+            const cell = document.createElement('td');
+            cell.style.padding = '8px';
+            cell.style.border = '1px solid #ddd';
+            cell.style.textAlign = 'center';
+            
+            if (dateData.tests[test]) {
+                // Use raw value for display
+                cell.textContent = dateData.tests[test].rawValue;
+                
+                // Add color highlighting for abnormal values
+                const value = dateData.tests[test].rawValue;
+                if (value.includes('H') || value.includes('>')) {
+                    cell.style.color = '#d32f2f';
+                    cell.style.fontWeight = 'bold';
+                } else if (value.includes('L') || value.includes('<')) {
+                    cell.style.color = '#1976d2';
+                    cell.style.fontWeight = 'bold';
+                }
+            } else {
+                cell.textContent = '-';
+                cell.style.color = '#999';
+            }
+            
+            row.appendChild(cell);
+        });
+        
+        tbody.appendChild(row);
+    });
+    
+    table.appendChild(tbody);
+    
+    // Clear and add the table
+    summaryTableContainer.innerHTML = '';
+    
+    // Add table info
+    const tableInfo = document.createElement('div');
+    tableInfo.style.marginBottom = '10px';
+    tableInfo.style.fontSize = '14px';
+    tableInfo.style.color = '#555';
+    tableInfo.innerHTML = `
+        <span>共有 ${sortedDates.length} 個檢測日期時間點，${selectedTests.length} 個檢驗項目</span>
+        <span style="float: right; color: #777;">表格可左右滾動查看更多項目 →</span>
+    `;
+    
+    summaryTableContainer.appendChild(tableInfo);
+    
+    // Create a scrollable container for the table
+    const tableScroller = document.createElement('div');
+    tableScroller.style.width = '100%';
+    tableScroller.style.overflowX = 'auto';
+    tableScroller.appendChild(table);
+    
+    summaryTableContainer.appendChild(tableScroller);
+}
+
+// Helper function to get unit for a test
+function getUnitForTest(test) {
+    const unitMap = {
+        'WBC': '1000/uL',
+        'RBC': 'million/uL',
+        'Hemoglobin': 'g/dL',
+        'Hb': 'g/dL',
+        'Hematocrit': '%',
+        'Plt': '1000/uL',
+        'Platelets': '1000/uL',
+        'Cr': 'mg/dL',
+        'Na': 'mEq/L',
+        'K': 'mEq/L',
+        'CRP': 'mg/dL',
+        'AST': 'U/L',
+        'ALT': 'U/L',
+        'Bil-T': 'mg/dL',
+        'Segment': '%',
+        'Lymphocyte': '%',
+        'P.T': 'sec',
+        'APTT': 'sec',
+        'INR': '',
+        'MPV': 'fL',
+        'MCHC': 'g/dL',
+        'MCH': 'pg',
+        'MCV': 'fL'
+    };
+    
+    return unitMap[test] || '';
+}
 
 // 添加到解析報告按鈕的點擊事件
 const originalParseReport = parseReport;
@@ -5840,8 +6649,15 @@ function openTab(evt, tabName) {
             window.dispatchEvent(new Event('resize'));
         }, 10);
     }
+    
+    // 如果切換到表格頁籤且尚未初始化，進行初始化
+    if (tabName === 'summaryTab' && labData.length > 0) {
+        const summaryControls = document.getElementById('summaryControls');
+        if (!summaryControls.innerHTML.trim()) {
+            initSummaryTab();
+        }
+    }
 }
-
 // 輔助函數：將時間字符串轉換為小數值以便比較
 // 例如："13:45" -> 13.75
 function convertTimeToDecimal(timeStr) {
@@ -6308,6 +7124,445 @@ document.addEventListener('DOMContentLoaded', function() {
         window.timeRangeInitialized = true;
     }
 });
+
+// 添加高級排序切換按鈕
+function addAdvancedSortButton() {
+    // 檢查是否已經添加過按鈕
+    if (document.getElementById('advancedSort')) {
+        return;
+    }
+    
+    // 創建新按鈕
+    const sortButton = document.createElement('button');
+    sortButton.id = 'advancedSort';
+    sortButton.innerHTML = '切換排序 <span id="sortModeIcon">T↑</span>';
+    sortButton.title = '切換排序模式 (時間升序/時間降序/項目升序/項目降序)';
+    
+    // 套用與其他按鈕一致的樣式
+    sortButton.style.marginRight = '10px';
+    sortButton.style.padding = '10px 20px';
+    sortButton.style.cursor = 'pointer';
+    sortButton.style.backgroundColor = '#4CAF50'; // 初始為綠色
+    sortButton.style.color = 'white';
+    sortButton.style.border = 'none';
+    sortButton.style.borderRadius = '4px';
+    
+    // 添加懸停效果
+    sortButton.onmouseover = function() {
+        this.style.backgroundColor = '#45a049';
+    };
+    sortButton.onmouseout = function() {
+        // 根據當前模式設置顏色
+        const mode = parseInt(this.getAttribute('data-mode') || '1');
+        switch(mode) {
+            case 1: this.style.backgroundColor = '#4CAF50'; break; // 時間升序
+            case 2: this.style.backgroundColor = '#2196F3'; break; // 時間降序
+            case 3: this.style.backgroundColor = '#FF9800'; break; // 項目升序
+            case 4: this.style.backgroundColor = '#9C27B0'; break; // 項目降序
+        }
+    };
+    
+    // 設置初始排序模式（1: 時間升序）
+    sortButton.setAttribute('data-mode', '1');
+    
+    // 添加點擊事件
+    sortButton.onclick = function() {
+        advancedSortText(this);
+    };
+    
+    // 將按鈕插入到現有的按鈕容器中
+    const buttonContainer = document.querySelector('.button-container');
+    if (buttonContainer) {
+        // 尋找「上下對調」按鈕位置，插在它之後
+        const toggleOrderButton = document.querySelector('button[onclick="toggleOrder()"]');
+        if (toggleOrderButton) {
+            buttonContainer.insertBefore(sortButton, toggleOrderButton.nextSibling);
+        } else {
+            // 如果找不到特定按鈕，添加到容器末尾
+            buttonContainer.appendChild(sortButton);
+        }
+    }
+}
+
+// 高級排序函數
+function advancedSortText(button) {
+    const outputElement = document.getElementById('output');
+    if (!outputElement || !outputElement.textContent.trim()) {
+        return; // 如果沒有文字內容，不執行任何操作
+    }
+    
+    // 獲取當前顯示的文字內容
+    const textContent = outputElement.textContent;
+    
+    // 按行分割
+    let lines = textContent.split('\n').filter(line => line.trim());
+    
+    // 獲取並更新當前模式
+    let currentMode = parseInt(button.getAttribute('data-mode') || '1');
+    let nextMode = (currentMode % 4) + 1;
+    button.setAttribute('data-mode', nextMode.toString());
+    
+    // 根據新模式更新圖標和顏色
+    const iconElement = document.getElementById('sortModeIcon');
+    switch(nextMode) {
+        case 1: // 時間升序
+            if (iconElement) iconElement.textContent = 'T↑';
+            button.title = '時間升序 - 點擊切換為時間降序';
+            button.style.backgroundColor = '#4CAF50'; // 綠色
+            break;
+        case 2: // 時間降序
+            if (iconElement) iconElement.textContent = 'T↓';
+            button.title = '時間降序 - 點擊切換為項目升序';
+            button.style.backgroundColor = '#2196F3'; // 藍色
+            break;
+        case 3: // 項目升序
+            if (iconElement) iconElement.textContent = 'I↑';
+            button.title = '項目升序 - 點擊切換為項目降序';
+            button.style.backgroundColor = '#FF9800'; // 橙色
+            break;
+        case 4: // 項目降序
+            if (iconElement) iconElement.textContent = 'I↓';
+            button.title = '項目降序 - 點擊切換為時間升序';
+            button.style.backgroundColor = '#9C27B0'; // 紫色
+            break;
+    }
+    
+    // 應用排序邏輯
+    lines = sortLines(lines, nextMode);
+    
+    // 更新顯示內容
+    outputElement.textContent = lines.join('\n');
+    
+    // 添加視覺反饋
+    const originalColor = button.style.backgroundColor;
+    button.style.animation = 'pulse 0.3s';
+    setTimeout(() => {
+        button.style.animation = '';
+    }, 300);
+    
+    // 添加一個簡短的提示顯示當前排序模式
+    showSortNotification(nextMode);
+}
+
+// 根據模式對行進行排序
+function sortLines(lines, mode) {
+    // 確保傳入的是有效數據
+    if (!Array.isArray(lines) || lines.length === 0) return lines;
+    
+    // 嘗試檢測行的格式
+    const hasCorrectFormat = lines.some(line => {
+        // 檢查是否符合「XX-XX 項目名」的格式 (如 "01-03 WBC 10.5")
+        return /^\d{2}-\d{2}\s+.+/.test(line.trim());
+    });
+    
+    // 如果沒有正確的格式，返回原始行
+    if (!hasCorrectFormat) return lines;
+    
+    // 定義排序函數
+    return lines.sort((a, b) => {
+        // 提取日期部分 (前5個字符，形如 "01-03")
+        const dateA = a.substring(0, 5);
+        const dateB = b.substring(0, 5);
+        
+        // 提取項目名稱部分 (第7個字符之後)
+        const itemA = a.substring(6).trim();
+        const itemB = b.substring(6).trim();
+        
+        // 根據模式應用不同的排序邏輯
+        switch(mode) {
+            case 1: // 時間升序：先按日期升序排，日期相同則按項目名稱升序排
+                return dateA === dateB ? itemA.localeCompare(itemB) : dateA.localeCompare(dateB);
+                
+            case 2: // 時間降序：先按日期降序排，日期相同則按項目名稱升序排
+                return dateA === dateB ? itemA.localeCompare(itemB) : dateB.localeCompare(dateA);
+                
+            case 3: // 項目升序：先按項目名稱升序排，項目名稱相同則按日期升序排
+                return itemA === itemB ? dateA.localeCompare(dateB) : itemA.localeCompare(itemB);
+                
+            case 4: // 項目降序：先按項目名稱降序排，項目名稱相同則按日期升序排
+                return itemA === itemB ? dateA.localeCompare(dateB) : itemB.localeCompare(itemA);
+                
+            default: // 默認時間升序
+                return dateA === dateB ? itemA.localeCompare(itemB) : dateA.localeCompare(dateB);
+        }
+    });
+}
+
+// 顯示排序模式提示
+function showSortNotification(mode) {
+    // 移除現有提示（如果有）
+    const existingNotification = document.getElementById('sortModeNotification');
+    if (existingNotification) {
+        existingNotification.remove();
+    }
+    
+    // 創建新提示
+    const notification = document.createElement('div');
+    notification.id = 'sortModeNotification';
+    notification.style.position = 'fixed';
+    notification.style.top = '20px';
+    notification.style.left = '50%';
+    notification.style.transform = 'translateX(-50%)';
+    notification.style.padding = '10px 15px';
+    notification.style.borderRadius = '5px';
+    notification.style.color = 'white';
+    notification.style.fontWeight = 'bold';
+    notification.style.zIndex = '9999';
+    notification.style.boxShadow = '0 2px 10px rgba(0,0,0,0.2)';
+    notification.style.transition = 'opacity 0.3s';
+    
+    // 根據模式設置提示內容和樣式
+    switch(mode) {
+        case 1:
+            notification.textContent = '排序模式：時間升序（先按日期，再按項目名）';
+            notification.style.backgroundColor = '#4CAF50';
+            break;
+        case 2:
+            notification.textContent = '排序模式：時間降序（先按日期，再按項目名）';
+            notification.style.backgroundColor = '#2196F3';
+            break;
+        case 3:
+            notification.textContent = '排序模式：項目升序（先按項目名，再按日期）';
+            notification.style.backgroundColor = '#FF9800';
+            break;
+        case 4:
+            notification.textContent = '排序模式：項目降序（先按項目名，再按日期）';
+            notification.style.backgroundColor = '#9C27B0';
+            break;
+    }
+    
+    // 添加到頁面
+    document.body.appendChild(notification);
+    
+    // 2秒後淡出
+    setTimeout(() => {
+        notification.style.opacity = '0';
+        // 動畫結束後移除元素
+        setTimeout(() => notification.remove(), 300);
+    }, 2000);
+}
+
+// 確保在HTML結構準備好後添加按鈕
+function ensureSortButtonAdded() {
+    if (document.querySelector('.button-container') && !document.getElementById('advancedSort')) {
+        addAdvancedSortButton();
+    }
+}
+
+// 在頁面載入完成後添加按鈕
+document.addEventListener('DOMContentLoaded', function() {
+    ensureSortButtonAdded();
+    
+    // 監視DOM變化，確保按鈕始終存在
+    const observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+                ensureSortButtonAdded();
+            }
+        });
+    });
+    
+    // 配置觀察者
+    observer.observe(document.body, { childList: true, subtree: true });
+    
+    // 添加CSS動畫
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    `;
+    document.head.appendChild(style);
+});
+
+// 修改解析報告函數，確保按鈕在每次解析時都添加
+if (typeof window.parseReport === 'function') {
+    const originalParseReport = window.parseReport;
+    window.parseReport = function() {
+        originalParseReport.apply(this, arguments);
+        ensureSortButtonAdded();
+    };
+}
+
+if (typeof window.parseAndCopy === 'function') {
+    const originalParseAndCopy = window.parseAndCopy;
+    window.parseAndCopy = function() {
+        originalParseAndCopy.apply(this, arguments);
+        ensureSortButtonAdded();
+    };
+}
+
+if (typeof window.clearAndParse === 'function') {
+    const originalClearAndParse = window.clearAndParse;
+    window.clearAndParse = function() {
+        originalClearAndParse.apply(this, arguments);
+        ensureSortButtonAdded();
+    };
+}
+
+// 立即添加按鈕（適用於已載入的頁面）
+if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    setTimeout(function() {
+        ensureSortButtonAdded();
+    }, 100);
+}
+
+// Add to the existing <style> tag or create a new one
+function addSummaryTableStyles() {
+    const styleElement = document.createElement('style');
+    styleElement.textContent = `
+        .summary-table th, .summary-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        
+        .summary-table th {
+            background-color: #f1f1f1;
+            font-weight: bold;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+        
+        .summary-table th:first-child,
+        .summary-table td:first-child {
+            position: sticky;
+            left: 0;
+            z-index: 2;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+        }
+        
+        .summary-table th:first-child {
+            z-index: 3;
+        }
+        
+        .summary-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .summary-table tr:hover {
+            background-color: #f1f8e9;
+        }
+        
+        #summaryTableContainer {
+            margin-top: 15px;
+            overflow-x: auto;
+        }
+    `;
+    document.head.appendChild(styleElement);
+}
+
+// Call this function when the document is ready
+document.addEventListener('DOMContentLoaded', function() {
+    addSummaryTableStyles();
+});
+
+// 修改Tab顯示邏輯 - 水平顯示在右側頂部
+document.addEventListener('DOMContentLoaded', function() {
+    // 移動Tab按鈕到主內容區頂部
+    moveTabButtonsToTop();
+    
+    // 增強Tab按鈕
+    enhanceTabButtons();
+    
+    // 監聽窗口大小變化，響應式調整
+    window.addEventListener('resize', handleResponsiveLayout);
+    handleResponsiveLayout();
+});
+
+// 將Tab按鈕移動到主內容區頂部
+function moveTabButtonsToTop() {
+    // 獲取Tab按鈕容器
+    const tabButtonsContainer = document.querySelector('.tab-buttons');
+    
+    if (!tabButtonsContainer) return;
+    
+    // 從側邊欄中移除Tab按鈕容器
+    if (tabButtonsContainer.parentNode) {
+        tabButtonsContainer.parentNode.removeChild(tabButtonsContainer);
+    }
+    
+    // 獲取主內容區
+    const mainContent = document.querySelector('.main-content');
+    if (!mainContent) return;
+    
+    // 將Tab按鈕容器插入到主內容區的最前面
+    mainContent.insertBefore(tabButtonsContainer, mainContent.firstChild);
+    
+    // 設置 tab 按鈕容器為 sticky (在此直接添加功能)
+    tabButtonsContainer.style.position = 'sticky';
+    tabButtonsContainer.style.top = '0';
+    tabButtonsContainer.style.zIndex = '50';
+    tabButtonsContainer.style.width = '100%'; // 使用百分比寬度而非動態計算
+}
+
+// 增強Tab按鈕顯示
+function enhanceTabButtons() {
+    const tabButtons = document.querySelectorAll('.tab-button');
+    
+    tabButtons.forEach((button, index) => {
+        // 如果按鈕已經有icon則跳過
+        if (button.querySelector('i')) return;
+        
+        // 根據索引/內容添加適當的圖標
+        const iconClass = getIconClassForButton(button.textContent.trim() || index);
+        
+        // 創建圖標元素
+        const icon = document.createElement('i');
+        icon.className = iconClass;
+        
+        // 將圖標添加到按鈕開頭
+        if (button.firstChild) {
+            button.insertBefore(icon, button.firstChild);
+        } else {
+            button.appendChild(icon);
+        }
+    });
+}
+
+// 根據按鈕內容選擇合適的圖標
+function getIconClassForButton(btnText) {
+    // 預設圖標映射
+    const iconMap = {
+        '文字': 'fas fa-align-left',
+        '趨勢': 'fas fa-chart-line',
+        '微生物': 'fas fa-bacterium',
+        '藥敏': 'fas fa-tablets',
+        '表格': 'fas fa-table'
+    };
+    
+    return iconMap[btnText] || 'fas fa-circle'; // 默認圖標
+}
+
+// 處理響應式布局
+function handleResponsiveLayout() {
+    const isMobile = window.innerWidth <= 768;
+    const tabButtons = document.querySelector('.tab-buttons');
+    
+    if (!tabButtons) return;
+    
+    if (isMobile) {
+        // 移動設備顯示方式 - 更小的padding
+        tabButtons.style.padding = '5px';
+        
+        // 縮小Tab按鈕
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.style.padding = '8px 12px';
+            button.style.fontSize = '13px';
+        });
+    } else {
+        // 桌面顯示方式 - 正常大小
+        tabButtons.style.padding = '';
+        
+        // 恢復Tab按鈕
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.style.padding = '';
+            button.style.fontSize = '';
+        });
+    }
+}
 
 </script>
 </body>
