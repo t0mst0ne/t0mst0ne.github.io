@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EDSS 評估計算器</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft JhengHei', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .patient-info {
+            padding: 30px;
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .info-field {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .info-field label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #374151;
+        }
+
+        .info-field input {
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .info-field input:focus {
+            outline: none;
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 0;
+        }
+
+        .assessment-panel {
+            padding: 30px;
+        }
+
+        .results-panel {
+            background: #1f2937;
+            color: white;
+            padding: 30px;
+            position: sticky;
+            top: 0;
+            height: fit-content;
+        }
+
+        .function-system {
+            margin-bottom: 35px;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .function-system:hover {
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .system-header {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: white;
+            padding: 18px 25px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .system-content {
+            padding: 25px;
+            background: white;
+        }
+
+        .grade-option {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            padding: 15px;
+            border: 2px solid #f1f5f9;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .grade-option:hover {
+            border-color: #cbd5e1;
+            background: #f8fafc;
+        }
+
+        .grade-option.selected {
+            border-color: #4f46e5;
+            background: #eef2ff;
+        }
+
+        .grade-option input[type="radio"] {
+            margin-right: 15px;
+            transform: scale(1.2);
+            accent-color: #4f46e5;
+        }
+
+        .grade-label {
+            flex: 1;
+        }
+
+        .grade-number {
+            font-weight: 700;
+            color: #4f46e5;
+            font-size: 1.1rem;
+            margin-right: 10px;
+            min-width: 30px;
+        }
+
+        .grade-description {
+            color: #64748b;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-top: 5px;
+        }
+
+        .results-panel h2 {
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            text-align: center;
+            background: linear-gradient(135deg, #60a5fa, #34d399);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .score-display {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(5, 150, 105, 0.3);
+        }
+
+        .score-number {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .score-label {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .score-interpretation {
+            background: #374151;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        .interpretation-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #f3f4f6;
+        }
+
+        .interpretation-text {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: #d1d5db;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .report-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .report-modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .report-content {
+            background: white;
+            border-radius: 15px;
+            max-width: 800px;
+            max-height: 90vh;
+            width: 90%;
+            overflow-y: auto;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+            position: relative;
+        }
+
+        .report-header {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            padding: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 15px 15px 0 0;
+        }
+
+        .report-header h2 {
+            margin: 0;
+            font-size: 1.8rem;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background-color 0.3s ease;
+        }
+
+        .close-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .report-body {
+            padding: 30px;
+            line-height: 1.8;
+        }
+
+        .report-body h3 {
+            color: #4f46e5;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 8px;
+        }
+
+        .report-body h4 {
+            color: #6b7280;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .report-body ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .report-body li {
+            margin-bottom: 5px;
+        }
+
+        .report-actions {
+            padding: 20px 30px;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+        }
+
+        .edss-reference {
+            margin-top: 50px;
+            padding: 30px;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .edss-reference h3 {
+            color: #374151;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.5rem;
+        }
+
+        .reference-table {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .reference-table table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .reference-table th {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: white;
+            padding: 15px 12px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .reference-table td {
+            padding: 12px;
+            border-bottom: 1px solid #e5e7eb;
+            text-align: center;
+            vertical-align: top;
+        }
+
+        .reference-table tbody tr:hover {
+            background: #f1f5f9;
+        }
+
+        .score-range {
+            font-weight: 600;
+            color: #4f46e5;
+        }
+
+        .description {
+            text-align: left;
+            line-height: 1.5;
+        }
+
+        .btn {
+            padding: 15px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(79, 70, 229, 0.3);
+        }
+
+        .btn-secondary {
+            background: #6b7280;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #4b5563;
+            transform: translateY(-2px);
+        }
+
+        .visual-acuity-table {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            overflow-x: auto;
+        }
+
+        .visual-acuity-table table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .visual-acuity-table th,
+        .visual-acuity-table td {
+            padding: 8px;
+            border: 1px solid #e5e7eb;
+            text-align: center;
+        }
+
+        .visual-acuity-table th {
+            background: #e5e7eb;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .results-panel {
+                position: relative;
+                order: -1;
+            }
+            
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>EDSS 評估計算器</h1>
+            <p>庫茲克擴展失能狀態量表 (Kurtzke Expanded Disability Status Scale)</p>
+        </div>
+
+        <div class="patient-info">
+            <div class="info-grid">
+                <div class="info-field">
+                    <label for="hospital">醫院名稱</label>
+                    <input type="text" id="hospital" placeholder="請輸入醫院名稱">
+                </div>
+                <div class="info-field">
+                    <label for="doctor">主治醫生</label>
+                    <input type="text" id="doctor" placeholder="請輸入主治醫生姓名">
+                </div>
+                <div class="info-field">
+                    <label for="patient">病患姓名</label>
+                    <input type="text" id="patient" placeholder="請輸入病患姓名">
+                </div>
+                <div class="info-field">
+                    <label for="record">病歷號碼</label>
+                    <input type="text" id="record" placeholder="請輸入病歷號碼">
+                </div>
+                <div class="info-field">
+                    <label for="date">評估日期</label>
+                    <input type="date" id="date">
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="assessment-panel">
+                <div id="functionalSystems"></div>
+                
+                <!-- EDSS Reference Table -->
+                <div class="edss-reference">
+                    <h3>表三：EDSS 評量簡表</h3>
+                    <div class="reference-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>EDSS 分數</th>
+                                    <th>功能狀態描述</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="score-range">0</td>
+                                    <td class="description">神經功能檢查正常。所有功能評分均為 0 級；或大腦功能評分為第 1 級。</td>
+                                </tr>
+                                <tr>
+                                    <td class="score-range">1.0</td>
+                                    <td class="description">無失能情況。僅有一個系統功能評分為第 1 級。</td>
+                                </tr>
+                                <tr>
+                                    <td class="score-range">1.5</td>
+                                    <td class="description">無失能情況。兩個或兩個以上系統功能評分為第 1 級。</td>
+                                </tr>
+                                <tr>
+                                    <td class="score-range">2.0</td>
+                                    <td class="description">有一個系統功能發生輕微失能情況。即一個系統功能評分為第 2 級。其它系統功能評分為 0 或 1 級。</td>
+                                </tr>
+                                <tr>
+                                    <td class="score-range">2.5</td>
+                                    <td class="description">有二個系統功能發生輕微失能情況。即二個系統功能評分為第 2 級。其它系統功能評分為 0 或 1 級。</td>
+                                </tr>
+                                <tr>
+                                    <td class="score-range">3.0</td>
+                                    <td class="description">仍可自由活動。有一個系統功能發生中度失能情況。即一個系統功能評分為第 3 級，其它系統功能評分為 0 或 1 級；或有三到四個系統功能發生輕微失能情況，即評分第 2 級或 2 級以下。</td>
+                                </tr>
+                                <tr>
+                                    <td class="score-range">3.5</td>
+                                    <td class="description">仍可自由活動。有一個系統功能發生中度失能情況，即一個系統功能評分為第 3 級，且其它一到二個系統功能評分為 2 級；或有四個系統功能評分為 3 級；或有五個系統功能評分為 2 級，其他系統功能評分為 0 或 1 級。</td>
+                                </tr>
+                                <tr>
+                                    <td class="score-range">4.0</td>
+                                    <td class="description">在無輔具或休息的情況下可連續行走 500 公尺以上。但一天中有部分時間（約 12 小時不需輔助即能自由行動。雖有一個系統功能發生嚴重失能情況，即一個系統功能評分為第 4 級，其它系統功能評分為 0 或 1 級。</td>
+                                </tr>
+                                <tr>
+                                    <td class="score-range">4.5</td>
+                                    <td class="description">在無輔具或休息的情況下可連續行走 300 公尺以上。一天中有部分活動受到限制或需輔助，但大部分時間仍可以不需輔助即能自由活動。雖有一個系統功能發生嚴重失能情況，即一個系統功能評分為第 4 級，其它系統功能評分為 0 或 1 級。</td>
+                                </tr>
+                                <tr>
+                                    <td class="score-range">5.0</td>
+                                    <td class="description">在無輔具或休息的情況下可連續行走 200 公尺以上。失能已嚴重影響每日的活動。一般情況為一個系統功能評分為第 5 級，其它系統功能評分為 0 或 1 級。</td>
+                                </tr>
+                                <tr>
+                                    <td class="score-range">5.5</td>
+                                    <td class="description">在無輔具或休息的情況下可連續行走 100 公尺以上。運動失能的情況已嚴重影響每日的活動。一般情況為一個系統功能評分為第 5 級，其它系統功能評分為 0 或 1 級。</td>
+                                </tr>
+                                <tr>
+                                    <td class="score-range">6.0</td>
+                                    <td class="description">單側輔具（如手杖、拐杖摘壁等）才能行走 100 公尺以上。一般情況為兩個以上的系統功能評分為第 3 級。</td>
+                                </tr>
+                                <tr>
+                                    <td class="score-range">6.5</td>
+                                    <td class="description">雙側輔具（如手杖、拐杖摘壁等），可連續行走 20 公尺以上而不用休息。一般情況為兩個以上的系統功能評分為第 3 級。</td>
+                                </tr>
+                                <tr>
+                                    <td class="score-range">7.0</td>
+                                    <td class="description">在有輔具下仍無法行走 5 公尺，可自行操作輪椅，且會使用輪椅超過 12 小時。一般情況為有一個以上的系統功能評分為第 4 級。</td>
+                                </tr>
+                                <tr>
+                                    <td class="score-range">7.5</td>
+                                    <td class="description">無法自己行走，需依賴輪椅及他人幫助。一般情況為有一個以上的系統功能評分為第 4 級。</td>
+                                </tr>
+                                <tr>
+                                    <td class="score-range">8.0</td>
+                                    <td class="description">活動範圍限於床上、椅子或輪椅，但大部分時間不需臥床休息，通常手部切能正確保有自行穿脫能力。一般情況為有幾個以上的系統功能評分為第 4 級。</td>
+                                </tr>
+                                <tr>
+                                    <td class="score-range">8.5</td>
+                                    <td class="description">大部分時間活動範圍限於臥床，仍保有部許部及自我照顧的能力。一般情況為有數個系統功能評分為第 4 級。</td>
+                                </tr>
+                                <tr>
+                                    <td class="score-range">9.0</td>
+                                    <td class="description">終日臥床，但仍與人溝通、進食。一般情況為大部分的系統功能為第 4 級。</td>
+                                </tr>
+                                <tr>
+                                    <td class="score-range">9.5</td>
+                                    <td class="description">終日臥床，無法與人溝通、進食、吞嚥。大部分系統功能為第 4 級。</td>
+                                </tr>
+                                <tr>
+                                    <td class="score-range">10.0</td>
+                                    <td class="description">因 MS 疾病死亡。</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="results-panel">
+                <h2>評估結果</h2>
+                <div class="score-display">
+                    <div class="score-number" id="totalScore">0.0</div>
+                    <div class="score-label">EDSS 分數</div>
+                </div>
+                
+                <div class="score-interpretation">
+                    <div class="interpretation-title">分數解釋</div>
+                    <div class="interpretation-text" id="scoreInterpretation">
+                        請完成功能系統評估以查看結果
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="generateReport()">生成報告</button>
+                    <button class="btn btn-secondary" onclick="resetForm()">重置表單</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Report Modal -->
+    <div class="report-modal" id="reportModal">
+        <div class="report-content">
+            <div class="report-header">
+                <h2>EDSS 評估報告</h2>
+                <button class="close-btn" onclick="closeReport()">&times;</button>
+            </div>
+            <div class="report-body" id="reportBody">
+                <!-- Report content will be inserted here -->
+            </div>
+            <div class="report-actions">
+                <button class="btn btn-secondary" onclick="copyReport()">複製報告</button>
+                <button class="btn btn-primary" onclick="downloadReport()">下載報告</button>
+                <button class="btn btn-secondary" onclick="closeReport()">關閉</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const functionalSystems = [
+            {
+                name: "視覺功能",
+                options: [
+                    { grade: 0, description: "正常" },
+                    { grade: 1, description: "矯正後的視力（視覺敏銳度）於國際圖例中為（含）0.66 以上，但視野仍有盲點" },
+                    { grade: 2, description: "矯正後的視力（視覺敏銳度）在較差的眼睛於國際圖例中介於 0.66 與 0.33 之間，視野仍有盲點" },
+                    { grade: 3, description: "矯正後的視力（視覺敏銳度）在較差的眼睛於國際圖例中介於 0.33 與 0.2 之間，具有較大的視野盲點或中度視野缺陷" },
+                    { grade: 4, description: "矯正後的視力（視覺敏銳度）在較差的眼睛於國際圖例中介於 0.2 與 0.1 之間，具有明顯的視野缺陷；或低級數 3 加上較好的眼睛矯正後的視力（視覺敏銳度）於國際圖例中為（含）0.33，或更差" },
+                    { grade: 5, description: "矯正後的視力（視覺敏銳度）在較差的眼睛於國際圖例為 0.1 或更差；或低級數 4 加上較好的眼睛矯正後的視力（視覺敏銳度）於國際圖例中為（含）0.33，或更差" },
+                    { grade: 6, description: "評估級數 5 加上較好的眼睛矯正後的視力（視覺敏銳度）在國際圖例中為（含）0.33，或更差" }
+                ]
+            },
+            {
+                name: "感覺功能",
+                options: [
+                    { grade: 0, description: "正常" },
+                    { grade: 1, description: "單或雙肢體 振動或手掌書寫辨識 (figure writing) 或溫度感覺減低" },
+                    { grade: 2, description: "單或雙肢體 輕微觸、痛覺、關節姿態辨識減低；中度振動感覺減低；三、四肢體 輕度振動感覺或手掌書寫辨識或溫度感覺減低" },
+                    { grade: 3, description: "單或雙肢體 中度觸覺、痛覺、關節姿態辨識減低；或振動感覺喪失；三、四肢體 輕微觸覺、痛覺減低或中度本體感覺減低" },
+                    { grade: 4, description: "單或雙肢體 明顯觸覺、痛覺減低；大於二肢體 中度觸、痛覺減低或嚴重本體感覺減低" },
+                    { grade: 5, description: "單或雙肢體的關節姿態辨識喪失；頭部以下所有的觸覺或痛覺中度的減低或本體感覺喪失" },
+                    { grade: 6, description: "頭部以下之所有的基本感覺喪失" }
+                ]
+            },
+            {
+                name: "腦幹功能",
+                options: [
+                    { grade: 0, description: "正常" },
+                    { grade: 1, description: "僅只有異常徵象 (signs only)" },
+                    { grade: 2, description: "中度眼球震顫 或 其他腦幹項目機能失能" },
+                    { grade: 3, description: "嚴重眼球震顫、顯著外眼肌肌力 或 其他腦幹經項目中度失能" },
+                    { grade: 4, description: "顯著構音困難 或 其他腦幹項目顯著失能" },
+                    { grade: 5, description: "無法吞嚥或說話" }
+                ]
+            },
+            {
+                name: "大腦功能",
+                options: [
+                    { grade: 0, description: "正常" },
+                    { grade: 1, description: "只有情緒變化（憂鬱、欣快感），輕度疲憊" },
+                    { grade: 2, description: "精神功能輕微減落，中度或嚴重疲憊" },
+                    { grade: 3, description: "精神功能中度減落" },
+                    { grade: 4, description: "精神功能明顯減落 (慢性的中度腦神經症狀出現)" },
+                    { grade: 5, description: "失智" }
+                ]
+            },
+            {
+                name: "維體功能",
+                options: [
+                    { grade: 0, description: "正常" },
+                    { grade: 1, description: "僅只有異常徵象，但沒失能。輕微失能：患者執行動作費力或不精準 及/或 組或兩組肌群的肌力為 4 分" },
+                    { grade: 2, description: "輕度至半身輕癱或半側輕癱：三組以上肌群的肌力為 4 分 或 一組或兩組肌群的肌力為 3 分，或 一組肌群的肌力為 2 分以下（嚴重輕癱）" },
+                    { grade: 3, description: "明顯下半身輕癱或半側輕癱：兩肢癱的肌力為 2 分，中度的四肢癱：三肢癱以上的肌力為 3 分，一肢癱輻 (plegia)：一肢癱的肌力為 1 分以下" },
+                    { grade: 4, description: "下半身重癱 (plegia) 或半側重癱：兩肢癱肌力 1 分以下，明顯的四肢癱：三肢癱以上的肌力 2 分以下" },
+                    { grade: 5, description: "四肢重癱 (plegia)：所有上下肢的肌力都在 1 分以下" },
+                    { grade: 6, description: "下半身重癱 (plegia) 或半側重癱：兩肢癱肌力 1 分以下，明顯的四肞癱：三肢癱以上的肌力 2 分以下" }
+                ]
+            },
+            {
+                name: "膀胱泌尿功能",
+                options: [
+                    { grade: 0, description: "正常" },
+                    { grade: 1, description: "輕微的排尿延遲、急尿、便祕" },
+                    { grade: 2, description: "中度的排尿延遲、急尿、或較少見的尿失禁、嚴重便祕" },
+                    { grade: 3, description: "頻繁的尿失禁或間歇性自我導尿；需要用灌腸藥或人為方式來排便" },
+                    { grade: 4, description: "必須固定輔助以導尿管自我導尿" },
+                    { grade: 5, description: "排便或排尿功能喪失；外部或留置導尿管持續自我導尿" },
+                    { grade: 6, description: "完全喪失排便及排尿功能" }
+                ]
+            },
+            {
+                name: "小腦功能",
+                options: [
+                    { grade: 0, description: "正常" },
+                    { grade: 1, description: "僅只有異常徵象，但沒失能" },
+                    { grade: 2, description: "輕微的運動失調 及/或 中度的站立失調 (Romberg test 中度陽性)" },
+                    { grade: 3, description: "中度的軀幹運動失調 及/或 中度的肢體運動失調 及/或 中度或重度的步態/軀幹運動失調" },
+                    { grade: 4, description: "重度的步態/軀幹運動失調及三個肢體以上的運動失調" },
+                    { grade: 5, description: "完全無法執行協識性動作" },
+                    { grade: "X", description: "肌力小於 3 分不檢測小腦功能檢查" }
+                ]
+            }
+        ];
+
+        const scoreInterpretations = {
+            0: "神經功能檢查正常。所有功能評分均為 0 級；或大腦功能評分為第 1 級。",
+            1.0: "無失能情況，僅有一個系統功能評分為第 1 級。",
+            1.5: "無失能情況，兩個或兩個以上系統功能評分為第 1 級。",
+            2.0: "有一個系統功能發生輕微失能情況，即一個系統功能評分為第 2 級，其它系統功能評分為 0 或 1 級。",
+            2.5: "有二個系統功能發生輕微失能情況，即二個系統功能評分為第 2 級，其它系統功能評分為 0 或 1 級。",
+            3.0: "仍可自由活動，有一個系統功能發生中度失能情況，即一個系統功能評分為第 3 級，其它系統功能評分為 0 或 1 級；或有三到四個系統功能發生輕微失能情況，即評分第 2 級或 2 級以下。",
+            3.5: "仍可自由活動，有一個系統功能發生中度失能情況，即一個系統功能評分為第 3 級，且其它一到二個系統功能評分為 2 級；或有四個系統功能評分為 3 級；或有五個系統功能評分為 2 級，其他系統功能評分為 0 或 1 級。",
+            4.0: "在無輔具或休息的情況下可連續行走 500 公尺以上，但一天中有部分時間（約 12 小時不需輔助即能自由行動。雖有一個系統功能發生嚴重失能情況，即一個系統功能評分為第 4 級，其它系統功能評分為 0 或 1 級。",
+            4.5: "在無輔具或休息的情況下可連續行走 300 公尺以上，一天中有部分活動受到限制或需輔助，但大部分時間仍可以不需輔助即能自由活動。雖有一個系統功能發生嚴重失能情況，即一個系統功能評分為第 4 級，其它系統功能評分為 0 或 1 級。",
+            5.0: "在無輔具或休息的情況下可連續行走 200 公尺以上，失能已嚴重影響每日的活動。一般情況為一個系統功能評分為第 5 級，其它系統功能評分為 0 或 1 級。",
+            5.5: "在無輔具或休息的情況下可連續行走 100 公尺以上，運動失能的情況已嚴重影響每日的活動。一般情況為一個系統功能評分為第 5 級，其它系統功能評分為 0 或 1 級。",
+            6.0: "單側輔具（如手杖、柺杖摘壁等）才能行走 100 公尺以上。一般情況為兩個以上的系統功能評分為第 3 級。",
+            6.5: "雙側輔具（如手杖、柺杖摘壁等），可連續行走 20 公尺以上而不用休息。一般情況為兩個以上的系統功能評分為第 3 級。",
+            7.0: "在有輔具下仍無法行走 5 公尺，可自行操作輪椅，且會使用輪椅超過 12 小時。一般情況為有一個以上的系統功能評分為第 4 級。",
+            7.5: "無法自己行走，需依賴輪椅及他人幫助。一般情況為有一個以上的系統功能評分為第 4 級。",
+            8.0: "活動範圍限於床上、椅子或輪椅，但大部分時間不需臥床休息，通常手部切能正確保有自行穿脫能力。一般情況為有幾個以上的系統功能評分為第 4 級。",
+            8.5: "大部分時間活動範圍限於臥床，仍保有部許部及自我照顧的能力。一般情況為有數個系統功能評分為第 4 級。",
+            9.0: "終日臥床，但仍與人溝通、進食。一般情況為大部分的系統功能為第 4 級。",
+            9.5: "終日臥床，無法與人溝通、進食、吞嚥。大部分系統功能為第 4 級。",
+            10.0: "因 MS 疾病死亡。"
+        };
+
+        let selectedGrades = {};
+
+        function initializeForm() {
+            const container = document.getElementById('functionalSystems');
+            
+            functionalSystems.forEach((system, systemIndex) => {
+                const systemDiv = document.createElement('div');
+                systemDiv.className = 'function-system fade-in';
+                systemDiv.style.animationDelay = `${systemIndex * 0.1}s`;
+                
+                systemDiv.innerHTML = `
+                    <div class="system-header">
+                        <span>${system.name}</span>
+                        <span class="selected-grade" id="grade-${systemIndex}">未選擇</span>
+                    </div>
+                    <div class="system-content">
+                        ${system.options.map((option, optionIndex) => `
+                            <div class="grade-option" onclick="selectGrade(${systemIndex}, ${JSON.stringify(option).replace(/"/g, '&quot;')})">
+                                <input type="radio" name="system-${systemIndex}" value="${option.grade}" id="option-${systemIndex}-${optionIndex}">
+                                <div class="grade-label">
+                                    <span class="grade-number">${option.grade}</span>
+                                    <div class="grade-description">${option.description}</div>
+                                </div>
+                            </div>
+                        `).join('')}
+                        ${systemIndex === 0 ? `
+                            <div class="visual-acuity-table">
+                                <h4>視覺敏銳度對照表</h4>
+                                <table>
+                                    <tr>
+                                        <th>視覺敏銳度</th>
+                                        <th>國際圖例</th>
+                                        <th>英呎圖例</th>
+                                        <th>公尺圖例</th>
+                                        <th>屈光度 (Diopter)</th>
+                                        <th>相略近視度數</th>
+                                    </tr>
+                                    <tr><td>1.0</td><td>20/20</td><td>6/6</td><td>0</td><td>正常</td></tr>
+                                    <tr><td>0.66</td><td>20/30</td><td>6/9</td><td>-0.25</td><td>25 度</td></tr>
+                                    <tr><td>0.5</td><td>20/40</td><td>6/12</td><td>-0.75</td><td>75 度</td></tr>
+                                    <tr><td>0.4</td><td>20/50</td><td>6/15</td><td>-1</td><td>100 度</td></tr>
+                                    <tr><td>0.33</td><td>20/60</td><td>6/18</td><td>-1.25</td><td>125 度</td></tr>
+                                    <tr><td>0.25</td><td>20/80</td><td>6/24</td><td>-1.5</td><td>150 度</td></tr>
+                                    <tr><td>0.2</td><td>20/100</td><td>6/30</td><td>-1.75</td><td>175 度</td></tr>
+                                    <tr><td>0.16</td><td>20/120</td><td>6/36</td><td>-2.25</td><td>225 度</td></tr>
+                                    <tr><td>0.125</td><td>20/160</td><td>6/48</td><td>-2.75</td><td>275 度</td></tr>
+                                    <tr><td>0.1</td><td>20/200</td><td>6/60</td><td>-3.25</td><td>325 度</td></tr>
+                                    <tr><td>0.08</td><td>20/250</td><td>6/75</td><td>-3.75</td><td>375 度</td></tr>
+                                </table>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+                
+                container.appendChild(systemDiv);
+            });
+
+            // Set today's date
+            document.getElementById('date').valueAsDate = new Date();
+        }
+
+        function selectGrade(systemIndex, option) {
+            // Remove previous selection
+            const systemDiv = document.querySelectorAll('.function-system')[systemIndex];
+            systemDiv.querySelectorAll('.grade-option').forEach(opt => opt.classList.remove('selected'));
+            
+            // Add selection to clicked option
+            event.currentTarget.classList.add('selected');
+            
+            // Update radio button
+            const radio = event.currentTarget.querySelector('input[type="radio"]');
+            radio.checked = true;
+            
+            // Store selection
+            selectedGrades[systemIndex] = option.grade;
+            
+            // Update display
+            document.getElementById(`grade-${systemIndex}`).textContent = `級數 ${option.grade}`;
+            
+            // Calculate total score
+            calculateEDSS();
+        }
+
+        function calculateEDSS() {
+            const grades = Object.values(selectedGrades);
+            if (grades.length === 0) {
+                updateScoreDisplay(0, "請完成功能系統評估以查看結果");
+                return;
+            }
+
+            // Check if all systems are evaluated
+            if (grades.length < 7) {
+                updateScoreDisplay(0, "請完成所有功能系統評估");
+                return;
+            }
+
+            // Remove 'X' grades for calculation
+            const numericGrades = grades.filter(g => g !== 'X').map(g => Number(g));
+            
+            // EDSS calculation logic based on the provided algorithm
+            let edssScore = 0;
+
+            // Check for ambulatory without aid >= 500m
+            const maxGrade = Math.max(...numericGrades);
+            
+            if (maxGrade <= 3) {
+                // Use the lookup table for lower scores
+                const gradesCount = {};
+                numericGrades.forEach(grade => {
+                    gradesCount[grade] = (gradesCount[grade] || 0) + 1;
+                });
+
+                if (numericGrades.every(g => g === 0)) {
+                    edssScore = 0;
+                } else if (gradesCount[1] >= 1 && numericGrades.every(g => g <= 1)) {
+                    edssScore = gradesCount[1] === 1 ? 1.0 : 1.5;
+                } else if (gradesCount[2] === 1 && numericGrades.every(g => g <= 2)) {
+                    edssScore = 2.0;
+                } else if (gradesCount[2] === 2 && numericGrades.every(g => g <= 2)) {
+                    edssScore = 2.5;
+                } else if (gradesCount[3] === 1 && numericGrades.every(g => g <= 3)) {
+                    if (gradesCount[2] === 0) {
+                        edssScore = 3.0;
+                    } else {
+                        edssScore = 3.5;
+                    }
+                } else if (gradesCount[3] >= 2 || (gradesCount[3] === 1 && gradesCount[2] >= 2)) {
+                    edssScore = 3.5;
+                } else {
+                    edssScore = 3.0;
+                }
+            } else if (maxGrade === 4) {
+                const grade4Count = numericGrades.filter(g => g === 4).length;
+                if (grade4Count === 1) {
+                    edssScore = 4.0;
+                } else {
+                    edssScore = 4.5;
+                }
+            } else if (maxGrade === 5) {
+                edssScore = 5.0;
+            } else if (maxGrade === 6) {
+                edssScore = 6.0;
+            } else {
+                // For higher grades, use more complex logic
+                edssScore = Math.min(maxGrade + 0.5, 10.0);
+            }
+
+            // Additional logic for specific combinations
+            if (edssScore >= 4.0) {
+                const pyramidalGrade = selectedGrades[4] || 0; // Pyramidal function
+                const cerebellarGrade = selectedGrades[6] || 0; // Cerebellar function
+                
+                if (pyramidalGrade >= 3 || cerebellarGrade >= 3) {
+                    edssScore = Math.max(edssScore, 6.0);
+                }
+            }
+
+            updateScoreDisplay(edssScore, getScoreInterpretation(edssScore));
+        }
+
+        function getScoreInterpretation(score) {
+            // Find the closest score interpretation
+            const availableScores = Object.keys(scoreInterpretations).map(Number).sort((a, b) => a - b);
+            let closestScore = availableScores.reduce((prev, curr) => 
+                Math.abs(curr - score) < Math.abs(prev - score) ? curr : prev
+            );
+            
+            return scoreInterpretations[closestScore] || "無對應的分數解釋";
+        }
+
+        function updateScoreDisplay(score, interpretation) {
+            document.getElementById('totalScore').textContent = score.toFixed(1);
+            document.getElementById('scoreInterpretation').textContent = interpretation;
+            
+            // Update color based on score
+            const scoreDisplay = document.querySelector('.score-display');
+            if (score >= 7.0) {
+                scoreDisplay.style.background = 'linear-gradient(135deg, #dc2626 0%, #991b1b 100%)';
+            } else if (score >= 4.0) {
+                scoreDisplay.style.background = 'linear-gradient(135deg, #ea580c 0%, #c2410c 100%)';
+            } else if (score >= 2.0) {
+                scoreDisplay.style.background = 'linear-gradient(135deg, #ca8a04 0%, #a16207 100%)';
+            } else {
+                scoreDisplay.style.background = 'linear-gradient(135deg, #059669 0%, #047857 100%)';
+            }
+        }
+
+        function generateReport() {
+            const hospital = document.getElementById('hospital').value || '未填寫';
+            const doctor = document.getElementById('doctor').value || '未填寫';
+            const patient = document.getElementById('patient').value || '未填寫';
+            const record = document.getElementById('record').value || '未填寫';
+            const date = document.getElementById('date').value || new Date().toISOString().split('T')[0];
+            const totalScore = document.getElementById('totalScore').textContent;
+            const interpretation = document.getElementById('scoreInterpretation').textContent;
+
+            let reportHtml = `
+                <h3>基本資訊</h3>
+                <ul>
+                    <li><strong>醫院名稱</strong>: ${hospital}</li>
+                    <li><strong>主治醫生</strong>: ${doctor}</li>
+                    <li><strong>病患姓名</strong>: ${patient}</li>
+                    <li><strong>病歷號碼</strong>: ${record}</li>
+                    <li><strong>評估日期</strong>: ${date}</li>
+                </ul>
+                
+                <h3>評估結果</h3>
+                <h4>總分: ${totalScore}</h4>
+                <h4>分數解釋</h4>
+                <p>${interpretation}</p>
+                
+                <h3>功能系統評分詳細</h3>
+            `;
+            
+            functionalSystems.forEach((system, index) => {
+                const grade = selectedGrades[index];
+                const selectedOption = system.options.find(opt => opt.grade == grade);
+                
+                reportHtml += `<h4>${system.name}</h4>`;
+                if (selectedOption) {
+                    reportHtml += `
+                        <ul>
+                            <li><strong>評分級數</strong>: ${grade}</li>
+                            <li><strong>狀況描述</strong>: ${selectedOption.description}</li>
+                        </ul>
+                    `;
+                } else {
+                    reportHtml += `<ul><li><strong>評分級數</strong>: 未評估</li></ul>`;
+                }
+            });
+            
+            reportHtml += `<h3>建議與注意事項</h3><ul>`;
+            if (parseFloat(totalScore) >= 6.0) {
+                reportHtml += `
+                    <li>病患行動能力嚴重受限，建議加強復健治療</li>
+                    <li>需要輔助器具或輪椅協助行動</li>
+                    <li>建議定期追蹤神經功能變化</li>
+                `;
+            } else if (parseFloat(totalScore) >= 3.0) {
+                reportHtml += `
+                    <li>病患有中度功能障礙，建議持續物理治療</li>
+                    <li>可考慮職能治療以維持日常生活能力</li>
+                    <li>建議每3-6個月追蹤評估</li>
+                `;
+            } else {
+                reportHtml += `
+                    <li>病患功能狀態相對良好</li>
+                    <li>建議維持規律運動和健康生活方式</li>
+                    <li>建議每6-12個月定期追蹤</li>
+                `;
+            }
+            reportHtml += `</ul>`;
+            
+            reportHtml += `
+                <hr style="margin: 20px 0; border: none; border-top: 1px solid #e5e7eb;">
+                <p style="font-style: italic; color: #6b7280; text-align: center;">
+                    本報告由 EDSS 評估計算器自動生成，僅供臨床參考使用<br>
+                    評估時間: ${new Date().toLocaleString('zh-TW')}
+                </p>
+            `;
+
+            // Store report content for download
+            window.currentReportMarkdown = generateMarkdownReport();
+            
+            // Display report in modal
+            document.getElementById('reportBody').innerHTML = reportHtml;
+            document.getElementById('reportModal').classList.add('show');
+        }
+
+        function generateMarkdownReport() {
+            const hospital = document.getElementById('hospital').value || '未填寫';
+            const doctor = document.getElementById('doctor').value || '未填寫';
+            const patient = document.getElementById('patient').value || '未填寫';
+            const record = document.getElementById('record').value || '未填寫';
+            const date = document.getElementById('date').value || new Date().toISOString().split('T')[0];
+            const totalScore = document.getElementById('totalScore').textContent;
+            const interpretation = document.getElementById('scoreInterpretation').textContent;
+
+            let report = `# EDSS 評估報告\n\n`;
+            report += `## 基本資訊\n\n`;
+            report += `- **醫院名稱**: ${hospital}\n`;
+            report += `- **主治醫生**: ${doctor}\n`;
+            report += `- **病患姓名**: ${patient}\n`;
+            report += `- **病歷號碼**: ${record}\n`;
+            report += `- **評估日期**: ${date}\n\n`;
+            
+            report += `## 評估結果\n\n`;
+            report += `### 總分: ${totalScore}\n\n`;
+            report += `### 分數解釋\n${interpretation}\n\n`;
+            
+            report += `## 功能系統評分詳細\n\n`;
+            
+            functionalSystems.forEach((system, index) => {
+                const grade = selectedGrades[index];
+                const selectedOption = system.options.find(opt => opt.grade == grade);
+                
+                report += `### ${system.name}\n`;
+                if (selectedOption) {
+                    report += `- **評分級數**: ${grade}\n`;
+                    report += `- **狀況描述**: ${selectedOption.description}\n\n`;
+                } else {
+                    report += `- **評分級數**: 未評估\n\n`;
+                }
+            });
+            
+            report += `## 建議與注意事項\n\n`;
+            if (parseFloat(totalScore) >= 6.0) {
+                report += `- 病患行動能力嚴重受限，建議加強復健治療\n`;
+                report += `- 需要輔助器具或輪椅協助行動\n`;
+                report += `- 建議定期追蹤神經功能變化\n`;
+            } else if (parseFloat(totalScore) >= 3.0) {
+                report += `- 病患有中度功能障礙，建議持續物理治療\n`;
+                report += `- 可考慮職能治療以維持日常生活能力\n`;
+                report += `- 建議每3-6個月追蹤評估\n`;
+            } else {
+                report += `- 病患功能狀態相對良好\n`;
+                report += `- 建議維持規律運動和健康生活方式\n`;
+                report += `- 建議每6-12個月定期追蹤\n`;
+            }
+            
+            report += `\n---\n`;
+            report += `*本報告由 EDSS 評估計算器自動生成，僅供臨床參考使用*\n`;
+            report += `*評估時間: ${new Date().toLocaleString('zh-TW')}*`;
+
+            return report;
+        }
+
+        function closeReport() {
+            document.getElementById('reportModal').classList.remove('show');
+        }
+
+        function copyReport() {
+            if (window.currentReportMarkdown) {
+                navigator.clipboard.writeText(window.currentReportMarkdown).then(() => {
+                    alert('報告已複製到剪貼簿！');
+                }).catch(() => {
+                    // Fallback for older browsers
+                    const textArea = document.createElement('textarea');
+                    textArea.value = window.currentReportMarkdown;
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textArea);
+                    alert('報告已複製到剪貼簿！');
+                });
+            }
+        }
+
+        function downloadReport() {
+            if (window.currentReportMarkdown) {
+                const patient = document.getElementById('patient').value || '未命名';
+                const date = document.getElementById('date').value || new Date().toISOString().split('T')[0];
+                
+                const blob = new Blob([window.currentReportMarkdown], { type: 'text/markdown;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `EDSS評估報告_${patient}_${date}.md`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                alert('報告已成功下載！');
+            }
+        }
+
+        function resetForm() {
+            if (confirm('確定要重置所有填寫內容嗎？')) {
+                selectedGrades = {};
+                
+                // Clear all selections
+                document.querySelectorAll('.grade-option').forEach(option => {
+                    option.classList.remove('selected');
+                });
+                
+                document.querySelectorAll('input[type="radio"]').forEach(radio => {
+                    radio.checked = false;
+                });
+                
+                // Reset grade displays
+                document.querySelectorAll('.selected-grade').forEach(display => {
+                    display.textContent = '未選擇';
+                });
+                
+                // Clear patient info
+                document.querySelectorAll('.info-field input').forEach(input => {
+                    if (input.type !== 'date') {
+                        input.value = '';
+                    }
+                });
+                
+                // Reset score display
+                updateScoreDisplay(0, "請完成功能系統評估以查看結果");
+            }
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('reportModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeReport();
+            }
+        });
+
+        // Initialize the form when page loads
+        document.addEventListener('DOMContentLoaded', initializeForm);
+    </script>
+</body>
+</html>
