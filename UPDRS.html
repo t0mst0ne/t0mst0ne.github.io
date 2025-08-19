@@ -1,0 +1,1788 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UPDRS巴金森症狀衡量表</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft JhengHei', Arial, sans-serif;
+            line-height: 1.6;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: repeating-linear-gradient(
+                45deg,
+                rgba(255,255,255,0.1),
+                rgba(255,255,255,0.1) 1px,
+                transparent 1px,
+                transparent 10px
+            );
+            animation: float 20s infinite linear;
+        }
+        
+        @keyframes float {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+        
+        .header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .form-content {
+            padding: 40px;
+        }
+        
+        .section {
+            margin-bottom: 35px;
+            border: 2px solid #f0f4f8;
+            border-radius: 12px;
+            padding: 25px;
+            background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .section:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+        
+        .section-title {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 15px 20px;
+            margin: -25px -25px 20px -25px;
+            font-size: 1.3em;
+            font-weight: bold;
+            border-radius: 10px 10px 0 0;
+            box-shadow: 0 4px 15px rgba(238, 90, 36, 0.3);
+        }
+        
+        .question {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-left: 4px solid #4facfe;
+        }
+        
+        .question-title {
+            font-weight: bold;
+            color: #2d3748;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+        
+        .options {
+            display: grid;
+            gap: 8px;
+        }
+        
+        .option {
+            display: flex;
+            align-items: flex-start;
+            padding: 10px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        
+        .option:hover {
+            background: #f7fafc;
+            transform: translateX(5px);
+        }
+        
+        .option input[type="radio"] {
+            margin-right: 12px;
+            margin-top: 3px;
+            transform: scale(1.2);
+            accent-color: #4facfe;
+        }
+        
+        .option label {
+            flex: 1;
+            cursor: pointer;
+            color: #4a5568;
+            line-height: 1.5;
+        }
+        
+        .multi-item {
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .multi-item-title {
+            font-weight: bold;
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+        
+        .score-summary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 30px 0;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+        
+        .score-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .score-row:last-child {
+            border-bottom: 2px solid white;
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-top: 15px;
+            padding-top: 15px;
+        }
+        
+        .score-value {
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        
+        .copy-section {
+            background: linear-gradient(145deg, #ffffff 0%, #f0f9ff 100%);
+            padding: 25px;
+            border-radius: 12px;
+            border: 2px solid #0ea5e9;
+            margin: 25px 0;
+        }
+        
+        .copy-button {
+            background: linear-gradient(135deg, #0ea5e9, #0284c7);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);
+            transition: all 0.2s ease;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .copy-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(14, 165, 233, 0.4);
+        }
+        
+        #copyText {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            font-size: 0.9em;
+            line-height: 1.6;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #10b981;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+            transform: translateX(400px);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .toast.show {
+            transform: translateX(0);
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 10px;
+            }
+            
+            .header, .form-content {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 1.8em;
+            }
+            
+            .section {
+                padding: 15px;
+                margin-bottom: 20px;
+            }
+            
+            .section-title {
+                margin: -15px -15px 15px -15px;
+                font-size: 1.1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>UPDRS巴金森症狀衡量表</h1>
+            <p>Unified Parkinson's Disease Rating Scale</p>
+        </div>
+        
+        <div class="form-content">
+            <form id="updrsForm">
+                <div class="section">
+                    <div class="section-title">第一部份：智能、行為、情緒</div>
+                    
+                    <div class="question">
+                        <div class="question-title">1. 智能障礙</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" id="q1_0" name="q1" value="0">
+                                <label for="q1_0">0 = 沒有</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q1_1" name="q1" value="1">
+                                <label for="q1_1">1 = 輕微，常遺忘事情，經過思考可以想起來，無其他困難</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q1_2" name="q1" value="2">
+                                <label for="q1_2">2 = 中度記憶喪失，處理複雜問題有中度困難，家居生活有輕度障礙，有時需要提示</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q1_3" name="q1" value="3">
+                                <label for="q1_3">3 = 重度記憶力喪失，時間與地點容易混淆，處理問題有重度困難</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q1_4" name="q1" value="4">
+                                <label for="q1_4">4 = 嚴重記憶力喪失，只能辨別特定人物，沒有判斷能力，無法解決問題，需要特別照顧，不能獨處</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-title">2. 思想錯亂</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" id="q2_0" name="q2" value="0">
+                                <label for="q2_0">0 = 沒有</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q2_1" name="q2" value="1">
+                                <label for="q2_1">1 = 鮮明的夢</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q2_2" name="q2" value="2">
+                                <label for="q2_2">2 = 良性幻覺，自己會知道</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q2_3" name="q2" value="3">
+                                <label for="q2_3">3 = 不時陷入幻覺或妄想而無法自覺，日常生活會被干擾</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q2_4" name="q2" value="4">
+                                <label for="q2_4">4 = 持續性的幻覺、妄想、精神錯亂，無法照顧自己</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-title">3. 沮喪</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" id="q3_0" name="q3" value="0">
+                                <label for="q3_0">0 = 沒有</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q3_1" name="q3" value="1">
+                                <label for="q3_1">1 = 不時會有超出正常人該有的哀傷或罪惡感，但是不會持續數天或數週</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q3_2" name="q3" value="2">
+                                <label for="q3_2">2 = 持續性沮喪（一週以上）</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q3_3" name="q3" value="3">
+                                <label for="q3_3">3 = 持續性沮喪伴隨活動力減退之症狀（如失眠、厭食、體重減輕、喪失樂趣）</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q3_4" name="q3" value="4">
+                                <label for="q3_4">4 = 持續性沮喪伴隨活動力減退之症狀，有自殺的念頭或行動</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-title">4. 動機</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" id="q4_0" name="q4" value="0">
+                                <label for="q4_0">0 = 正常</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q4_1" name="q4" value="1">
+                                <label for="q4_1">1 = 不如平常積極，比較被動</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q4_2" name="q4" value="2">
+                                <label for="q4_2">2 = 對非例行需做選擇的活動缺乏主動或沒有興趣</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q4_3" name="q4" value="3">
+                                <label for="q4_3">3 = 對日常例行的活動缺乏主動或沒有興趣</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q4_4" name="q4" value="4">
+                                <label for="q4_4">4 = 退縮，完全喪失動機</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">第二部份：日常生活能力</div>
+                    
+                    <div class="question">
+                        <div class="question-title">5. 語言能力</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" id="q5_0" name="q5" value="0">
+                                <label for="q5_0">0 = 正常</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q5_1" name="q5" value="1">
+                                <label for="q5_1">1 = 輕微影響，但可了解</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q5_2" name="q5" value="2">
+                                <label for="q5_2">2 = 中度影響，但有時需要重複述說一遍</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q5_3" name="q5" value="3">
+                                <label for="q5_3">3 = 重度影響，常常需要重複述說一遍</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q5_4" name="q5" value="4">
+                                <label for="q5_4">4 = 大半無法瞭解</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-title">6. 唾液分泌</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" id="q6_0" name="q6" value="0">
+                                <label for="q6_0">0 = 正常</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q6_1" name="q6" value="1">
+                                <label for="q6_1">1 = 少許過量的唾液在口中，晚上可能會流出來</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q6_2" name="q6" value="2">
+                                <label for="q6_2">2 = 中度</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q6_3" name="q6" value="3">
+                                <label for="q6_3">3 = 嚴重</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q6_4" name="q6" value="4">
+                                <label for="q6_4">4 = 嚴重垂涎，一直需要紙巾或手帕擦拭</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-title">7. 吞嚥</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" id="q7_0" name="q7" value="0">
+                                <label for="q7_0">0 = 正常</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q7_1" name="q7" value="1">
+                                <label for="q7_1">1 = 很少嗆住</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q7_2" name="q7" value="2">
+                                <label for="q7_2">2 = 偶爾嗆住</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q7_3" name="q7" value="3">
+                                <label for="q7_3">3 = 需要進食半流質食物</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q7_4" name="q7" value="4">
+                                <label for="q7_4">4 = 需插鼻胃管或做胃造口手術</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-title">8. 寫字</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" id="q8_0" name="q8" value="0">
+                                <label for="q8_0">0 = 正常</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q8_1" name="q8" value="1">
+                                <label for="q8_1">1 = 有點遲緩或字體小</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q8_2" name="q8" value="2">
+                                <label for="q8_2">2 = 中度遲緩或字體小，但是可以辨認所有字體</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q8_3" name="q8" value="3">
+                                <label for="q8_3">3 = 嚴重遲緩，無法辨認所有字體</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q8_4" name="q8" value="4">
+                                <label for="q8_4">4 = 大部分字體無法辨認</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-title">9. 進食能力</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" id="q9_0" name="q9" value="0">
+                                <label for="q9_0">0 = 正常</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q9_1" name="q9" value="1">
+                                <label for="q9_1">1 = 有點緩慢笨拙，但不需要幫忙</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q9_2" name="q9" value="2">
+                                <label for="q9_2">2 = 有點緩慢笨拙，但是可以使用筷子，有時需要別人的幫助</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q9_3" name="q9" value="3">
+                                <label for="q9_3">3 = 必須使用湯匙進食，自己可以緩慢進食</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q9_4" name="q9" value="4">
+                                <label for="q9_4">4 = 需要別人餵食</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-title">10. 穿衣</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" id="q10_0" name="q10" value="0">
+                                <label for="q10_0">0 = 正常</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q10_1" name="q10" value="1">
+                                <label for="q10_1">1 = 有點緩慢，但不需要幫忙</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q10_2" name="q10" value="2">
+                                <label for="q10_2">2 = 有時需要幫忙扣釦子、穿袖子</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q10_3" name="q10" value="3">
+                                <label for="q10_3">3 = 有時需要更多幫助，但是有些事情可以獨自做</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q10_4" name="q10" value="4">
+                                <label for="q10_4">4 = 需要完全幫助</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-title">11. 衛生清潔</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" id="q11_0" name="q11" value="0">
+                                <label for="q11_0">0 = 正常</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q11_1" name="q11" value="1">
+                                <label for="q11_1">1 = 有點緩慢，但不需要幫忙</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q11_2" name="q11" value="2">
+                                <label for="q11_2">2 = 洗澡需要幫忙，個人衛生處理很慢</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q11_3" name="q11" value="3">
+                                <label for="q11_3">3 = 盥洗、刷牙、梳頭、大小便都需要幫助</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q11_4" name="q11" value="4">
+                                <label for="q11_4">4 = 需要導尿管、或者其他器械幫助</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-title">12. 翻身、調整被單</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" id="q12_0" name="q12" value="0">
+                                <label for="q12_0">0 = 正常</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q12_1" name="q12" value="1">
+                                <label for="q12_1">1 = 有點緩慢，但不需要幫忙</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q12_2" name="q12" value="2">
+                                <label for="q12_2">2 = 可翻身或調整被單，但是費很多力氣</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q12_3" name="q12" value="3">
+                                <label for="q12_3">3 = 有企圖心、但不能用自己的力量翻身也拉不動被單</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q12_4" name="q12" value="4">
+                                <label for="q12_4">4 = 完全沒辦法做</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-title">13. 跌倒（與凍僵無關）</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" id="q13_0" name="q13" value="0">
+                                <label for="q13_0">0 = 正常</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q13_1" name="q13" value="1">
+                                <label for="q13_1">1 = 很少跌倒</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q13_2" name="q13" value="2">
+                                <label for="q13_2">2 = 很少跌倒，一天少於一次</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q13_3" name="q13" value="3">
+                                <label for="q13_3">3 = 平均一天跌倒一次</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q13_4" name="q13" value="4">
+                                <label for="q13_4">4 = 一天跌倒超過一次</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-title">14. 走路時出現凍僵現象</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" id="q14_0" name="q14" value="0">
+                                <label for="q14_0">0 = 正常</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q14_1" name="q14" value="1">
+                                <label for="q14_1">1 = 走路時很少凍僵，起步時有點躊躇</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q14_2" name="q14" value="2">
+                                <label for="q14_2">2 = 走路時有時候會凍僵</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q14_3" name="q14" value="3">
+                                <label for="q14_3">3 = 常常凍僵，有時會因此跌倒</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q14_4" name="q14" value="4">
+                                <label for="q14_4">4 = 常常因為凍僵而跌倒</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-title">15. 走路</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" id="q15_0" name="q15" value="0">
+                                <label for="q15_0">0 = 正常</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q15_1" name="q15" value="1">
+                                <label for="q15_1">1 = 輕度困難，可能不會擺動手臂，或者拖著腳走</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q15_2" name="q15" value="2">
+                                <label for="q15_2">2 = 中度困難，但是只要一些幫助，或是不需要幫助</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q15_3" name="q15" value="3">
+                                <label for="q15_3">3 = 嚴重影響走路</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q15_4" name="q15" value="4">
+                                <label for="q15_4">4 = 即使幫助也無法走路</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-title">16. 顫抖</div>
+                        <div class="multi-item">
+                            <div class="multi-item-title">右手臂</div>
+                            <div class="options">
+                                <div class="option">
+                                    <input type="radio" id="q16_right_0" name="q16_right" value="0">
+                                    <label for="q16_right_0">0 = 沒有</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q16_right_1" name="q16_right" value="1">
+                                    <label for="q16_right_1">1 = 輕微，很少出現並不會造成困擾</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q16_right_2" name="q16_right" value="2">
+                                    <label for="q16_right_2">2 = 中度，造成一些困擾</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q16_right_3" name="q16_right" value="3">
+                                    <label for="q16_right_3">3 = 嚴重，許多活動被干擾</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q16_right_4" name="q16_right" value="4">
+                                    <label for="q16_right_4">4 = 非常嚴重，大部份活動被干擾</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="multi-item">
+                            <div class="multi-item-title">左手臂</div>
+                            <div class="options">
+                                <div class="option">
+                                    <input type="radio" id="q16_left_0" name="q16_left" value="0">
+                                    <label for="q16_left_0">0 = 沒有</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q16_left_1" name="q16_left" value="1">
+                                    <label for="q16_left_1">1 = 輕微，很少出現並不會造成困擾</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q16_left_2" name="q16_left" value="2">
+                                    <label for="q16_left_2">2 = 中度，造成一些困擾</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q16_left_3" name="q16_left" value="3">
+                                    <label for="q16_left_3">3 = 嚴重，許多活動被干擾</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q16_left_4" name="q16_left" value="4">
+                                    <label for="q16_left_4">4 = 非常嚴重，大部份活動被干擾</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-title">17. 與巴金森症有關異常感覺</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" id="q17_0" name="q17" value="0">
+                                <label for="q17_0">0 = 沒有</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q17_1" name="q17" value="1">
+                                <label for="q17_1">1 = 偶而四肢麻木、刺痛、與輕微疼痛</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q17_2" name="q17" value="2">
+                                <label for="q17_2">2 = 常常四肢麻木、刺痛、與輕微疼痛，還不致於因此煩惱</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q17_3" name="q17" value="3">
+                                <label for="q17_3">3 = 常有疼痛感覺</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q17_4" name="q17" value="4">
+                                <label for="q17_4">4 = 非常疼痛</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <div class="section-title">第三部份：動作能力之檢查</div>
+                    
+                    <div class="question">
+                        <div class="question-title">18. 語言</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" id="q18_0" name="q18" value="0">
+                                <label for="q18_0">0 = 正常</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q18_1" name="q18" value="1">
+                                <label for="q18_1">1 = 表情、用字、音量有一點減弱</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q18_2" name="q18" value="2">
+                                <label for="q18_2">2 = 中度障礙，發音含糊單調，但是可以了解</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q18_3" name="q18" value="3">
+                                <label for="q18_3">3 = 重度障礙，很難了解</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q18_4" name="q18" value="4">
+                                <label for="q18_4">4 = 完全不了解</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-title">19. 面部表情</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" id="q19_0" name="q19" value="0">
+                                <label for="q19_0">0 = 正常</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q19_1" name="q19" value="1">
+                                <label for="q19_1">1 = 輕微面無表情，可以是正常人的"撲克臉"</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q19_2" name="q19" value="2">
+                                <label for="q19_2">2 = 面部表情輕微地減少，並確定是不正常減少</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q19_3" name="q19" value="3">
+                                <label for="q19_3">3 = 中度面無表情，嘴巴有時微張</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q19_4" name="q19" value="4">
+                                <label for="q19_4">4 = 臉部僵硬、固定、表情全無、嘴巴張開超過半公分以上</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-title">20. 靜止型顫抖</div>
+                        <div class="multi-item">
+                            <div class="multi-item-title">臉、唇、頰</div>
+                            <div class="options">
+                                <div class="option">
+                                    <input type="radio" id="q20_face_0" name="q20_face" value="0">
+                                    <label for="q20_face_0">0 = 沒有</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q20_face_1" name="q20_face" value="1">
+                                    <label for="q20_face_1">1 = 輕微顫抖，很少出現</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q20_face_2" name="q20_face" value="2">
+                                    <label for="q20_face_2">2 = 持續性的輕微顫抖或間續性的中度顫抖</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q20_face_3" name="q20_face" value="3">
+                                    <label for="q20_face_3">3 = 中度顫抖，常常出現</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q20_face_4" name="q20_face" value="4">
+                                    <label for="q20_face_4">4 = 抖動幅度很大，並且經常出現</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="multi-item">
+                            <div class="multi-item-title">右上肢</div>
+                            <div class="options">
+                                <div class="option">
+                                    <input type="radio" id="q20_ru_0" name="q20_ru" value="0">
+                                    <label for="q20_ru_0">0 = 沒有</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q20_ru_1" name="q20_ru" value="1">
+                                    <label for="q20_ru_1">1 = 輕微顫抖，很少出現</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q20_ru_2" name="q20_ru" value="2">
+                                    <label for="q20_ru_2">2 = 持續性的輕微顫抖或間續性的中度顫抖</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q20_ru_3" name="q20_ru" value="3">
+                                    <label for="q20_ru_3">3 = 中度顫抖，常常出現</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q20_ru_4" name="q20_ru" value="4">
+                                    <label for="q20_ru_4">4 = 抖動幅度很大，並且經常出現</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="multi-item">
+                            <div class="multi-item-title">左上肢</div>
+                            <div class="options">
+                                <div class="option">
+                                    <input type="radio" id="q20_lu_0" name="q20_lu" value="0">
+                                    <label for="q20_lu_0">0 = 沒有</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q20_lu_1" name="q20_lu" value="1">
+                                    <label for="q20_lu_1">1 = 輕微顫抖，很少出現</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q20_lu_2" name="q20_lu" value="2">
+                                    <label for="q20_lu_2">2 = 持續性的輕微顫抖或間續性的中度顫抖</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q20_lu_3" name="q20_lu" value="3">
+                                    <label for="q20_lu_3">3 = 中度顫抖，常常出現</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q20_lu_4" name="q20_lu" value="4">
+                                    <label for="q20_lu_4">4 = 抖動幅度很大，並且經常出現</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="multi-item">
+                            <div class="multi-item-title">右下肢</div>
+                            <div class="options">
+                                <div class="option">
+                                    <input type="radio" id="q20_rl_0" name="q20_rl" value="0">
+                                    <label for="q20_rl_0">0 = 沒有</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q20_rl_1" name="q20_rl" value="1">
+                                    <label for="q20_rl_1">1 = 輕微顫抖，很少出現</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q20_rl_2" name="q20_rl" value="2">
+                                    <label for="q20_rl_2">2 = 持續性的輕微顫抖或間續性的中度顫抖</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q20_rl_3" name="q20_rl" value="3">
+                                    <label for="q20_rl_3">3 = 中度顫抖，常常出現</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q20_rl_4" name="q20_rl" value="4">
+                                    <label for="q20_rl_4">4 = 抖動幅度很大，並且經常出現</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="multi-item">
+                            <div class="multi-item-title">左下肢</div>
+                            <div class="options">
+                                <div class="option">
+                                    <input type="radio" id="q20_ll_0" name="q20_ll" value="0">
+                                    <label for="q20_ll_0">0 = 沒有</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q20_ll_1" name="q20_ll" value="1">
+                                    <label for="q20_ll_1">1 = 輕微顫抖，很少出現</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q20_ll_2" name="q20_ll" value="2">
+                                    <label for="q20_ll_2">2 = 持續性的輕微顫抖或間續性的中度顫抖</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q20_ll_3" name="q20_ll" value="3">
+                                    <label for="q20_ll_3">3 = 中度顫抖，常常出現</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q20_ll_4" name="q20_ll" value="4">
+                                    <label for="q20_ll_4">4 = 抖動幅度很大，並且經常出現</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-title">21. 動作型或姿勢型顫抖</div>
+                        <div class="multi-item">
+                            <div class="multi-item-title">右上肢</div>
+                            <div class="options">
+                                <div class="option">
+                                    <input type="radio" id="q21_right_0" name="q21_right" value="0">
+                                    <label for="q21_right_0">0 = 沒有</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q21_right_1" name="q21_right" value="1">
+                                    <label for="q21_right_1">1 = 輕微，只有動作時才發生</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q21_right_2" name="q21_right" value="2">
+                                    <label for="q21_right_2">2 = 中度，只有動作時才發生</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q21_right_3" name="q21_right" value="3">
+                                    <label for="q21_right_3">3 = 中度，在動作及維持姿勢時皆發生</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q21_right_4" name="q21_right" value="4">
+                                    <label for="q21_right_4">4 = 重度，會干擾進食</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="multi-item">
+                            <div class="multi-item-title">左上肢</div>
+                            <div class="options">
+                                <div class="option">
+                                    <input type="radio" id="q21_left_0" name="q21_left" value="0">
+                                    <label for="q21_left_0">0 = 沒有</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q21_left_1" name="q21_left" value="1">
+                                    <label for="q21_left_1">1 = 輕微，只有動作時才發生</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q21_left_2" name="q21_left" value="2">
+                                    <label for="q21_left_2">2 = 中度，只有動作時才發生</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q21_left_3" name="q21_left" value="3">
+                                    <label for="q21_left_3">3 = 中度，在動作及維持姿勢時皆發生</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q21_left_4" name="q21_left" value="4">
+                                    <label for="q21_left_4">4 = 重度，會干擾進食</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question">
+                        <div class="question-title">22. 僵硬（以病人放鬆的坐著時，主要關節移動的狀况來判斷）</div>
+                        <div class="multi-item">
+                            <div class="multi-item-title">頸部</div>
+                            <div class="options">
+                                <div class="option">
+                                    <input type="radio" id="q22_neck_0" name="q22_neck" value="0">
+                                    <label for="q22_neck_0">0 = 沒有</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q22_neck_1" name="q22_neck" value="1">
+                                    <label for="q22_neck_1">1 = 極輕微，或只有在其他肢體做動作時才可測到</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q22_neck_2" name="q22_neck" value="2">
+                                    <label for="q22_neck_2">2 = 輕微至中度</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q22_neck_3" name="q22_neck" value="3">
+                                    <label for="q22_neck_3">3 = 明顯，但是範圍內動作可完成</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q22_neck_4" name="q22_neck" value="4">
+                                    <label for="q22_neck_4">4 = 嚴重，範圍內動作完成困難</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="multi-item">
+                            <div class="multi-item-title">右上肢</div>
+                            <div class="options">
+                                <div class="option">
+                                    <input type="radio" id="q22_ru_0" name="q22_ru" value="0">
+                                    <label for="q22_ru_0">0 = 沒有</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q22_ru_1" name="q22_ru" value="1">
+                                    <label for="q22_ru_1">1 = 極輕微，或只有在其他肢體做動作時才可測到</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q22_ru_2" name="q22_ru" value="2">
+                                    <label for="q22_ru_2">2 = 輕微至中度</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q22_ru_3" name="q22_ru" value="3">
+                                    <label for="q22_ru_3">3 = 明顯，但是範圍內動作可完成</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q22_ru_4" name="q22_ru" value="4">
+                                    <label for="q22_ru_4">4 = 嚴重，範圍內動作完成困難</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="multi-item">
+                            <div class="multi-item-title">左上肢</div>
+                            <div class="options">
+                                <div class="option">
+                                    <input type="radio" id="q22_lu_0" name="q22_lu" value="0">
+                                    <label for="q22_lu_0">0 = 沒有</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q22_lu_1" name="q22_lu" value="1">
+                                    <label for="q22_lu_1">1 = 極輕微，或只有在其他肢體做動作時才可測到</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q22_lu_2" name="q22_lu" value="2">
+                                    <label for="q22_lu_2">2 = 輕微至中度</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q22_lu_3" name="q22_lu" value="3">
+                                    <label for="q22_lu_3">3 = 明顯，但是範圍內動作可完成</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q22_lu_4" name="q22_lu" value="4">
+                                    <label for="q22_lu_4">4 = 嚴重，範圍內動作完成困難</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="multi-item">
+                            <div class="multi-item-title">右下肢</div>
+                            <div class="options">
+                                <div class="option">
+                                    <input type="radio" id="q22_rl_0" name="q22_rl" value="0">
+                                    <label for="q22_rl_0">0 = 沒有</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q22_rl_1" name="q22_rl" value="1">
+                                    <label for="q22_rl_1">1 = 極輕微，或只有在其他肢體做動作時才可測到</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q22_rl_2" name="q22_rl" value="2">
+                                    <label for="q22_rl_2">2 = 輕微至中度</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q22_rl_3" name="q22_rl" value="3">
+                                    <label for="q22_rl_3">3 = 明顯，但是範圍內動作可完成</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q22_rl_4" name="q22_rl" value="4">
+                                    <label for="q22_rl_4">4 = 嚴重，範圍內動作完成困難</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="multi-item">
+                            <div class="multi-item-title">左下肢</div>
+                            <div class="options">
+                                <div class="option">
+                                    <input type="radio" id="q22_ll_0" name="q22_ll" value="0">
+                                    <label for="q22_ll_0">0 = 沒有</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q22_ll_1" name="q22_ll" value="1">
+                                    <label for="q22_ll_1">1 = 極輕微，或只有在其他肢體做動作時才可測到</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q22_ll_2" name="q22_ll" value="2">
+                                    <label for="q22_ll_2">2 = 輕微至中度</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q22_ll_3" name="q22_ll" value="3">
+                                    <label for="q22_ll_3">3 = 明顯，但是範圍內動作可完成</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q22_ll_4" name="q22_ll" value="4">
+                                    <label for="q22_ll_4">4 = 嚴重，範圍內動作完成困難</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-title">23. 手指打拍（病人的大姆指與食指儘量張開，以最快速度打拍，雙手分別測試）</div>
+                        <div class="multi-item">
+                            <div class="multi-item-title">右手</div>
+                            <div class="options">
+                                <div class="option">
+                                    <input type="radio" id="q23_right_0" name="q23_right" value="0">
+                                    <label for="q23_right_0">0 = 正常（每五秒多或等於15下）</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q23_right_1" name="q23_right" value="1">
+                                    <label for="q23_right_1">1 = 有點緩慢，並且幅度減少（每5秒11-14下）</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q23_right_2" name="q23_right" value="2">
+                                    <label for="q23_right_2">2 = 中度障礙，容易疲勞，有時動作會中斷（每5秒7-10下）</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q23_right_3" name="q23_right" value="3">
+                                    <label for="q23_right_3">3 = 重度障礙，啟動動作很慢，或動作時常會中斷（每5秒3-6下）</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q23_right_4" name="q23_right" value="4">
+                                    <label for="q23_right_4">4 = 幾乎無法動作（每5秒0-2下）</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="multi-item">
+                            <div class="multi-item-title">左手</div>
+                            <div class="options">
+                                <div class="option">
+                                    <input type="radio" id="q23_left_0" name="q23_left" value="0">
+                                    <label for="q23_left_0">0 = 正常（每五秒多或等於15下）</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q23_left_1" name="q23_left" value="1">
+                                    <label for="q23_left_1">1 = 有點緩慢，並且幅度減少（每5秒11-14下）</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q23_left_2" name="q23_left" value="2">
+                                    <label for="q23_left_2">2 = 中度障礙，容易疲勞，有時動作會中斷（每5秒7-10下）</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q23_left_3" name="q23_left" value="3">
+                                    <label for="q23_left_3">3 = 重度障礙，啟動動作很慢，或動作時常會中斷（每5秒3-6下）</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q23_left_4" name="q23_left" value="4">
+                                    <label for="q23_left_4">4 = 幾乎無法動作（每5秒0-2下）</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question">
+                        <div class="question-title">24. 手掌握合（病人手掌盡量張開，再連續做手掌握合動作，兩手分開測試）</div>
+                        <div class="multi-item">
+                            <div class="multi-item-title">右手</div>
+                            <div class="options">
+                                <div class="option">
+                                    <input type="radio" id="q24_right_0" name="q24_right" value="0">
+                                    <label for="q24_right_0">0 = 正常</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q24_right_1" name="q24_right" value="1">
+                                    <label for="q24_right_1">1 = 有點緩慢，或手掌張開的幅度稍微減小</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q24_right_2" name="q24_right" value="2">
+                                    <label for="q24_right_2">2 = 中度障礙，容易疲勞，有時動作會中斷</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q24_right_3" name="q24_right" value="3">
+                                    <label for="q24_right_3">3 = 重度障礙，動作開始很吃力，或動作常常會中斷</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q24_right_4" name="q24_right" value="4">
+                                    <label for="q24_right_4">4 = 幾乎無法動作</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="multi-item">
+                            <div class="multi-item-title">左手</div>
+                            <div class="options">
+                                <div class="option">
+                                    <input type="radio" id="q24_left_0" name="q24_left" value="0">
+                                    <label for="q24_left_0">0 = 正常</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q24_left_1" name="q24_left" value="1">
+                                    <label for="q24_left_1">1 = 有點緩慢，或手掌張開的幅度稍微減小</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q24_left_2" name="q24_left" value="2">
+                                    <label for="q24_left_2">2 = 中度障礙，容易疲勞，有時動作會中斷</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q24_left_3" name="q24_left" value="3">
+                                    <label for="q24_left_3">3 = 重度障礙，動作開始很吃力，或動作常常會中斷</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q24_left_4" name="q24_left" value="4">
+                                    <label for="q24_left_4">4 = 幾乎無法動作</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-title">25. 前臂迴旋（以垂直或水平的方向，盡量以最大的幅度，兩手同時做內旋或外轉的動作）</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" id="q25_0" name="q25" value="0">
+                                <label for="q25_0">0 = 正常</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q25_1" name="q25" value="1">
+                                <label for="q25_1">1 = 有點遲緩，旋轉的幅度稍微減小</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q25_2" name="q25" value="2">
+                                <label for="q25_2">2 = 中度遲緩，容易疲勞，有時動作會中斷</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q25_3" name="q25" value="3">
+                                <label for="q25_3">3 = 重度遲緩，動作開始很吃力，或動作常常會中斷</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q25_4" name="q25" value="4">
+                                <label for="q25_4">4 = 幾乎無法動作</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-title">26. 兩腳靈敏度測試（病人將腳抬高，幅度必須有三英吋高，再用腳跟在地上以最快的速度連續拍打）</div>
+                        <div class="multi-item">
+                            <div class="multi-item-title">右下肢</div>
+                            <div class="options">
+                                <div class="option">
+                                    <input type="radio" id="q26_right_0" name="q26_right" value="0">
+                                    <label for="q26_right_0">0 = 正常</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q26_right_1" name="q26_right" value="1">
+                                    <label for="q26_right_1">1 = 有點遲緩，幅度稍微減小</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q26_right_2" name="q26_right" value="2">
+                                    <label for="q26_right_2">2 = 中度遲緩，容易疲勞，有時動作會中斷</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q26_right_3" name="q26_right" value="3">
+                                    <label for="q26_right_3">3 = 重度遲緩，動作開始很吃力，或動作常常會中斷</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q26_right_4" name="q26_right" value="4">
+                                    <label for="q26_right_4">4 = 幾乎無法動作</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="multi-item">
+                            <div class="multi-item-title">左下肢</div>
+                            <div class="options">
+                                <div class="option">
+                                    <input type="radio" id="q26_left_0" name="q26_left" value="0">
+                                    <label for="q26_left_0">0 = 正常</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q26_left_1" name="q26_left" value="1">
+                                    <label for="q26_left_1">1 = 有點遲緩，幅度稍微減小</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q26_left_2" name="q26_left" value="2">
+                                    <label for="q26_left_2">2 = 中度遲緩，容易疲勞，有時動作會中斷</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q26_left_3" name="q26_left" value="3">
+                                    <label for="q26_left_3">3 = 重度遲緩，動作開始很吃力，或動作常常會中斷</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q26_left_4" name="q26_left" value="4">
+                                    <label for="q26_left_4">4 = 幾乎無法動作</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-title">27. 從椅子上站起來（病人兩手交叉胸前，從直背的木椅或金屬椅站起來）</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" id="q27_0" name="q27" value="0">
+                                <label for="q27_0">0 = 正常</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q27_1" name="q27" value="1">
+                                <label for="q27_1">1 = 遲緩，或需要試好多次</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q27_2" name="q27" value="2">
+                                <label for="q27_2">2 = 可自己推把手站起來</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q27_3" name="q27" value="3">
+                                <label for="q27_3">3 = 容易向後跌回，需要多試幾次，但仍可靠自己站起來</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q27_4" name="q27" value="4">
+                                <label for="q27_4">4 = 必須要人幫助才能從椅子上起來</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-title">28. 姿勢</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" id="q28_0" name="q28" value="0">
+                                <label for="q28_0">0 = 正常挺直</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q28_1" name="q28" value="1">
+                                <label for="q28_1">1 = 不是很挺，輕微駝背，對老人可算是正常</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q28_2" name="q28" value="2">
+                                <label for="q28_2">2 = 中度駝背，明顯異常，有輕度側彎</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q28_3" name="q28" value="3">
+                                <label for="q28_3">3 = 中度駝背，中度側彎</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q28_4" name="q28" value="4">
+                                <label for="q28_4">4 = 嚴重前屈，姿勢極端不正確</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-title">29. 步態</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" id="q29_0" name="q29" value="0">
+                                <label for="q29_0">0 = 正常</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q29_1" name="q29" value="1">
+                                <label for="q29_1">1 = 步態遲緩、拖步、但是不會急步或向前衝</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q29_2" name="q29" value="2">
+                                <label for="q29_2">2 = 走路困難，不需要幫助或只需要一點幫助，有時步伐急促、碎步、或向前衝</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q29_3" name="q29" value="3">
+                                <label for="q29_3">3 = 走路極端困難，需要幫助</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q29_4" name="q29" value="4">
+                                <label for="q29_4">4 = 即使有幫助，仍不能走路</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-title">30. 姿勢平穩度（病人眼睛張開，雙腳微張並有準備，檢查人在背後突然拉動肩膀，測試病人反應）</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" id="q30_0" name="q30" value="0">
+                                <label for="q30_0">0 = 正常</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q30_1" name="q30" value="1">
+                                <label for="q30_1">1 = 後退，但不需要幫助，可自行平衡</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q30_2" name="q30" value="2">
+                                <label for="q30_2">2 = 沒有平衡反應，若沒有檢查人員抓住，病人會摔倒</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q30_3" name="q30" value="3">
+                                <label for="q30_3">3 = 非常不穩，即使在自然狀態也有失去平衡的傾向</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q30_4" name="q30" value="4">
+                                <label for="q30_4">4 = 需要幫助才能站穩</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-title">31. 全身動作遲緩</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" id="q31_0" name="q31" value="0">
+                                <label for="q31_0">0 = 正常</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q31_1" name="q31" value="1">
+                                <label for="q31_1">1 = 稍微變慢，給人小心翼翼的感覺，對某些人可以是正常的，動作幅度可能減小</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q31_2" name="q31" value="2">
+                                <label for="q31_2">2 = 輕度變慢或動作減少，確實是不正常的，或者動作幅度稍微減小</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q31_3" name="q31" value="3">
+                                <label for="q31_3">3 = 中度變慢或動作減少，或者動作幅度減小</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q31_4" name="q31" value="4">
+                                <label for="q31_4">4 = 重度變慢或動作減少</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">第四部份：治療之併發症</div>
+
+                    <h3 style="font-weight: bold; margin-bottom: 15px; padding-left: 20px;">A. 異動症</h3>
+
+                    <div class="question">
+                        <div class="question-title">32. 期間：出現異動症的時段和清醒期</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" id="q32_0" name="q32" value="0">
+                                <label for="q32_0">0 = 無</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q32_1" name="q32" value="1">
+                                <label for="q32_1">1 = 佔清醒時段的1%-25%</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q32_2" name="q32" value="2">
+                                <label for="q32_2">2 = 佔清醒時段的26%-50%</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q32_3" name="q32" value="3">
+                                <label for="q32_3">3 = 佔清醒時段的51%-75%</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q32_4" name="q32" value="4">
+                                <label for="q32_4">4 = 佔清醒時段的76%-100%</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question">
+                        <div class="question-title">33. 殘障程度：異動症造成殘障的情形</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" id="q33_0" name="q33" value="0">
+                                <label for="q33_0">0 = 無殘障</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q33_1" name="q33" value="1">
+                                <label for="q33_1">1 = 輕度殘障</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q33_2" name="q33" value="2">
+                                <label for="q33_2">2 = 中度殘障</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q33_3" name="q33" value="3">
+                                <label for="q33_3">3 = 重度殘障</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q33_4" name="q33" value="4">
+                                <label for="q33_4">4 = 完全殘障</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question">
+                        <div class="question-title">34. 疼痛性異動症：異動症有多痛？</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" id="q34_0" name="q34" value="0">
+                                <label for="q34_0">0 = 不痛</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q34_1" name="q34" value="1">
+                                <label for="q34_1">1 = 輕度</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q34_2" name="q34" value="2">
+                                <label for="q34_2">2 = 中度</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q34_3" name="q34" value="3">
+                                <label for="q34_3">3 = 重度</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q34_4" name="q34" value="4">
+                                <label for="q34_4">4 = 極嚴重</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question">
+                        <div class="question-title">35. 是否出現清晨肌張力異常之症狀</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" id="q35_0" name="q35" value="0">
+                                <label for="q35_0">0 = 無</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q35_1" name="q35" value="1">
+                                <label for="q35_1">1 = 有</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3 style="font-weight: bold; margin-bottom: 15px; margin-top: 30px; padding-left: 20px;">B. 臨床藥波動現象</h3>
+
+                    <div class="question">
+                        <div class="question-title">36. 服用一劑藥物後，是否有可以預測的”無效期”出現</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" id="q36_0" name="q36" value="0">
+                                <label for="q36_0">0 = 無</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q36_1" name="q36" value="1">
+                                <label for="q36_1">1 = 有</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question">
+                        <div class="question-title">37. 服用一劑藥物後，是否有不可以預測的”無效期”出現</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" id="q37_0" name="q37" value="0">
+                                <label for="q37_0">0 = 沒有</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q37_1" name="q37" value="1">
+                                <label for="q37_1">1 = 有</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question">
+                        <div class="question-title">38. 是否有任何”無效期”是在幾秒的時間忽然出現</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" id="q38_0" name="q38" value="0">
+                                <label for="q38_0">0 = 沒有</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q38_1" name="q38" value="1">
+                                <label for="q38_1">1 = 有</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question">
+                        <div class="question-title">39. 病人出現”無效期”佔清醒時段的平均比率</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" id="q39_0" name="q39" value="0">
+                                <label for="q39_0">0 = 無</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q39_1" name="q39" value="1">
+                                <label for="q39_1">1 = 佔清醒時段的1%-25%</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q39_2" name="q39" value="2">
+                                <label for="q39_2">2 = 佔清醒時段的26%-50%</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q39_3" name="q39" value="3">
+                                <label for="q39_3">3 = 佔清醒時段的51%-75%</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q39_4" name="q39" value="4">
+                                <label for="q39_4">4 = 佔清醒時段的76%-100%</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            
+            <div class="score-summary">
+                <div class="score-row">
+                    <span>第一部份：智能、行為、情緒</span>
+                    <span class="score-value" id="scorePart1">0</span>
+                </div>
+                <div class="score-row">
+                    <span>第二部份：日常生活能力</span>
+                    <span class="score-value" id="scorePart2">0</span>
+                </div>
+                <div class="score-row">
+                    <span>第三部份：動作能力之檢查</span>
+                    <span class="score-value" id="scorePart3">0</span>
+                </div>
+                <div class="score-row">
+                    <span>第四部份：治療之併發症</span>
+                    <span class="score-value" id="scorePart4">0</span>
+                </div>
+                <div class="score-row">
+                    <span>總分</span>
+                    <span class="score-value" id="totalScore">0</span>
+                </div>
+            </div>
+
+            <div class="copy-section">
+                <button class="copy-button" id="copyButton">複製結果</button>
+                <pre id="copyText"></pre>
+            </div>
+            
+        </div>
+    </div>
+
+    <div class="toast" id="toast">複製成功！</div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('updrsForm');
+            const copyButton = document.getElementById('copyButton');
+            const copyTextEl = document.getElementById('copyText');
+            const toast = document.getElementById('toast');
+
+            // --- 全局問題定義 ---
+            const questionTitles = {
+                'q1': '1. 智能障礙', 'q2': '2. 思想錯亂', 'q3': '3. 沮喪', 'q4': '4. 動機',
+                'q5': '5. 語言能力', 'q6': '6. 唾液分泌', 'q7': '7. 吞嚥', 'q8': '8. 寫字',
+                'q9': '9. 進食能力', 'q10': '10. 穿衣', 'q11': '11. 衛生清潔', 'q12': '12. 翻身、調整被單',
+                'q13': '13. 跌倒（與凍僵無關）', 'q14': '14. 走路時出現凍僵現象', 'q15': '15. 走路',
+                'q16_right': '16. 顫抖 (右手臂)', 'q16_left': '16. 顫抖 (左手臂)', 'q17': '17. 與巴金森症有關異常感覺',
+                'q18': '18. 語言', 'q19': '19. 面部表情',
+                'q20_face': '20. 靜止型顫抖 (臉、唇、頰)', 'q20_ru': '20. 靜止型顫抖 (右上肢)', 'q20_lu': '20. 靜止型顫抖 (左上肢)',
+                'q20_rl': '20. 靜止型顫抖 (右下肢)', 'q20_ll': '20. 靜止型顫抖 (左下肢)',
+                'q21_right': '21. 動作型或姿勢型顫抖 (右上肢)', 'q21_left': '21. 動作型或姿勢型顫抖 (左上肢)',
+                'q22_neck': '22. 僵硬 (頸部)', 'q22_ru': '22. 僵硬 (右上肢)', 'q22_lu': '22. 僵硬 (左上肢)',
+                'q22_rl': '22. 僵硬 (右下肢)', 'q22_ll': '22. 僵硬 (左下肢)',
+                'q23_right': '23. 手指打拍 (右手)', 'q23_left': '23. 手指打拍 (左手)',
+                'q24_right': '24. 手掌握合 (右手)', 'q24_left': '24. 手掌握合 (左手)',
+                'q25': '25. 前臂迴旋',
+                'q26_right': '26. 兩腳靈敏度測試 (右下肢)', 'q26_left': '26. 兩腳靈敏度測試 (左下肢)',
+                'q27': '27. 從椅子上站起來', 'q28': '28. 姿勢', 'q29': '29. 步態',
+                'q30': '30. 姿勢平穩度', 'q31': '31. 全身動作遲緩',
+                'q32': '32. 期間：出現異動症', 'q33': '33. 殘障程度', 'q34': '34. 疼痛性異動症',
+                'q35': '35. 清晨肌張力異常', 'q36': '36. 可預測的”無效期”', 'q37': '37. 不可預測的”無效期”',
+                'q38': '38. 忽然出現的”無效期”', 'q39': '39. ”無效期”佔清醒時段比率'
+            };
+            const part1Questions = ['q1', 'q2', 'q3', 'q4'];
+            const part2Questions = ['q5', 'q6', 'q7', 'q8', 'q9', 'q10', 'q11', 'q12', 'q13', 'q14', 'q15', 'q16_right', 'q16_left', 'q17'];
+            const part3Questions = [
+                'q18', 'q19', 'q20_face', 'q20_ru', 'q20_lu', 'q20_rl', 'q20_ll', 'q21_right', 'q21_left',
+                'q22_neck', 'q22_ru', 'q22_lu', 'q22_rl', 'q22_ll', 'q23_right', 'q23_left',
+                'q24_right', 'q24_left', 'q25', 'q26_right', 'q26_left', 'q27', 'q28', 'q29', 'q30', 'q31'
+            ];
+            const part4Questions = ['q32', 'q33', 'q34', 'q35', 'q36', 'q37', 'q38', 'q39'];
+            const allQuestions = [...part1Questions, ...part2Questions, ...part3Questions, ...part4Questions];
+
+            // --- 事件監聽 ---
+            form.addEventListener('change', calculateScores);
+            copyButton.addEventListener('click', copyResults);
+            
+            // --- 函數 ---
+            function getRadioValue(name) {
+                const radio = form.elements[name];
+                if (radio && radio.value) {
+                    return radio.value;
+                }
+                return null;
+            }
+
+            function calculateScores() {
+                let score1 = 0, score2 = 0, score3 = 0, score4 = 0;
+                
+                part1Questions.forEach(q => { score1 += parseInt(getRadioValue(q) || 0); });
+                part2Questions.forEach(q => { score2 += parseInt(getRadioValue(q) || 0); });
+                part3Questions.forEach(q => { score3 += parseInt(getRadioValue(q) || 0); });
+                part4Questions.forEach(q => { score4 += parseInt(getRadioValue(q) || 0); });
+
+                document.getElementById('scorePart1').textContent = score1;
+                document.getElementById('scorePart2').textContent = score2;
+                document.getElementById('scorePart3').textContent = score3;
+                document.getElementById('scorePart4').textContent = score4;
+
+                const totalScore = score1 + score2 + score3 + score4;
+                document.getElementById('totalScore').textContent = totalScore;
+                
+                let scoredItemsText = '';
+                allQuestions.forEach(q => {
+                    const value = parseInt(getRadioValue(q) || 0);
+                    if (value > 0) {
+                        const title = questionTitles[q] || q;
+                        scoredItemsText += `${title}: ${value}分\n`;
+                    }
+                });
+
+                updateCopyText(score1, score2, score3, score4, totalScore, scoredItemsText);
+            }
+            
+            function updateCopyText(s1, s2, s3, s4, total, itemsText) {
+                let text = `UPDRS巴金森症狀衡量表評分結果：\n` +
+                             `--------------------------------\n` +
+                             `第一部份 (智能、行為、情緒): ${s1} 分\n` +
+                             `第二部份 (日常生活能力): ${s2} 分\n` +
+                             `第三部份 (動作能力之檢查): ${s3} 分\n` +
+                             `第四部份 (治療之併發症): ${s4} 分\n` +
+                             `--------------------------------\n` +
+                             `總分: ${total} 分\n`;
+
+                if (itemsText) {
+                    text += `\n計分項目明細：\n` +
+                            `--------------------------------\n` +
+                            `${itemsText}`;
+                } else {
+                    text += `\n無計分項目。`;
+                }
+                copyTextEl.textContent = text;
+            }
+
+            function copyResults() {
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(copyTextEl.textContent).then(function() {
+                        showToast();
+                    }, function(err) {
+                        console.error('無法複製文字: ', err);
+                    });
+                } else {
+                    copyTextEl.select();
+                    document.execCommand('copy');
+                    showToast();
+                }
+            }
+
+            function showToast() {
+                toast.classList.add('show');
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 2000);
+            }
+
+            // Initial calculation on load
+            calculateScores();
+        });
+    </script>
+</body>
+</html>
