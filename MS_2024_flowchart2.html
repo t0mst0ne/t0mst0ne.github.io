@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>多發性硬化症診斷流程圖 - 路徑2</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .mermaid svg {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+    <div class="bg-white p-6 sm:p-8 rounded-xl shadow-lg max-w-5xl w-full">
+        <h1 class="text-2xl sm:text-3xl font-bold text-center text-gray-800 mb-6">多發性硬化症 (MS) 診斷流程 - 路徑 2</h1>
+        <div class="mermaid-container flex justify-center">
+            <div class="mermaid">
+graph TD
+    subgraph "路徑 2：放射學孤立綜合症(RIS)或其他非特異性表現"
+        P1["開始：<br/>RIS 或其他非特異性表現"] --> P2{"初步工作檢查提示MS<br/>且已排除其他解釋？"};
+        P2 -- "是" --> P3{"病灶是否存在於 >= 2 個 CNS 部位 (DIS)？<br/>或<br/>疾病進展>=12個月且<br/>有>=2個脊髓病灶"};
+
+        P3 -- "是" --> P4{"以下任一項成立？<br/>- 腦脊液陽性 (CSF)<br/>- 中央靜脈徵陽性 (CVS)<br/>- 時間傳播 (DIT)<br/>- 病灶存在於 4-5 個 CNS 位置"};
+        P4 -- "是" --> P_MS["診斷為<br/>多發性硬化症 (MS)"];
+        P4 -- "否" --> P_Monitor["監測新的<br/>神經學或影像學變化"];
+
+        P3 -- "否 (僅1個CNS部位)" --> P7{"以下任一組合成立？<br/>- CSF+ & CVS+<br/>- CSF+ & PRL+<br/>- DIT & CVS+<br/>- DIT & PRL+"};
+        P7 -- "是" --> P_MS;
+        P7 -- "否" --> P_Monitor;
+    end
+
+    style P_MS fill:#d4edda,stroke:#c3e6cb,stroke-width:2px;
+    style P_Monitor fill:#fff3cd,stroke:#ffeeba,stroke-width:2px;
+    style P1 fill:#f8d7da,stroke:#f5c6cb,stroke-width:2px;
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({ startOnLoad: true });
+    </script>
+</body>
+</html>
