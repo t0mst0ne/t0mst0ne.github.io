@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>多發性硬化症診斷流程圖</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .mermaid svg {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+    <div class="bg-white p-6 sm:p-8 rounded-xl shadow-lg max-w-5xl w-full">
+        <h1 class="text-2xl sm:text-3xl font-bold text-center text-gray-800 mb-6">多發性硬化症 (MS) 診斷流程</h1>
+        <div class="mermaid-container flex justify-center">
+            <div class="mermaid">
+graph TD
+    subgraph "路徑 1：典型臨床發作或客觀進展"
+        A["開始：<br/>典型臨床發作或<br/>客觀進展"] --> B{"已排除其他<br/>更好的解釋？"};
+        B -- "是" --> C{"病灶是否存在於<br/>>= 2 個 CNS 部位 (DIS)？"};
+
+        C -- "是" --> D{"以下任一項成立？<br/>- 腦脊液陽性 (OCB/kFLC)<br/>- 中央靜脈徵陽性 (CVS)<br/>- 時間傳播 (DIT)"};
+        D -- "是" --> MS["診斷為<br/>多發性硬化症 (MS)"];
+        D -- "否" --> Monitor["監測新的<br/>神經學或影像學變化"];
+
+        C -- "否 (僅1個CNS部位)" --> H{"特殊情況：<br/>典型臨床表現且<br/>病灶存在於 4-5 個<br/>CNS 位置？"};
+        H -- "是" --> MS;
+        H -- "否" --> G{"以下任一組合成立？<br/>- CSF+ & CVS+<br/>- CSF+ & PRL+<br/>- DIT & CVS+<br/>- DIT & PRL+"};
+        G -- "是" --> MS;
+        G -- "否" --> Monitor;
+    end
+
+    style MS fill:#d4edda,stroke:#c3e6cb,stroke-width:2px;
+    style Monitor fill:#fff3cd,stroke:#ffeeba,stroke-width:2px;
+    style A fill:#f8d7da,stroke:#f5c6cb,stroke-width:2px;
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({ startOnLoad: true });
+    </script>
+</body>
+</html>
