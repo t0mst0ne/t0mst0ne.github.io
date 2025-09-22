@@ -23,6 +23,12 @@
             top: 0;
             z-index: 20;
         }
+        .form-input {
+            @apply w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm;
+        }
+        .form-label {
+            @apply block text-sm font-medium text-gray-700 mb-1;
+        }
     </style>
 </head>
 <body class="bg-slate-100">
@@ -31,32 +37,79 @@
         <div class="bg-white rounded-2xl shadow-lg p-6 sm:p-8">
             <header class="text-center mb-8">
                 <h1 class="text-3xl font-bold text-slate-800">主日學排班系統</h1>
-                <p class="text-slate-500 mt-2">2026年 1月 - 3月</p>
             </header>
+            
+            <!-- Step 1: Configuration -->
+            <div class="mb-8 p-6 bg-slate-50 rounded-lg border">
+                <h2 class="text-xl font-semibold text-slate-700 border-b pb-2 mb-6">步驟一：參數設定</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <label for="year-select" class="form-label">年份</label>
+                        <select id="year-select" class="form-input"></select>
+                    </div>
+                    <div>
+                        <label for="quarter-select" class="form-label">季別</label>
+                        <select id="quarter-select" class="form-input">
+                            <option value="1">Q1 (1-3月)</option>
+                            <option value="2">Q2 (4-6月)</option>
+                            <option value="3">Q3 (7-9月)</option>
+                            <option value="4">Q4 (10-12月)</option>
+                        </select>
+                    </div>
+                </div>
 
-            <!-- Step 1: Unavailability Input -->
-            <div class="mb-8">
-                <h2 class="text-xl font-semibold text-slate-700 border-b pb-2 mb-4">步驟一：勾選老師無法服事的日期</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                    <div>
+                        <label for="group-1-input" class="form-label">第 1 組老師 (用逗號分隔)</label>
+                        <input type="text" id="group-1-input" class="form-input" value="A, B, C, D">
+                    </div>
+                     <div>
+                        <label for="group-2-input" class="form-label">第 2 組老師 (用逗號分隔)</label>
+                        <input type="text" id="group-2-input" class="form-input" value="E, F, G, H">
+                    </div>
+                     <div>
+                        <label for="group-3-input" class="form-label">第 3 組老師 (用逗號分隔)</label>
+                        <input type="text" id="group-3-input" class="form-input" value="I, J, K, L">
+                    </div>
+                     <div>
+                        <label for="group-4-input" class="form-label">第 4 組老師 (用逗號分隔)</label>
+                        <input type="text" id="group-4-input" class="form-input" value="M, N, O, P">
+                    </div>
+                </div>
+
+                 <div>
+                    <label for="family-pairs-input" class="form-label">家庭關係 (例如: E,M; L,N)</label>
+                    <input type="text" id="family-pairs-input" class="form-input" value="E,M; L,N" placeholder="用分號 ; 隔開每對家人">
+                </div>
+
+                <div class="text-center mt-6">
+                    <button id="update-settings-btn" class="bg-emerald-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-transform transform hover:scale-105 duration-300 shadow-md">
+                        確認設定並載入老師
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 2: Unavailability Input -->
+            <div id="unavailability-container" class="mb-8 hidden">
+                <h2 class="text-xl font-semibold text-slate-700 border-b pb-2 mb-4">步驟二：勾選老師無法服事的日期</h2>
                 <div id="unavailability-section" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                     <!-- Teacher groups will be dynamically inserted here -->
                 </div>
             </div>
 
-            <!-- Step 2: Generate Schedule -->
-            <div class="text-center my-8">
+            <!-- Step 3: Generate Schedule -->
+            <div id="generate-container" class="text-center my-8 hidden">
                 <button id="generate-btn" class="bg-indigo-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-transform transform hover:scale-105 duration-300 shadow-md">
                     產生排班表
                 </button>
             </div>
 
-            <!-- Step 3: Results -->
+            <!-- Step 4: Results -->
             <div id="results-section" class="hidden">
-                <h2 class="text-xl font-semibold text-slate-700 border-b pb-2 mb-4">步驟三：排班結果</h2>
+                <h2 class="text-xl font-semibold text-slate-700 border-b pb-2 mb-4">步驟四：排班結果</h2>
                 <div id="message-area" class="mb-6"></div>
-                <!-- New container for the transposed table -->
-                <div id="schedule-table-container" class="overflow-x-auto relative shadow-md sm:rounded-lg border">
-                    <!-- The new schedule table will be generated here by JavaScript -->
-                </div>
+                <div id="schedule-table-container" class="overflow-x-auto relative shadow-md sm:rounded-lg border"></div>
                 <div id="workload-summary" class="mt-8"></div>
             </div>
         </div>
@@ -64,49 +117,118 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // --- Configuration ---
-            const groups = {
-                1: ['A', 'B', 'C', 'D'],
-                2: ['E', 'F', 'G', 'H'],
-                3: ['I', 'J', 'K', 'L'],
-                4: ['M', 'N', 'O', 'P']
-            };
-            const allTeachers = Object.values(groups).flat();
-            const familyPairs = [
-                { teacher1: 'E', group1: 2, teacher2: 'M', group2: 4 },
-                { teacher1: 'L', group1: 3, teacher2: 'N', group2: 4 }
-            ];
+            // --- Global State ---
+            let groups = {};
+            let allTeachers = [];
+            let familyPairs = [];
+            let sundays = [];
 
+            // --- Element References ---
+            const yearSelect = document.getElementById('year-select');
+            const quarterSelect = document.getElementById('quarter-select');
+            const groupInputs = {
+                1: document.getElementById('group-1-input'),
+                2: document.getElementById('group-2-input'),
+                3: document.getElementById('group-3-input'),
+                4: document.getElementById('group-4-input'),
+            };
+            const familyPairsInput = document.getElementById('family-pairs-input');
+            const updateSettingsBtn = document.getElementById('update-settings-btn');
+            const unavailabilityContainer = document.getElementById('unavailability-container');
             const unavailabilitySection = document.getElementById('unavailability-section');
+            const generateContainer = document.getElementById('generate-container');
             const generateBtn = document.getElementById('generate-btn');
             const resultsSection = document.getElementById('results-section');
             const scheduleTableContainer = document.getElementById('schedule-table-container');
             const messageArea = document.getElementById('message-area');
             const workloadSummary = document.getElementById('workload-summary');
 
+            // --- Initial UI Population ---
+            function populateYearSelect() {
+                const currentYear = new Date().getFullYear();
+                for (let year = 2025; year <= 2030; year++) {
+                    const option = document.createElement('option');
+                    option.value = year;
+                    option.textContent = year;
+                    if (year === 2026) { // Default selection
+                        option.selected = true;
+                    }
+                    yearSelect.appendChild(option);
+                }
+            }
+
             // --- Date Generation ---
             function getSundays(year, startMonth, endMonth) {
-                const sundays = [];
+                const sundaysInRange = [];
                 for (let month = startMonth; month <= endMonth; month++) {
                     const daysInMonth = new Date(year, month + 1, 0).getDate();
                     for (let day = 1; day <= daysInMonth; day++) {
                         const date = new Date(year, month, day);
-                        if (date.getDay() === 0) { // Sunday is 0
-                            sundays.push(date);
+                        if (date.getDay() === 0) {
+                            sundaysInRange.push(date);
                         }
                     }
                 }
-                return sundays;
+                return sundaysInRange;
             }
+            
+            // --- Setup and Parsing Logic ---
+            function setupScheduler() {
+                // Parse Groups
+                groups = {};
+                allTeachers = [];
+                for (const groupNum in groupInputs) {
+                    const names = groupInputs[groupNum].value.trim()
+                        .split(/[,，\s]+/) // Split by comma, chinese comma, or space
+                        .filter(name => name); // Remove empty strings
+                    if (names.length > 0) {
+                        groups[groupNum] = names;
+                        allTeachers.push(...names);
+                    }
+                }
 
-            const sundays = getSundays(2026, 0, 2); // January is 0, March is 2
+                // Parse Family Pairs
+                familyPairs = [];
+                const pairStrings = familyPairsInput.value.trim().split(';');
+                pairStrings.forEach(pairStr => {
+                    const names = pairStr.trim().split(/[,，]/);
+                    if (names.length === 2) {
+                        const teacher1 = names[0].trim();
+                        const teacher2 = names[1].trim();
+                        let group1 = null, group2 = null;
+                        for (const groupNum in groups) {
+                            if (groups[groupNum].includes(teacher1)) group1 = groupNum;
+                            if (groups[groupNum].includes(teacher2)) group2 = groupNum;
+                        }
+                        if (teacher1 && teacher2 && group1 && group2) {
+                            familyPairs.push({ teacher1, group1, teacher2, group2 });
+                        }
+                    }
+                });
+
+                // Generate Sundays
+                const year = parseInt(yearSelect.value);
+                const quarter = parseInt(quarterSelect.value);
+                const monthMap = { 1: [0, 2], 2: [3, 5], 3: [6, 8], 4: [9, 11] };
+                const [startMonth, endMonth] = monthMap[quarter];
+                sundays = getSundays(year, startMonth, endMonth);
+                
+                // Render UI
+                renderInputs();
+                unavailabilityContainer.classList.remove('hidden');
+                generateContainer.classList.remove('hidden');
+                resultsSection.classList.add('hidden'); // Hide old results
+            }
 
             // --- UI Rendering ---
             function renderInputs() {
+                unavailabilitySection.innerHTML = '';
+                if (Object.keys(groups).length === 0) return;
+                
                 const groupColors = ['bg-sky-100', 'bg-emerald-100', 'bg-amber-100', 'bg-rose-100'];
                 Object.keys(groups).forEach((groupNum, index) => {
                     const groupContainer = document.createElement('div');
-                    groupContainer.className = `p-4 rounded-lg border shadow-sm ${groupColors[index]}`;
+                    groupContainer.className = `p-4 rounded-lg border shadow-sm ${groupColors[index % 4]}`;
                     
                     let teachersList = groups[groupNum].join(', ');
                     groupContainer.innerHTML = `<h3 class="font-bold text-slate-800">第 ${groupNum} 組：${teachersList}</h3>`;
@@ -143,15 +265,16 @@
                 const unavailable = {};
                 allTeachers.forEach(t => unavailable[t] = new Set());
                 document.querySelectorAll('input[type="checkbox"]:checked').forEach(checkbox => {
-                    const { teacher, date } = checkbox.dataset;
-                    unavailable[teacher].add(date);
+                    unavailable[checkbox.dataset.teacher].add(checkbox.dataset.date);
                 });
 
                 const schedule = {};
                 sundays.forEach(date => {
                     const dateString = date.toISOString().split('T')[0];
-                    schedule[dateString] = { 1: null, 2: null, 3: null, 4: null };
+                    schedule[dateString] = {};
+                     Object.keys(groups).forEach(g => schedule[dateString][g] = null);
                 });
+
                 const workload = {};
                 allTeachers.forEach(t => workload[t] = 0);
                 const conflicts = [];
@@ -165,6 +288,7 @@
                     
                     familyPairs.forEach(pair => {
                         const { teacher1, group1, teacher2, group2 } = pair;
+                        if (!available[group1] || !available[group2]) return;
                         const t1Available = available[group1].includes(teacher1);
                         const t2Available = available[group2].includes(teacher2);
                         if (t1Available && !t2Available) {
@@ -174,47 +298,42 @@
                             available[group2] = available[group2].filter(t => t !== teacher2);
                         }
                     });
-
-                    const schedulingOrder = [4, 1, 2, 3];
+                    
+                    const schedulingOrder = Object.keys(groups).sort((a,b) => b-a); // Schedule group 4, 3, 2, 1
                     for (const groupNum of schedulingOrder) {
                         if (schedule[dateString][groupNum]) continue;
+                        
                         const candidates = available[groupNum];
-                        if (candidates.length === 0) {
+                        if (!candidates || candidates.length === 0) {
                             conflicts.push({ date: dateString, group: groupNum, reason: '沒有可安排的老師。' });
                             continue;
                         }
+
                         candidates.sort((a, b) => workload[a] - workload[b]);
                         const chosenTeacher = candidates[0];
                         schedule[dateString][groupNum] = chosenTeacher;
                         workload[chosenTeacher]++;
+                        
                         const pair = familyPairs.find(p => p.teacher1 === chosenTeacher || p.teacher2 === chosenTeacher);
                         if (pair) {
-                            if (pair.teacher1 === chosenTeacher) {
-                                if (available[pair.group2].includes(pair.teacher2)) {
-                                    schedule[dateString][pair.group2] = pair.teacher2;
-                                    workload[pair.teacher2]++;
-                                }
-                            } else {
-                                 if (available[pair.group1].includes(pair.teacher1)) {
-                                    schedule[dateString][pair.group1] = pair.teacher1;
-                                    workload[pair.teacher1]++;
-                                 }
-                            }
+                            const otherTeacher = pair.teacher1 === chosenTeacher ? pair.teacher2 : pair.teacher1;
+                            const otherGroup = pair.teacher1 === chosenTeacher ? pair.group2 : pair.group1;
+                             if (available[otherGroup] && available[otherGroup].includes(otherTeacher)) {
+                                schedule[dateString][otherGroup] = otherTeacher;
+                                workload[otherTeacher]++;
+                             }
                         }
                     }
                 });
                 renderResults(schedule, workload, conflicts, unavailable);
             }
 
-            // --- MODIFIED Result Rendering Function ---
             function renderResults(schedule, workload, conflicts, unavailable) {
-                // Clear previous results and show section
                 messageArea.innerHTML = '';
                 workloadSummary.innerHTML = '';
                 scheduleTableContainer.innerHTML = '';
                 resultsSection.classList.remove('hidden');
                 
-                // Render conflicts/messages
                 if (conflicts.length > 0) {
                     messageArea.className = 'p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-100';
                     let conflictHtml = '<h3 class="font-bold">排班衝突報告：</h3><ul class="mt-2 list-disc list-inside">';
@@ -228,40 +347,24 @@
                     messageArea.innerHTML = '<h3 class="font-bold">排班成功！</h3><p>所有日期都已順利安排，沒有發現衝突。</p>';
                 }
 
-                // --- Build the new transposed table ---
                 let tableHtml = '<table class="w-full text-sm text-left text-gray-600 whitespace-nowrap">';
-
-                // 1. Create Header Row (Dates)
                 tableHtml += '<thead class="text-xs text-gray-700 uppercase bg-gray-100 sticky-header">';
                 tableHtml += '<tr><th scope="col" class="px-4 py-3 sticky-col bg-gray-100 border-r">老師</th>';
                 sundays.forEach(date => {
-                    const dateFormatted = `${date.getMonth() + 1}/${date.getDate()}`;
-                    tableHtml += `<th scope="col" class="px-4 py-3 text-center">${dateFormatted}</th>`;
+                    tableHtml += `<th scope="col" class="px-4 py-3 text-center">${date.getMonth() + 1}/${date.getDate()}</th>`;
                 });
                 tableHtml += '</tr></thead>';
 
-                // 2. Create Body Rows (Teachers)
                 tableHtml += '<tbody>';
-                Object.keys(groups).forEach(groupNum => {
-                    // Add a group header row
+                Object.keys(groups).sort((a,b)=>a-b).forEach(groupNum => {
                     tableHtml += `<tr class="bg-slate-200 border-y"><td colspan="${sundays.length + 1}" class="px-4 py-2 font-semibold text-slate-800">第 ${groupNum} 組</td></tr>`;
-                    
-                    // Add rows for each teacher in the group
                     groups[groupNum].forEach(teacher => {
                         tableHtml += `<tr class="bg-white border-b hover:bg-gray-50">`;
                         tableHtml += `<th scope="row" class="px-4 py-3 font-medium text-gray-900 sticky-col bg-white border-r">${teacher}</th>`;
                         
                         sundays.forEach(date => {
                             const dateString = date.toISOString().split('T')[0];
-                            let isServing = false;
-                            
-                            for (const g in schedule[dateString]) {
-                                if (schedule[dateString][g] === teacher) {
-                                    isServing = true;
-                                    break;
-                                }
-                            }
-                            
+                            const isServing = Object.values(schedule[dateString]).includes(teacher);
                             const isUnavailable = unavailable[teacher].has(dateString);
 
                             if (isServing) {
@@ -276,16 +379,14 @@
                     });
                 });
                 tableHtml += '</tbody></table>';
-                
                 scheduleTableContainer.innerHTML = tableHtml;
 
-                // Render workload summary
                 let summaryHtml = '<h3 class="text-lg font-semibold text-slate-700 mb-2">服事次數統計</h3><div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-8 gap-4">';
                 allTeachers.sort().forEach(teacher => {
                     summaryHtml += `
                         <div class="p-2 bg-slate-100 rounded-md text-center">
                             <span class="font-mono font-bold text-slate-800">${teacher}</span>
-                            <span class="text-sm text-slate-600 ml-2">${workload[teacher]} 次</span>
+                            <span class="text-sm text-slate-600 ml-2">${workload[teacher] || 0} 次</span>
                         </div>
                     `;
                 });
@@ -293,8 +394,9 @@
                 workloadSummary.innerHTML = summaryHtml;
             }
 
-            // --- Initial Setup ---
-            renderInputs();
+            // --- Initial Setup & Event Listeners ---
+            populateYearSelect();
+            updateSettingsBtn.addEventListener('click', setupScheduler);
             generateBtn.addEventListener('click', generateSchedule);
         });
     </script>
