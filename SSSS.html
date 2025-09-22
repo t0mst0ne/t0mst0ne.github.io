@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>主日學排班系統 (Sunday School Scheduling Software) </title>
+    <title>主日學排班系統 v5</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
@@ -36,7 +36,7 @@
     <div class="container mx-auto p-4 sm:p-8 max-w-7xl">
         <div class="bg-white rounded-2xl shadow-lg p-6 sm:p-8">
             <header class="text-center mb-8">
-                <h1 class="text-3xl font-bold text-slate-800">主日學排班系統 (Sunday School Scheduling Software)</h1>
+                <h1 class="text-3xl font-bold text-slate-800">主日學排班系統</h1>
             </header>
             
             <!-- Step 1: Configuration -->
@@ -90,9 +90,9 @@
                 </div>
             </div>
 
-            <!-- Step 2: Unavailability Input -->
+            <!-- Step 2: Unavailability & Preference Input -->
             <div id="unavailability-container" class="mb-8 hidden">
-                <h2 class="text-xl font-semibold text-slate-700 border-b pb-2 mb-4">步驟二：勾選老師無法服事的日期</h2>
+                <h2 class="text-xl font-semibold text-slate-700 border-b pb-2 mb-4">步驟二：勾選老師無法服事(X)或希望服事(✓)的日期</h2>
                 <div id="unavailability-section" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                     <!-- Teacher groups will be dynamically inserted here -->
                 </div>
@@ -146,11 +146,11 @@
             // --- Initial UI Population ---
             function populateYearSelect() {
                 const currentYear = new Date().getFullYear();
-                for (let year = 2026; year <= 2030; year++) {
+                for (let year = currentYear; year <= currentYear + 5; year++) {
                     const option = document.createElement('option');
                     option.value = year;
                     option.textContent = year;
-                    if (year === 2026) { // Default selection
+                    if (year === new Date().getFullYear() + 1) { // Default selection
                         option.selected = true;
                     }
                     yearSelect.appendChild(option);
@@ -247,7 +247,12 @@
                             label.className = 'flex items-center justify-between text-xs cursor-pointer text-slate-700';
                             label.innerHTML = `
                                 <span>${date.getMonth() + 1}/${date.getDate()}</span>
-                                <input type="checkbox" data-teacher="${teacher}" data-date="${dateString}" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                                <span class="flex items-center gap-2">
+                                    <span class="text-emerald-600 font-bold" title="希望服事">✓</span>
+                                    <input type="checkbox" data-teacher="${teacher}" data-date="${dateString}" data-type="preferred" class="h-4 w-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
+                                    <span class="text-red-600 font-bold" title="無法服事">X</span>
+                                    <input type="checkbox" data-teacher="${teacher}" data-date="${dateString}" data-type="unavailable" class="h-4 w-4 rounded border-gray-300 text-red-600 focus:ring-red-500">
+                                </span>
                             `;
                             datesContainer.appendChild(label);
                         });
@@ -263,9 +268,17 @@
             // --- Scheduling Logic ---
             function generateSchedule() {
                 const unavailable = {};
-                allTeachers.forEach(t => unavailable[t] = new Set());
-                document.querySelectorAll('input[type="checkbox"]:checked').forEach(checkbox => {
+                const preferred = {};
+                allTeachers.forEach(t => {
+                    unavailable[t] = new Set();
+                    preferred[t] = new Set();
+                });
+                
+                document.querySelectorAll('input[data-type="unavailable"]:checked').forEach(checkbox => {
                     unavailable[checkbox.dataset.teacher].add(checkbox.dataset.date);
+                });
+                document.querySelectorAll('input[data-type="preferred"]:checked').forEach(checkbox => {
+                    preferred[checkbox.dataset.teacher].add(checkbox.dataset.date);
                 });
 
                 const schedule = {};
@@ -303,13 +316,24 @@
                     for (const groupNum of schedulingOrder) {
                         if (schedule[dateString][groupNum]) continue;
                         
-                        const candidates = available[groupNum];
+                        let candidates = available[groupNum];
                         if (!candidates || candidates.length === 0) {
                             conflicts.push({ date: dateString, group: groupNum, reason: '沒有可安排的老師。' });
                             continue;
                         }
-
-                        candidates.sort((a, b) => workload[a] - workload[b]);
+                        
+                        // New sorting logic: prioritize preferred teachers, then by workload
+                        candidates.sort((a, b) => {
+                            const aIsPreferred = preferred[a].has(dateString);
+                            const bIsPreferred = preferred[b].has(dateString);
+                            
+                            if (aIsPreferred && !bIsPreferred) return -1; // a is preferred, comes first
+                            if (!aIsPreferred && bIsPreferred) return 1;  // b is preferred, comes first
+                            
+                            // If preference is the same (both or neither), sort by workload
+                            return workload[a] - workload[b];
+                        });
+                        
                         const chosenTeacher = candidates[0];
                         schedule[dateString][groupNum] = chosenTeacher;
                         workload[chosenTeacher]++;
@@ -325,10 +349,10 @@
                         }
                     }
                 });
-                renderResults(schedule, workload, conflicts, unavailable);
+                renderResults(schedule, workload, conflicts, unavailable, preferred);
             }
 
-            function renderResults(schedule, workload, conflicts, unavailable) {
+            function renderResults(schedule, workload, conflicts, unavailable, preferred) {
                 messageArea.innerHTML = '';
                 workloadSummary.innerHTML = '';
                 scheduleTableContainer.innerHTML = '';
@@ -368,7 +392,7 @@
                             const isUnavailable = unavailable[teacher].has(dateString);
 
                             if (isServing) {
-                                tableHtml += '<td class="px-4 py-3 text-center text-red-500 font-bold text-xl">*</td>';
+                                tableHtml += '<td class="px-4 py-3 text-center text-rose-500 font-bold text-xl">*</td>';
                             } else if (isUnavailable) {
                                 tableHtml += '<td class="px-4 py-3 text-center text-slate-800 font-semibold">X</td>';
                             } else {
@@ -398,6 +422,22 @@
             populateYearSelect();
             updateSettingsBtn.addEventListener('click', setupScheduler);
             generateBtn.addEventListener('click', generateSchedule);
+
+            // Add event listener for mutually exclusive checkboxes
+            unavailabilitySection.addEventListener('change', (e) => {
+                if (e.target.type === 'checkbox' && e.target.checked) {
+                    const teacher = e.target.dataset.teacher;
+                    const date = e.target.dataset.date;
+                    const type = e.target.dataset.type;
+                    
+                    const oppositeType = type === 'preferred' ? 'unavailable' : 'preferred';
+                    const oppositeCheckbox = unavailabilitySection.querySelector(`input[data-teacher="${teacher}"][data-date="${date}"][data-type="${oppositeType}"]`);
+                    
+                    if (oppositeCheckbox) {
+                        oppositeCheckbox.checked = false;
+                    }
+                }
+            });
         });
     </script>
 </body>
