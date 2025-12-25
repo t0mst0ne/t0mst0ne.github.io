@@ -1,47 +1,172 @@
+<!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-  <body>
-    <h1> MS 診斷 update 2024 </h1>
-    <li><a href="MS_2024_flowchart1.html">路徑 1：典型臨床發作或客觀進展</a></li>
-    <li><a href="MS_2024_flowchart2.html">路徑 2：放射學孤立綜合症(RIS)或其他非特異性表現</a></li>
-    <li><a href="MS_2024_flowchart3.html">路徑 3 : 特殊人群考量</a></li>
-    
-    <h1> Neurology scores </h1>
-
-    <h2> Stroke </h2>
-    <li><a href="NIHSS.html">NIHSS 計算器</a></li>
-    <li><a href="ABCD2.html">ABCD2 計算器</a></li>
-    <li><a href="PSS.html">PSS 計算器</a></li>
-    <li><a href="PSS-MAS.html">PSS-MAS </a></li>
-    
-    <h2> Dementia </h2>
-    <li><a href="CDR2.html">CDR 計算器</a></li>
-    <li><a href="NPI5.html">NPI 計算器</a></li>
-    <li><a href="CMAI.html">CMAI 量表 Cohen-Mansfield Agitation Inventory (CMAI) score </a></li>
-    <li><a href="fast-assessment-form.html"> Dementia 功能性評估分期測驗 (FAST) </a></li>
-    <li><a href="GDS.html"> Dementia 整體退化量表 (GDS) </a></li>
-
-    <h2> PD </h2>
-    <li><a href="UPDRS.html">UPDRS </a></li>
-
-    <h2> Multiple Sclerosis </h2>
-    <li><a href="EDSS.html">EDSS 量表</a></li>
-    
-    <h2> Fibromyalgia </h2>
-    <b> Lyrical :  WPI (wide spread pain index)≧7、Symptom severity (SS)≧5 且pain rating scale≧6分，或WPI 3-6、SS scale≧9且pain rating scale≧6分 </b>
-    <li><a href="fibromyalgia-calculator.html">纖維肌痛Severity Score 計分器</a></li>
-    <li><a href="wpi-calculator.html">纖維肌痛WPI 計分器</a></li>
-    
-
-    <h2> Parsing text</h2>
-    <li><a href="space.html">Parsing lab structure data </a></li>
-    <li><a href="Convert0321B.html">Parsing lab and visualization His4.0 by idnerdtw </li>
-
-    <h2> Reminder </h2>
-    <li><a href="qr-calendar-two-step.html"> 回診提醒 QR code </a></li>
-
-    <h2> Sunday School Scheduling Software</h2>
-    <li><a href="SSSS.html">SSSS.html</a></li>
-  </body>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neurology Tools Dashboard</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
 </head>
+<body>
+
+    <header>
+        <h1>Neurology Clinical Tools</h1>
+        <p>Comprehensive collection of diagnostic calculators, flowcharts, and assessment scales.</p>
+    </header>
+
+    <main>
+        <!-- multiple Sclerosis 2024 Update -->
+        <section>
+            <h2>🆕 MS Diagnosis Update 2024</h2>
+            <div class="grid">
+                <a href="MS_2024_flowchart1.html" class="card">
+                    <div class="card-title">路徑 1 (Path 1)</div>
+                    <div class="card-desc">典型臨床發作或客觀進展 (Typical Clinical Attack or Progression)</div>
+                    <span class="badge">Flowchart</span>
+                </a>
+                <a href="MS_2024_flowchart2.html" class="card">
+                    <div class="card-title">路徑 2 (Path 2)</div>
+                    <div class="card-desc">放射學孤立綜合症 (RIS) 或其他非特異性表現</div>
+                    <span class="badge">Flowchart</span>
+                </a>
+                <a href="MS_2024_flowchart3.html" class="card">
+                    <div class="card-title">路徑 3 (Path 3)</div>
+                    <div class="card-desc">特殊人群考量 (Special Populations)</div>
+                    <span class="badge">Flowchart</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- Stroke -->
+        <section>
+            <h2>🧠 Stroke Assessment</h2>
+            <div class="grid">
+                <a href="NIHSS.html" class="card">
+                    <div class="card-title">NIHSS 計算器</div>
+                    <div class="card-desc">National Institutes of Health Stroke Scale</div>
+                </a>
+                <a href="ABCD2.html" class="card">
+                    <div class="card-title">ABCD2 計算器</div>
+                    <div class="card-desc">Stroke risk assessment for TIA patients</div>
+                </a>
+                <a href="PSS.html" class="card">
+                    <div class="card-title">PSS 計算器</div>
+                    <div class="card-desc">Post-Stroke Spasticity Risk Score</div>
+                </a>
+                <a href="PSS-MAS.html" class="card">
+                    <div class="card-title">PSS-MAS</div>
+                    <div class="card-desc">Modified Ashworth Scale</div>
+                </a>
+            </div>
+        </section>
+
+        <!-- Dementia -->
+        <section>
+            <h2>🧩 Dementia & Cognition</h2>
+            <div class="grid">
+                <a href="CDR2.html" class="card">
+                    <div class="card-title">CDR 計算器</div>
+                    <div class="card-desc">Clinical Dementia Rating</div>
+                </a>
+                <a href="NPI5.html" class="card">
+                    <div class="card-title">NPI 計算器</div>
+                    <div class="card-desc">Neuropsychiatric Inventory</div>
+                </a>
+                <a href="CMAI.html" class="card">
+                    <div class="card-title">CMAI 量表</div>
+                    <div class="card-desc">Cohen-Mansfield Agitation Inventory</div>
+                </a>
+                <a href="fast-assessment-form.html" class="card">
+                    <div class="card-title">FAST Assessment</div>
+                    <div class="card-desc">Functional Assessment Staging Test</div>
+                </a>
+                <a href="GDS.html" class="card">
+                    <div class="card-title">GDS 量表</div>
+                    <div class="card-desc">Global Deterioration Scale</div>
+                </a>
+            </div>
+        </section>
+
+        <!-- Movement Disorders -->
+        <section>
+            <h2>🏃 Movement Disorders (PD)</h2>
+            <div class="grid">
+                <a href="UPDRS.html" class="card">
+                    <div class="card-title">UPDRS</div>
+                    <div class="card-desc">Unified Parkinson's Disease Rating Scale</div>
+                </a>
+            </div>
+        </section>
+
+        <!-- Multiple Sclerosis General -->
+        <section>
+            <h2>🦋 Multiple Sclerosis (General)</h2>
+            <div class="grid">
+                <a href="EDSS.html" class="card">
+                    <div class="card-title">EDSS 量表</div>
+                    <div class="card-desc">Expanded Disability Status Scale</div>
+                </a>
+            </div>
+        </section>
+
+        <!-- Fibromyalgia -->
+        <section>
+            <h2>🌿 Fibromyalgia</h2>
+            <div class="highlight-text">
+                <strong>Diagnostic Criteria Note:</strong> WPI (Wide Spread Pain Index) ≧ 7 & SS (Symptom Severity) ≧ 5 & Pain Rating ≧ 6 <br>
+                <em>OR</em> WPI 3-6 & SS ≧ 9 & Pain Rating ≧ 6
+            </div>
+            <div class="grid">
+                <a href="fibromyalgia-calculator.html" class="card">
+                    <div class="card-title">Severity Score (SS)</div>
+                    <div class="card-desc">Symptom Severity Score Calculator</div>
+                </a>
+                <a href="wpi-calculator.html" class="card">
+                    <div class="card-title">WPI Calculator</div>
+                    <div class="card-desc">Widespread Pain Index</div>
+                </a>
+            </div>
+        </section>
+
+        <!-- Data Tools -->
+        <section>
+            <h2>📊 Data & Parsing Tools</h2>
+            <div class="grid">
+                <a href="space.html" class="card">
+                    <div class="card-title">Lab Structure Parser</div>
+                    <div class="card-desc">Parse lab structure data</div>
+                </a>
+                <a href="Convert0321B.html" class="card">
+                    <div class="card-title">Lab Visualization</div>
+                    <div class="card-desc">Parsing lab and visualization (His4.0)</div>
+                </a>
+            </div>
+        </section>
+
+        <!-- Practical Tools -->
+        <section>
+            <h2>🛠️ Practical Tools</h2>
+            <div class="grid">
+                <a href="qr-calendar-two-step.html" class="card">
+                    <div class="card-title">QR Reminder</div>
+                    <div class="card-desc">Return visit reminder generator</div>
+                </a>
+                <a href="SSSS.html" class="card">
+                    <div class="card-title">Scheduling Tool</div>
+                    <div class="card-desc">Sunday School Scheduling Software</div>
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Tom Stone. All rights reserved.</p>
+    </footer>
+
+</body>
 </html>
