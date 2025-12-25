@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>整體退化量表 (GDS) - 互動評估表</title>
+    <style>
+        body {
+            font-family: "Microsoft JhengHei", "Heiti TC", sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        h1 {
+            background-color: #2c3e50;
+            color: #fff;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+            font-size: 24px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background-color: #6a9ac3; /* 類似圖片的標題藍色 */
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        /* 讓第一欄寬度固定，避免手機版太擠 */
+        th:nth-child(2) {
+            width: 30%;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            vertical-align: top;
+            line-height: 1.6;
+        }
+
+        tr {
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        tr:hover {
+            background-color: #f0f8ff;
+        }
+
+        /* 選中狀態 */
+        tr.selected {
+            background-color: #e3f2fd;
+            border-left: 5px solid #2196F3;
+        }
+
+        .check-col {
+            width: 50px;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        input[type="radio"] {
+            transform: scale(1.5);
+            cursor: pointer;
+        }
+
+        .stage-title {
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+
+        .stage-desc {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 0;
+        }
+
+        ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 4px;
+        }
+
+        /* 結果顯示區 */
+        .result-box {
+            padding: 20px;
+            background-color: #e8f5e9;
+            border-top: 2px solid #4caf50;
+            display: none; /* 預設隱藏 */
+        }
+        
+        .result-text {
+            font-weight: bold;
+            font-size: 18px;
+            color: #2e7d32;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>整體退化量表 (GDS)</h1>
+    <form id="gdsForm">
+        <table>
+            <thead>
+                <tr>
+                    <th class="check-col">選取</th>
+                    <th>階段</th>
+                    <th>典型症狀</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr onclick="selectRow(this)">
+                    <td class="check-col">
+                        <input type="radio" name="gds" value="1" id="gds1">
+                    </td>
+                    <td>
+                        <div class="stage-title">第一階段</div>
+                        <div class="stage-desc">認知能力沒有衰退 (正常運作)</div>
+                    </td>
+                    <td>
+                        <ul>
+                            <li>沒有記憶力問題</li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr onclick="selectRow(this)">
+                    <td class="check-col">
+                        <input type="radio" name="gds" value="2" id="gds2">
+                    </td>
+                    <td>
+                        <div class="stage-title">第二階段</div>
+                        <div class="stage-desc">認知能力有很輕微的衰退 (可能是與年齡相關的正常變化或是阿茲海默症最早期的症狀)</div>
+                    </td>
+                    <td>
+                        <ul>
+                            <li>記憶失誤</li>
+                            <li>忘記熟悉的人名和物件擺放的位置</li>
+                            <li>這些失誤並不明顯，其他人不易察覺</li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr onclick="selectRow(this)">
+                    <td class="check-col">
+                        <input type="radio" name="gds" value="3" id="gds3">
+                    </td>
+                    <td>
+                        <div class="stage-title">第三階段</div>
+                        <div class="stage-desc">認知能力輕微衰退 (出現這些症狀的某些人，但不是所有人，會被診斷出患上早期阿茲海默症)</div>
+                    </td>
+                    <td>
+                        <ul>
+                            <li>記憶力問題屬輕微</li>
+                            <li>難以學習新的事物</li>
+                            <li>難以集中精神或專注力有限</li>
+                            <li>難以辨認方向位置，例如會迷路</li>
+                            <li>溝通出現困難，例如想不起正確的用字</li>
+                            <li>遺失或亂放貴重物品</li>
+                            <li>難以處理工作上的難題</li>
+                            <li>家人、朋友或同事留意到問題</li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr onclick="selectRow(this)">
+                    <td class="check-col">
+                        <input type="radio" name="gds" value="4" id="gds4">
+                    </td>
+                    <td>
+                        <div class="stage-title">第四階段</div>
+                        <div class="stage-desc">認知能力中度衰退 (輕微或早期階段的阿茲海默症)</div>
+                    </td>
+                    <td>
+                        <ul>
+                            <li>記不起一些個人往事</li>
+                            <li>難以執行複雜的工作，例如管理財政、購物及旅遊</li>
+                            <li>對現時和最近發生的事情知道得少了</li>
+                            <li>對於較難的數學題，心算能力減弱 (例如由 75 每次減 7 倒數)</li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr onclick="selectRow(this)">
+                    <td class="check-col">
+                        <input type="radio" name="gds" value="5" id="gds5">
+                    </td>
+                    <td>
+                        <div class="stage-title">第五階段</div>
+                        <div class="stage-desc">認知能力中度嚴重衰退 (中度或中期階段的阿茲海默症)</div>
+                    </td>
+                    <td>
+                        <ul>
+                            <li>記憶力出現嚴重缺失，例如忘記電話號碼或親密家屬的名字</li>
+                            <li>需要別人協助日常生活</li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr onclick="selectRow(this)">
+                    <td class="check-col">
+                        <input type="radio" name="gds" value="6" id="gds6">
+                    </td>
+                    <td>
+                        <div class="stage-title">第六階段</div>
+                        <div class="stage-desc">認知能力非常嚴重衰退 (嚴重或晚期階段的阿茲海默症)</div>
+                    </td>
+                    <td>
+                        <ul>
+                            <li>記憶力持續減退，例如偶爾忘記配偶或主要照顧者的名字</li>
+                            <li>不知道自己最近做過的事情，例如忘記午餐吃了什麼或子女剛畢業</li>
+                            <li>需要別人協助日常的活動，例如穿衣、洗澡等</li>
+                            <li>數數字有困難</li>
+                            <li>性格和情緒出現變化，例如思想混亂、焦慮、多疑、憤怒、哀傷／抑鬱、敵意、顧慮、錯覺和激動</li>
+                            <li>強迫症，例如重複地做一些簡單的事情</li>
+                            <li>正常的睡眠／起床時間受到干擾</li>
+                            <li>失禁情況增多</li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr onclick="selectRow(this)">
+                    <td class="check-col">
+                        <input type="radio" name="gds" value="7" id="gds7">
+                    </td>
+                    <td>
+                        <div class="stage-title">第七階段</div>
+                        <div class="stage-desc">認知能力非常嚴重衰退 (嚴重或晚期階段的阿茲海默症)</div>
+                    </td>
+                    <td>
+                        <ul>
+                            <li>認知能力嚴重減弱</li>
+                            <li>使用的詞彙變得很有限，逐漸喪失說話能力</li>
+                            <li>不靠支撐不能自行走路或坐好</li>
+                            <li>進食和如廁時需要協助；通常有失禁問題</li>
+                        </ul>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+
+    <div class="result-box" id="resultBox">
+        當前評估結果：<span id="resultText" class="result-text"></span>
+    </div>
+</div>
+
+<script>
+    function selectRow(row) {
+        // 找到該行內的 radio button
+        const radio = row.querySelector('input[type="radio"]');
+        radio.checked = true;
+
+        // 移除所有行的 selected 樣式
+        document.querySelectorAll('tr').forEach(tr => tr.classList.remove('selected'));
+        
+        // 為當前行添加 selected 樣式
+        row.classList.add('selected');
+
+        // 顯示結果
+        const stageTitle = row.querySelector('.stage-title').innerText;
+        const resultBox = document.getElementById('resultBox');
+        const resultText = document.getElementById('resultText');
+        
+        resultBox.style.display = 'block';
+        resultText.innerText = stageTitle;
+        
+        // 平滑滾動到底部查看確認
+        // resultBox.scrollIntoView({ behavior: 'smooth' });
+    }
+</script>
+
+</body>
+</html>
