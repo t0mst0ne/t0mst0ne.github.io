@@ -127,6 +127,11 @@
     </div>
   </div>
 
+  <!-- Privacy notice -->
+  <div style="background:#fff3cd;border:1px solid #ffc107;border-radius:10px;padding:10px 14px;margin-bottom:12px;font-size:12px;color:#856404;line-height:1.5;">
+    ⚠️ <strong>隱私提醒：</strong>輸入內容將傳送至第三方 AI 服務。請勿輸入病患姓名、身分證字號、病歷號等可識別個人資訊。
+  </div>
+
   <!-- Input -->
   <div class="card">
     <div class="card-title">病史輸入</div>
@@ -168,7 +173,7 @@
     },
   };
 
-  let currentProvider = localStorage.getItem('provider') || 'gemini';
+  let currentProvider = sessionStorage.getItem('provider') || 'gemini';
 
   function selectProvider(p) {
     currentProvider = p;
@@ -177,18 +182,18 @@
     const models = PROVIDERS[p].models;
     const sel = document.getElementById('modelSelect');
     sel.innerHTML = models.map(m => `<option value="${m}">${m}</option>`).join('');
-    const saved = localStorage.getItem(p + '_model');
+    const saved = sessionStorage.getItem(p + '_model');
     if (saved && models.includes(saved)) sel.value = saved;
-    const key = localStorage.getItem(p + '_key') || '';
+    const key = sessionStorage.getItem(p + '_key') || '';
     document.getElementById('apiKeyInput').value = key;
   }
 
   function saveSettings() {
     const key = document.getElementById('apiKeyInput').value.trim();
     const model = document.getElementById('modelSelect').value;
-    localStorage.setItem('provider', currentProvider);
-    localStorage.setItem(currentProvider + '_key', key);
-    localStorage.setItem(currentProvider + '_model', model);
+    sessionStorage.setItem('provider', currentProvider);
+    sessionStorage.setItem(currentProvider + '_key', key);
+    sessionStorage.setItem(currentProvider + '_model', model);
     setStatus('設定已儲存', '');
   }
 
@@ -266,7 +271,7 @@ ${text}`;
 
   async function convert() {
     const text = document.getElementById('inputText').value.trim();
-    const key = localStorage.getItem(currentProvider + '_key') || '';
+    const key = sessionStorage.getItem(currentProvider + '_key') || '';
     const model = document.getElementById('modelSelect').value;
 
     if (!text) { setStatus('請先輸入病史', 'error'); return; }
@@ -291,8 +296,9 @@ ${text}`;
 
     if (provider === 'gemini') {
       res = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`,
-        { method: 'POST', headers: { 'Content-Type': 'application/json' },
+        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
+        { method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'x-goog-api-key': key },
           body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }) }
       );
       data = await res.json();
