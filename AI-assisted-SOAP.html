@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>病歷聽寫 SOAP</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, sans-serif; background: #f2f2f7; min-height: 100vh; }
+    .container { max-width: 720px; margin: 0 auto; padding: 20px; }
+    h1 { font-size: 20px; font-weight: 600; color: #1c1c1e; margin-bottom: 16px; }
+
+    /* Settings card */
+    .card { background: white; border-radius: 12px; padding: 16px; margin-bottom: 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+    .card-title {
+      font-size: 12px; font-weight: 600; color: #8e8e93;
+      text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px;
+    }
+    .settings-header {
+      display: flex; justify-content: space-between; align-items: center;
+      cursor: pointer; user-select: none;
+    }
+    .settings-header .card-title { margin-bottom: 0; }
+    .settings-body { margin-top: 12px; }
+    .settings-body.hidden { display: none; }
+
+    /* Provider tabs */
+    .provider-tabs { display: flex; gap: 6px; margin-bottom: 12px; }
+    .tab {
+      flex: 1; padding: 7px; text-align: center; font-size: 13px; font-weight: 500;
+      border: 1px solid #d1d1d6; border-radius: 8px; cursor: pointer;
+      background: white; color: #3c3c43;
+    }
+    .tab.active { background: #007aff; color: white; border-color: #007aff; }
+
+    .settings-row { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
+    .settings-row label { font-size: 13px; color: #3c3c43; white-space: nowrap; min-width: 48px; }
+    select, .settings-row input {
+      flex: 1; padding: 7px 10px; border: 1px solid #d1d1d6;
+      border-radius: 8px; font-size: 13px; background: white;
+    }
+    select:focus, .settings-row input:focus { outline: none; border-color: #007aff; }
+
+    .btn-save {
+      width: 100%; padding: 9px; background: #6c6c70; color: white;
+      border: none; border-radius: 8px; font-size: 13px; cursor: pointer; margin-top: 4px;
+    }
+    .btn-save:hover { background: #48484a; }
+
+    /* Input card */
+    textarea {
+      width: 100%; border: 1px solid #d1d1d6; border-radius: 8px;
+      padding: 10px 12px; font-size: 15px; line-height: 1.5;
+      resize: vertical; min-height: 120px; font-family: inherit;
+    }
+    textarea:focus { outline: none; border-color: #007aff; }
+    .interim { color: #8e8e93; font-size: 13px; min-height: 20px; margin-top: 6px; font-style: italic; }
+
+    .btn-row { display: flex; gap: 8px; margin-top: 12px; }
+    .btn-mic {
+      flex: 1; padding: 12px; border: none; border-radius: 10px;
+      font-size: 15px; font-weight: 500; cursor: pointer;
+      background: #007aff; color: white; transition: background 0.15s;
+    }
+    .btn-mic.listening { background: #ff3b30; }
+    .btn-mic:disabled { background: #aeaeb2; cursor: default; }
+    .btn-convert {
+      flex: 1; padding: 12px; border: none; border-radius: 10px;
+      font-size: 15px; font-weight: 500; cursor: pointer;
+      background: #34c759; color: white;
+    }
+    .btn-convert:disabled { background: #aeaeb2; cursor: default; }
+    .btn-clear {
+      padding: 12px 16px; border: none; border-radius: 10px;
+      font-size: 15px; cursor: pointer; background: #f2f2f7; color: #8e8e93;
+    }
+
+    /* SOAP output */
+    .soap-section { display: none; }
+    .soap-section.visible { display: block; }
+    .soap-label {
+      display: inline-block; font-size: 11px; font-weight: 700;
+      color: white; border-radius: 4px; padding: 2px 7px; margin-bottom: 6px;
+    }
+    .s { background: #007aff; } .o { background: #5856d6; }
+    .a { background: #ff9500; } .p { background: #34c759; }
+    .soap-block { margin-bottom: 14px; }
+    .soap-text { font-size: 14px; line-height: 1.6; color: #1c1c1e; white-space: pre-wrap; }
+    .copy-row { display: flex; gap: 8px; margin-top: 4px; }
+    .btn-copy {
+      font-size: 12px; padding: 5px 12px; border: 1px solid #d1d1d6;
+      border-radius: 6px; background: white; cursor: pointer; color: #007aff;
+    }
+    .btn-copy:active { background: #f2f2f7; }
+
+    .status { font-size: 12px; color: #8e8e93; text-align: center; padding: 6px; }
+    .loading { color: #007aff; }
+    .error { color: #ff3b30; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>病歷聽寫 → SOAP</h1>
+
+  <!-- Settings -->
+  <div class="card">
+    <div class="settings-header" onclick="toggleSettings()">
+      <div class="card-title">AI 設定</div>
+      <span id="settingsArrow" style="font-size:12px;color:#8e8e93;">▲</span>
+    </div>
+    <div class="settings-body" id="settingsBody">
+      <div class="provider-tabs" style="margin-top:12px;">
+        <div class="tab active" id="tab-gemini"  onclick="selectProvider('gemini')">Gemini</div>
+        <div class="tab"        id="tab-claude"  onclick="selectProvider('claude')">Claude</div>
+        <div class="tab"        id="tab-openai"  onclick="selectProvider('openai')">OpenAI</div>
+      </div>
+      <div class="settings-row">
+        <label>Model</label>
+        <select id="modelSelect"></select>
+      </div>
+      <div class="settings-row">
+        <label>API Key</label>
+        <input type="password" id="apiKeyInput" placeholder="貼上 API Key">
+      </div>
+      <button class="btn-save" onclick="saveSettings()">儲存</button>
+    </div>
+  </div>
+
+  <!-- Input -->
+  <div class="card">
+    <div class="card-title">病史輸入</div>
+    <textarea id="inputText" placeholder="點麥克風說話，或直接打字輸入碎片病史…"></textarea>
+    <div class="interim" id="interim"></div>
+    <div class="btn-row">
+      <button class="btn-mic" id="micBtn" onclick="toggleMic()">🎤 開始聽寫</button>
+      <button class="btn-convert" id="convertBtn" onclick="convert()">✦ 轉 SOAP</button>
+      <button class="btn-clear" onclick="clearAll()">清除</button>
+    </div>
+    <div class="status" id="status"></div>
+  </div>
+
+  <!-- SOAP output -->
+  <div class="card soap-section" id="soapCard">
+    <div class="card-title">SOAP Draft</div>
+    <div class="soap-block"><span class="soap-label s">S</span><div class="soap-text" id="s-text"></div></div>
+    <div class="soap-block"><span class="soap-label o">O</span><div class="soap-text" id="o-text"></div></div>
+    <div class="soap-block"><span class="soap-label a">A</span><div class="soap-text" id="a-text"></div></div>
+    <div class="soap-block"><span class="soap-label p">P</span><div class="soap-text" id="p-text"></div></div>
+    <div class="copy-row">
+      <button class="btn-copy" onclick="copySOAP()">複製完整 SOAP</button>
+      <button class="btn-copy" onclick="copyOriginal()">複製原文</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── Provider config ──────────────────────────────────────────────
+  const PROVIDERS = {
+    gemini: {
+      models: ['gemini-2.5-flash-lite', 'gemini-2.5-flash', 'gemini-2.5-pro'],
+    },
+    claude: {
+      models: ['claude-haiku-4-5-20251001', 'claude-sonnet-4-6', 'claude-opus-4-7'],
+    },
+    openai: {
+      models: ['gpt-4.1-mini', 'gpt-4o-mini', 'gpt-4o'],
+    },
+  };
+
+  let currentProvider = localStorage.getItem('provider') || 'gemini';
+
+  function selectProvider(p) {
+    currentProvider = p;
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('tab-' + p).classList.add('active');
+    const models = PROVIDERS[p].models;
+    const sel = document.getElementById('modelSelect');
+    sel.innerHTML = models.map(m => `<option value="${m}">${m}</option>`).join('');
+    const saved = localStorage.getItem(p + '_model');
+    if (saved && models.includes(saved)) sel.value = saved;
+    const key = localStorage.getItem(p + '_key') || '';
+    document.getElementById('apiKeyInput').value = key;
+  }
+
+  function saveSettings() {
+    const key = document.getElementById('apiKeyInput').value.trim();
+    const model = document.getElementById('modelSelect').value;
+    localStorage.setItem('provider', currentProvider);
+    localStorage.setItem(currentProvider + '_key', key);
+    localStorage.setItem(currentProvider + '_model', model);
+    setStatus('設定已儲存', '');
+  }
+
+  function toggleSettings() {
+    const body = document.getElementById('settingsBody');
+    const arrow = document.getElementById('settingsArrow');
+    body.classList.toggle('hidden');
+    arrow.textContent = body.classList.contains('hidden') ? '▼' : '▲';
+  }
+
+  // init
+  selectProvider(currentProvider);
+
+  // ── Speech Recognition ───────────────────────────────────────────
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  let recognition, listening = false;
+
+  if (!SR) {
+    document.getElementById('micBtn').disabled = true;
+    document.getElementById('micBtn').textContent = '語音不支援';
+  }
+
+  function toggleMic() {
+    if (listening) { recognition.stop(); return; }
+    recognition = new SR();
+    recognition.lang = 'zh-TW';
+    recognition.continuous = true;
+    recognition.interimResults = true;
+
+    recognition.onstart = () => {
+      listening = true;
+      const btn = document.getElementById('micBtn');
+      btn.textContent = '⏹ 停止聆聽';
+      btn.classList.add('listening');
+      setStatus('🔴 聆聽中…', '');
+    };
+
+    recognition.onresult = (e) => {
+      let final = '', interim = '';
+      for (let i = 0; i < e.results.length; i++) {
+        if (e.results[i].isFinal) final += e.results[i][0].transcript;
+        else interim += e.results[i][0].transcript;
+      }
+      document.getElementById('inputText').value = final;
+      document.getElementById('interim').textContent = interim;
+    };
+
+    recognition.onerror = (e) => { setStatus('錯誤：' + e.error, 'error'); resetMic(); };
+    recognition.onend = resetMic;
+    recognition.start();
+  }
+
+  function resetMic() {
+    listening = false;
+    const btn = document.getElementById('micBtn');
+    btn.textContent = '🎤 開始聽寫';
+    btn.classList.remove('listening');
+    document.getElementById('interim').textContent = '';
+    if (document.getElementById('status').textContent === '🔴 聆聽中…') setStatus('', '');
+  }
+
+  // ── SOAP Conversion ──────────────────────────────────────────────
+  const SOAP_PROMPT = (text) => `你是一位有經驗的臨床醫師。請根據以下碎片化的病史描述，整理成標準 SOAP 格式。
+
+規則：
+- S（Subjective）：患者主訴、症狀、病史，第三人稱描述
+- O（Objective）：客觀數據，若輸入無提及則填「Not documented」
+- A（Assessment）：診斷或鑑別診斷，要合理推斷
+- P（Plan）：治療計畫，若輸入無提及則填「To be determined」
+- 輸出格式嚴格依照：S: ...\nO: ...\nA: ...\nP: ...
+- 使用英文輸出
+
+病史輸入：
+${text}`;
+
+  async function convert() {
+    const text = document.getElementById('inputText').value.trim();
+    const key = localStorage.getItem(currentProvider + '_key') || '';
+    const model = document.getElementById('modelSelect').value;
+
+    if (!text) { setStatus('請先輸入病史', 'error'); return; }
+    if (!key)  { setStatus('請填入 API Key 並儲存', 'error'); return; }
+
+    setStatus('轉換中…', 'loading');
+    document.getElementById('convertBtn').disabled = true;
+
+    try {
+      const output = await callAPI(currentProvider, model, key, SOAP_PROMPT(text));
+      parseSOAP(output);
+      setStatus('', '');
+    } catch (e) {
+      setStatus('API 錯誤：' + e.message, 'error');
+    } finally {
+      document.getElementById('convertBtn').disabled = false;
+    }
+  }
+
+  async function callAPI(provider, model, key, prompt) {
+    let res, data;
+
+    if (provider === 'gemini') {
+      res = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`,
+        { method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }) }
+      );
+      data = await res.json();
+      if (!res.ok) throw new Error(data.error?.message || res.status);
+      return data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    }
+
+    if (provider === 'claude') {
+      res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': key,
+          'anthropic-version': '2023-06-01',
+          'anthropic-dangerous-direct-browser-access': 'true',
+        },
+        body: JSON.stringify({ model, max_tokens: 1024,
+          messages: [{ role: 'user', content: prompt }] })
+      });
+      data = await res.json();
+      if (!res.ok) throw new Error(data.error?.message || res.status);
+      return data.content?.[0]?.text || '';
+    }
+
+    if (provider === 'openai') {
+      res = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${key}` },
+        body: JSON.stringify({ model, messages: [{ role: 'user', content: prompt }] })
+      });
+      data = await res.json();
+      if (!res.ok) throw new Error(data.error?.message || res.status);
+      return data.choices?.[0]?.message?.content || '';
+    }
+
+    throw new Error('Unknown provider');
+  }
+
+  function parseSOAP(text) {
+    const get = (tag) => {
+      const re = new RegExp(`${tag}:\\s*([\\s\\S]*?)(?=\\n[SOAP]:|$)`, 'i');
+      return (text.match(re)?.[1] || '').trim();
+    };
+    document.getElementById('s-text').textContent = get('S');
+    document.getElementById('o-text').textContent = get('O');
+    document.getElementById('a-text').textContent = get('A');
+    document.getElementById('p-text').textContent = get('P');
+    document.getElementById('soapCard').classList.add('visible');
+  }
+
+  function copySOAP() {
+    const s = document.getElementById('s-text').textContent;
+    const o = document.getElementById('o-text').textContent;
+    const a = document.getElementById('a-text').textContent;
+    const p = document.getElementById('p-text').textContent;
+    navigator.clipboard.writeText(`S: ${s}\n\nO: ${o}\n\nA: ${a}\n\nP: ${p}`);
+    setStatus('已複製 SOAP', '');
+  }
+
+  function copyOriginal() {
+    navigator.clipboard.writeText(document.getElementById('inputText').value);
+    setStatus('已複製原文', '');
+  }
+
+  function clearAll() {
+    document.getElementById('inputText').value = '';
+    document.getElementById('interim').textContent = '';
+    document.getElementById('soapCard').classList.remove('visible');
+    setStatus('', '');
+  }
+
+  function setStatus(msg, type) {
+    const el = document.getElementById('status');
+    el.textContent = msg;
+    el.className = 'status ' + type;
+  }
+</script>
+</body>
+</html>
