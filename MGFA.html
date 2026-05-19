@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MGFA 重症肌無力臨床分級</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        @media print {
+            .no-print { display: none !important; }
+            body { background-color: white; }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in { animation: fadeIn 0.35s ease-out forwards; }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen">
+<div id="root"></div>
+
+<script type="text/babel">
+const { useState } = React;
+
+// ── Icons ──────────────────────────────────────────────────────────────────
+const CopyIcon = (p) => (
+    <svg {...p} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+         stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="9" y="9" width="13" height="13" rx="2"/>
+        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+    </svg>
+);
+const CheckIcon = (p) => (
+    <svg {...p} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+         stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <polyline points="20 6 9 17 4 12"/>
+    </svg>
+);
+const PrinterIcon = (p) => (
+    <svg {...p} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+         stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <polyline points="6 9 6 2 18 2 18 9"/>
+        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+        <rect x="6" y="14" width="12" height="8"/>
+    </svg>
+);
+const RefreshIcon = (p) => (
+    <svg {...p} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+         stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
+        <path d="M21 3v5h-5"/>
+        <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
+        <path d="M8 16H3v5"/>
+    </svg>
+);
+
+// ── Classification data ────────────────────────────────────────────────────
+const CLASSES = [
+    {
+        id: "I",
+        label: "Class I",
+        severity: "眼肌型",
+        severity_en: "Ocular only",
+        color: {
+            ring:   "ring-emerald-400",
+            bg:     "bg-emerald-50",
+            header: "bg-emerald-100",
+            badge:  "bg-emerald-500",
+            text:   "text-emerald-800",
+            border: "border-emerald-300",
+            dot:    "bg-emerald-500",
+        },
+        description_zh: "僅眼外肌無力；可能伴有眼瞼閉合無力。其餘所有肌肉力量正常。",
+        description_en: "Any ocular muscle weakness; may have weakness of eye closure. All other muscle strength is normal.",
+        subs: null,
+    },
+    {
+        id: "II",
+        label: "Class II",
+        severity: "輕度全身型",
+        severity_en: "Mild generalized",
+        color: {
+            ring:   "ring-sky-400",
+            bg:     "bg-sky-50",
+            header: "bg-sky-100",
+            badge:  "bg-sky-500",
+            text:   "text-sky-800",
+            border: "border-sky-300",
+            dot:    "bg-sky-500",
+        },
+        description_zh: "眼肌以外的肌肉出現輕度無力；可伴有任何程度的眼肌無力。",
+        description_en: "Mild weakness affecting muscles other than ocular muscles; may also have ocular muscle weakness of any severity.",
+        subs: [
+            {
+                id: "IIa",
+                label: "IIa",
+                zh: "主要影響四肢、軸向肌肉或兩者",
+                detail_zh: "咽喉肌肉受累程度較輕。",
+                en: "Predominantly affecting limb, axial muscles or both.",
+                detail_en: "May also have lesser involvement of oropharyngeal muscles.",
+            },
+            {
+                id: "IIb",
+                label: "IIb",
+                zh: "主要影響咽喉、呼吸肌或兩者",
+                detail_zh: "四肢、軸向肌肉受累程度相當或較輕。",
+                en: "Predominantly affecting oropharyngeal, respiratory muscles or both.",
+                detail_en: "May also have lesser or equal involvement of limb, axial muscles or both.",
+            },
+        ],
+    },
+    {
+        id: "III",
+        label: "Class III",
+        severity: "中度全身型",
+        severity_en: "Moderate generalized",
+        color: {
+            ring:   "ring-amber-400",
+            bg:     "bg-amber-50",
+            header: "bg-amber-100",
+            badge:  "bg-amber-500",
+            text:   "text-amber-800",
+            border: "border-amber-300",
+            dot:    "bg-amber-500",
+        },
+        description_zh: "眼肌以外的肌肉出現中度無力；可伴有任何程度的眼肌無力。",
+        description_en: "Moderate weakness affecting muscles other than ocular muscles; may also have ocular muscle weakness of any severity.",
+        subs: [
+            {
+                id: "IIIa",
+                label: "IIIa",
+                zh: "主要影響四肢、軸向肌肉或兩者",
+                detail_zh: "咽喉肌肉受累程度較輕。",
+                en: "Predominantly affecting limb, axial muscles or both.",
+                detail_en: "May also have lesser involvement of oropharyngeal muscles.",
+            },
+            {
+                id: "IIIb",
+                label: "IIIb",
+                zh: "主要影響咽喉、呼吸肌或兩者",
+                detail_zh: "四肢、軸向肌肉受累程度相當或較輕。",
+                en: "Predominantly affecting oropharyngeal, respiratory muscles or both.",
+                detail_en: "May also have lesser or equal involvement of limb, axial muscles or both.",
+            },
+        ],
+    },
+    {
+        id: "IV",
+        label: "Class IV",
+        severity: "重度全身型",
+        severity_en: "Severe generalized",
+        color: {
+            ring:   "ring-orange-400",
+            bg:     "bg-orange-50",
+            header: "bg-orange-100",
+            badge:  "bg-orange-500",
+            text:   "text-orange-800",
+            border: "border-orange-300",
+            dot:    "bg-orange-500",
+        },
+        description_zh: "眼肌以外的肌肉出現重度無力；可伴有任何程度的眼肌無力。",
+        description_en: "Severe weakness affecting muscles other than ocular muscles; may also have ocular muscle weakness of any severity.",
+        subs: [
+            {
+                id: "IVa",
+                label: "IVa",
+                zh: "主要影響四肢、軸向肌肉或兩者",
+                detail_zh: "咽喉肌肉受累程度較輕。",
+                en: "Predominantly affecting limb, axial muscles or both.",
+                detail_en: "May also have lesser involvement of oropharyngeal muscles.",
+            },
+            {
+                id: "IVb",
+                label: "IVb",
+                zh: "主要影響咽喉、呼吸肌或兩者",
+                detail_zh: "四肢、軸向肌肉受累程度相當或較輕。需鼻胃管但未插管者歸於此級。",
+                en: "Predominantly affecting oropharyngeal, respiratory muscles or both.",
+                detail_en: "May also have lesser or equal involvement of limb, axial muscles or both. The use of a feeding tube without intubation places the patient in class IVb.",
+            },
+        ],
+    },
+    {
+        id: "V",
+        label: "Class V",
+        severity: "插管依賴",
+        severity_en: "Intubation required",
+        color: {
+            ring:   "ring-red-400",
+            bg:     "bg-red-50",
+            header: "bg-red-100",
+            badge:  "bg-red-600",
+            text:   "text-red-800",
+            border: "border-red-300",
+            dot:    "bg-red-600",
+        },
+        description_zh: "需要插管，伴或不伴機械通氣（常規術後處理除外）。",
+        description_en: "Defined as intubation, with or without mechanical ventilation, except when employed during routine postoperative management.",
+        subs: null,
+        note_zh: "若僅需鼻胃管但未插管，歸為 Class IVb。",
+        note_en: "The use of a feeding tube without intubation places the patient in class IVb.",
+    },
+];
+
+// ── CopyBtn ────────────────────────────────────────────────────────────────
+function CopyBtn({ text, label = "複製", className = "" }) {
+    const [copied, setCopied] = useState(false);
+    const copy = () => {
+        navigator.clipboard.writeText(text).then(() => {
+            setCopied(true);
+            setTimeout(() => setCopied(false), 1800);
+        });
+    };
+    return (
+        <button onClick={copy}
+            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium border transition-all
+                ${copied
+                    ? "bg-green-100 text-green-700 border-green-300"
+                    : "bg-white text-slate-600 border-slate-300 hover:border-indigo-400 hover:text-indigo-700"
+                } ${className}`}>
+            {copied
+                ? <><CheckIcon className="w-3.5 h-3.5"/>已複製</>
+                : <><CopyIcon className="w-3.5 h-3.5"/>{label}</>}
+        </button>
+    );
+}
+
+// ── ClassCard ──────────────────────────────────────────────────────────────
+function ClassCard({ cls, selected, selectedSub, onSelect, onSelectSub }) {
+    const c = cls.color;
+    const isSelected = selected === cls.id;
+
+    return (
+        <div className={`rounded-xl border-2 transition-all duration-200 overflow-hidden fade-in
+            ${isSelected ? `${c.border} ${c.ring} ring-2 shadow-md` : "border-slate-200 hover:border-slate-300 shadow-sm bg-white"}`}>
+
+            {/* Header — click to select */}
+            <button
+                onClick={() => onSelect(cls.id)}
+                className={`w-full flex items-start gap-4 p-4 text-left transition-colors
+                    ${isSelected ? `${c.bg}` : "bg-white hover:bg-slate-50"}`}>
+
+                {/* Class badge */}
+                <div className={`shrink-0 ${c.badge} text-white rounded-lg px-3 py-1.5 text-sm font-extrabold shadow-sm min-w-[4rem] text-center`}>
+                    {cls.label}
+                </div>
+
+                {/* Description */}
+                <div className="flex-1 min-w-0">
+                    <div className="flex flex-wrap items-center gap-2 mb-1">
+                        <span className={`text-base font-bold ${isSelected ? c.text : "text-slate-800"}`}>
+                            {cls.severity}
+                        </span>
+                        <span className="text-xs text-slate-400">{cls.severity_en}</span>
+                    </div>
+                    <p className={`text-sm leading-relaxed ${isSelected ? c.text : "text-slate-600"}`}>
+                        {cls.description_zh}
+                    </p>
+                    <p className="text-xs text-slate-400 mt-0.5 leading-relaxed">{cls.description_en}</p>
+                    {cls.note_zh && (
+                        <p className={`text-xs mt-1.5 font-medium ${isSelected ? c.text : "text-slate-500"}`}>
+                            ⚠ {cls.note_zh}
+                        </p>
+                    )}
+                </div>
+
+                {/* Selected indicator */}
+                <div className={`shrink-0 w-5 h-5 rounded-full border-2 transition-all mt-0.5
+                    ${isSelected ? `${c.badge} border-transparent` : "border-slate-300 bg-white"}`}>
+                    {isSelected && <CheckIcon className="w-full h-full text-white p-0.5"/>}
+                </div>
+            </button>
+
+            {/* Sub-classification (only when selected and has subs) */}
+            {isSelected && cls.subs && (
+                <div className={`border-t ${c.border} ${c.bg} px-4 pb-4 pt-3`}>
+                    <p className={`text-xs font-semibold uppercase tracking-wide mb-2 ${c.text}`}>
+                        亞型分類 Sub-classification
+                    </p>
+                    <div className="space-y-2">
+                        {cls.subs.map(sub => {
+                            const subSel = selectedSub === sub.id;
+                            return (
+                                <label key={sub.id}
+                                    className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-all
+                                        ${subSel
+                                            ? `${c.border} ${c.bg} border-2`
+                                            : "border-slate-200 bg-white hover:border-slate-300"
+                                        }`}>
+                                    <input
+                                        type="radio"
+                                        name={`sub_${cls.id}`}
+                                        value={sub.id}
+                                        checked={subSel}
+                                        onChange={() => onSelectSub(sub.id)}
+                                        className="mt-0.5 w-4 h-4 accent-current shrink-0"
+                                    />
+                                    <div>
+                                        <div className="flex items-center gap-2 flex-wrap">
+                                            <span className={`text-sm font-bold ${subSel ? c.text : "text-slate-700"}`}>
+                                                {sub.label}
+                                            </span>
+                                            <span className={`text-sm ${subSel ? c.text : "text-slate-700"}`}>
+                                                {sub.zh}
+                                            </span>
+                                        </div>
+                                        <p className={`text-xs mt-0.5 ${subSel ? c.text : "text-slate-500"}`}>
+                                            {sub.detail_zh}
+                                        </p>
+                                        <p className="text-xs text-slate-400 mt-0.5">{sub.en} {sub.detail_en}</p>
+                                    </div>
+                                </label>
+                            );
+                        })}
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+}
+
+// ── ResultPanel ────────────────────────────────────────────────────────────
+function ResultPanel({ selected, selectedSub }) {
+    if (!selected) {
+        return (
+            <div className="rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 p-6 text-center text-slate-400 text-sm">
+                請選擇分級
+            </div>
+        );
+    }
+
+    const cls = CLASSES.find(c => c.id === selected);
+    if (!cls) return null;
+
+    const sub = cls.subs ? cls.subs.find(s => s.id === selectedSub) : null;
+    const needSub = cls.subs && !sub;
+
+    const finalClass = sub ? sub.id : (cls.subs ? null : cls.id);
+    const c = cls.color;
+
+    const buildText = () => {
+        const today = new Date().toLocaleDateString("zh-TW", { year: "numeric", month: "2-digit", day: "2-digit" });
+        const lines = [`MGFA 臨床分級　${today}`];
+        if (finalClass) {
+            lines.push(`分級：${finalClass}　（${cls.severity}${sub ? "，" + sub.zh : ""}）`);
+            lines.push(`說明：${cls.description_zh}${sub ? " " + sub.zh + "。" + sub.detail_zh : ""}`);
+        } else {
+            lines.push(`分級：${cls.id}　（${cls.severity}）— 亞型尚未選擇`);
+        }
+        return lines.join("\n");
+    };
+
+    return (
+        <div className={`rounded-xl border-2 ${c.border} ${c.bg} p-5 shadow-sm fade-in`}>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+                <div>
+                    <div className="text-xs uppercase tracking-widest text-slate-500 mb-1">MGFA Classification</div>
+                    <div className="flex items-center gap-3 flex-wrap">
+                        {finalClass ? (
+                            <>
+                                <span className={`text-4xl font-extrabold ${c.text}`}>{finalClass}</span>
+                                <div>
+                                    <div className={`text-base font-semibold ${c.text}`}>{cls.severity}</div>
+                                    {sub && <div className={`text-sm ${c.text}`}>{sub.zh}</div>}
+                                </div>
+                            </>
+                        ) : (
+                            <span className={`text-4xl font-extrabold ${c.text}`}>{cls.id}</span>
+                        )}
+                    </div>
+                    {needSub && (
+                        <p className="text-xs text-amber-600 mt-1 font-medium">⚠ 請繼續選擇 a / b 亞型</p>
+                    )}
+                </div>
+
+                <div className="flex items-center gap-2 no-print flex-wrap">
+                    {finalClass && <CopyBtn text={finalClass} label="複製分級" />}
+                    <CopyBtn text={buildText()} label="複製完整結果" />
+                </div>
+            </div>
+
+            {/* Description */}
+            <div className={`rounded-lg border ${c.border} bg-white/60 p-3 text-sm space-y-1`}>
+                <p className={`font-medium ${c.text}`}>{cls.description_zh}</p>
+                <p className="text-slate-400 text-xs">{cls.description_en}</p>
+                {sub && (
+                    <>
+                        <hr className="border-slate-200 my-1"/>
+                        <p className={`font-medium ${c.text}`}>{sub.zh}　{sub.detail_zh}</p>
+                        <p className="text-slate-400 text-xs">{sub.en} {sub.detail_en}</p>
+                    </>
+                )}
+                {cls.note_zh && (
+                    <>
+                        <hr className="border-slate-200 my-1"/>
+                        <p className={`text-xs font-medium ${c.text}`}>⚠ {cls.note_zh}</p>
+                    </>
+                )}
+            </div>
+        </div>
+    );
+}
+
+// ── Severity Bar ───────────────────────────────────────────────────────────
+const SEV_BAR = [
+    { id: "I",   label: "I",   color: "bg-emerald-500", tip: "眼肌型" },
+    { id: "II",  label: "II",  color: "bg-sky-500",     tip: "輕度全身型" },
+    { id: "III", label: "III", color: "bg-amber-500",   tip: "中度全身型" },
+    { id: "IV",  label: "IV",  color: "bg-orange-500",  tip: "重度全身型" },
+    { id: "V",   label: "V",   color: "bg-red-600",     tip: "插管依賴" },
+];
+
+// ── App ────────────────────────────────────────────────────────────────────
+function App() {
+    const [selected, setSelected]       = useState(null);
+    const [selectedSub, setSelectedSub] = useState(null);
+
+    const handleSelect = (id) => {
+        setSelected(id);
+        setSelectedSub(null);
+    };
+
+    const reset = () => {
+        setSelected(null);
+        setSelectedSub(null);
+    };
+
+    return (
+        <div className="max-w-2xl mx-auto px-4 py-8">
+            {/* Header */}
+            <div className="mb-6 fade-in">
+                <div className="inline-block bg-indigo-100 text-indigo-700 text-xs font-semibold px-3 py-1 rounded-full mb-3 uppercase tracking-wide">
+                    Neurology · MG Classification
+                </div>
+                <h1 className="text-2xl font-extrabold text-slate-900 leading-tight">
+                    MGFA Clinical Classification
+                </h1>
+                <p className="text-slate-500 text-sm mt-1">
+                    Myasthenia Gravis Foundation of America
+                    &nbsp;·&nbsp; 重症肌無力臨床分級
+                </p>
+
+                {/* Severity bar */}
+                <div className="mt-4 flex items-center gap-1">
+                    {SEV_BAR.map(s => (
+                        <div key={s.id} title={s.tip}
+                            className={`flex-1 ${s.color} rounded text-white text-center text-xs font-bold py-1 cursor-default`}>
+                            {s.label}
+                        </div>
+                    ))}
+                </div>
+                <div className="flex justify-between text-xs text-slate-400 mt-0.5">
+                    <span>較輕</span>
+                    <span>較重</span>
+                </div>
+            </div>
+
+            {/* Class cards */}
+            <div className="space-y-3 mb-8">
+                {CLASSES.map(cls => (
+                    <ClassCard
+                        key={cls.id}
+                        cls={cls}
+                        selected={selected}
+                        selectedSub={selectedSub}
+                        onSelect={handleSelect}
+                        onSelectSub={setSelectedSub}
+                    />
+                ))}
+            </div>
+
+            {/* Result */}
+            <div className="mb-6 fade-in">
+                <h2 className="text-sm font-semibold text-slate-600 uppercase tracking-widest mb-3">
+                    分級結果
+                </h2>
+                <ResultPanel selected={selected} selectedSub={selectedSub} />
+            </div>
+
+            {/* Actions */}
+            <div className="flex gap-3 justify-end no-print">
+                <button onClick={reset}
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-slate-300 text-slate-600 text-sm font-medium hover:border-red-300 hover:text-red-600 transition-colors bg-white">
+                    <RefreshIcon className="w-4 h-4"/> 重置
+                </button>
+                <button onClick={() => window.print()}
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium transition-colors shadow-sm">
+                    <PrinterIcon className="w-4 h-4"/> 列印
+                </button>
+            </div>
+
+            {/* Footer */}
+            <p className="text-center text-xs text-slate-400 mt-8 no-print">
+                來源：<a href="https://www.tnms.com.tw/en/mgfa-2/" target="_blank" rel="noopener noreferrer"
+                    className="underline hover:text-indigo-500">台灣神經免疫醫學會 TNMS</a>
+                &nbsp;·&nbsp; Jaretzki A 3rd, et al. <em>Neurology</em> 2000;55:16–23.
+            </p>
+        </div>
+    );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>

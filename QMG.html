@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QMG 重症肌無力量化評估</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        @media print {
+            .no-print { display: none !important; }
+            body { background-color: white; }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in { animation: fadeIn 0.35s ease-out forwards; }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen">
+<div id="root"></div>
+
+<script type="text/babel">
+const { useState, useCallback } = React;
+
+// ── Icons ──────────────────────────────────────────────────────────────────
+const CopyIcon = (p) => (
+    <svg {...p} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+         stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="9" y="9" width="13" height="13" rx="2"/>
+        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+    </svg>
+);
+const CheckIcon = (p) => (
+    <svg {...p} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+         stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <polyline points="20 6 9 17 4 12"/>
+    </svg>
+);
+const PrinterIcon = (p) => (
+    <svg {...p} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+         stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <polyline points="6 9 6 2 18 2 18 9"/>
+        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+        <rect x="6" y="14" width="12" height="8"/>
+    </svg>
+);
+const RefreshIcon = (p) => (
+    <svg {...p} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+         stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
+        <path d="M21 3v5h-5"/>
+        <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
+        <path d="M8 16H3v5"/>
+    </svg>
+);
+
+// ── Item definitions ───────────────────────────────────────────────────────
+const GROUPS = [
+    { id: "ocular",    zh: "眼肌",       en: "Ocular",              color: "bg-violet-500" },
+    { id: "bulbar",    zh: "延髓/球部",   en: "Bulbar",              color: "bg-sky-500" },
+    { id: "limb",      zh: "上肢",        en: "Upper Limb",          color: "bg-teal-500" },
+    { id: "resp",      zh: "呼吸",        en: "Respiratory",         color: "bg-amber-500" },
+    { id: "grip",      zh: "握力",        en: "Hand Grip",           color: "bg-orange-500" },
+    { id: "axial",     zh: "軀幹/下肢",   en: "Axial / Lower Limb",  color: "bg-rose-500" },
+];
+
+// options: [score0, score1, score2, score3]
+// type: "timed" | "grip" | "fvc" | "categorical"
+// rawUnit: unit label for numeric input
+// thresholds: [t1, t2, t3] — raw value ≥ t1 → 0; t2≤x<t1 → 1; t3≤x<t2 → 2; else → 3
+//   special: "spontaneous" for ocular items
+const ITEMS = [
+    // ── Ocular ──────────────────────────────────────────────────────────
+    {
+        id: "double_vision", group: "ocular", index: 1,
+        en: "Double vision on lateral gaze",
+        zh: "側向凝視複視持續時間",
+        instruction_zh: "右側或左側擇一測量（秒）",
+        instruction_en: "Right or left (circle one), secs",
+        type: "timed_ocular",
+        rawUnit: "秒",
+        options: [
+            { score: 0, zh: "≥ 61 秒",    en: "≥ 61 sec" },
+            { score: 1, zh: "11–60 秒",   en: "11–60 sec" },
+            { score: 2, zh: "1–10 秒",    en: "1–10 sec" },
+            { score: 3, zh: "自發性複視", en: "Spontaneous" },
+        ],
+    },
+    {
+        id: "ptosis", group: "ocular", index: 2,
+        en: "Ptosis (upward gaze)",
+        zh: "上視眼瞼下垂持續時間",
+        instruction_zh: "上視時眼瞼下垂（秒）",
+        instruction_en: "Upward gaze, secs",
+        type: "timed_ocular",
+        rawUnit: "秒",
+        options: [
+            { score: 0, zh: "≥ 61 秒",    en: "≥ 61 sec" },
+            { score: 1, zh: "11–60 秒",   en: "11–60 sec" },
+            { score: 2, zh: "1–10 秒",    en: "1–10 sec" },
+            { score: 3, zh: "自發性下垂", en: "Spontaneous" },
+        ],
+    },
+    // ── Bulbar ──────────────────────────────────────────────────────────
+    {
+        id: "facial", group: "bulbar", index: 3,
+        en: "Facial muscles",
+        zh: "顏面肌肉",
+        instruction_zh: "評估眼瞼閉合力量",
+        instruction_en: "Assess lid closure",
+        type: "categorical",
+        options: [
+            { score: 0, zh: "正常眼瞼閉合",              en: "Normal lid closure" },
+            { score: 1, zh: "完全閉合，無力，可稍抵抗",   en: "Complete, weak, some resistance" },
+            { score: 2, zh: "完全閉合，無法抵抗",         en: "Complete, without resistance" },
+            { score: 3, zh: "無法完全閉合",               en: "Incomplete" },
+        ],
+    },
+    {
+        id: "swallowing", group: "bulbar", index: 4,
+        en: "Swallowing 4 oz water (½ cup)",
+        zh: "吞嚥 4 盎司水（約 120 mL）",
+        instruction_zh: "請病患一次喝下半杯水",
+        instruction_en: "Patient drinks ½ cup water",
+        type: "categorical",
+        options: [
+            { score: 0, zh: "正常",                       en: "Normal" },
+            { score: 1, zh: "輕微咳嗽或清喉嚨",           en: "Minimal coughing or throat clearing" },
+            { score: 2, zh: "嚴重嗆咳/哽噎或鼻腔逆流",    en: "Severe coughing/choking or nasal regurgitation" },
+            { score: 3, zh: "無法吞嚥（測試未進行）",      en: "Cannot swallow (test not attempted)" },
+        ],
+    },
+    {
+        id: "speech", group: "bulbar", index: 5,
+        en: "Speech after counting aloud from 1 to 50",
+        zh: "大聲從 1 數到 50（構音障礙出現時機）",
+        instruction_zh: "記錄構音障礙開始出現的數字",
+        instruction_en: "Note onset of dysarthria",
+        type: "categorical",
+        options: [
+            { score: 0, zh: "數到 50 無構音障礙",   en: "None at 50" },
+            { score: 1, zh: "構音障礙於 30–49",     en: "Dysarthria at 30–49" },
+            { score: 2, zh: "構音障礙於 10–29",     en: "Dysarthria at 10–29" },
+            { score: 3, zh: "構音障礙於 ≤ 9",       en: "Dysarthria at ≤ 9" },
+        ],
+    },
+    // ── Upper Limb ──────────────────────────────────────────────────────
+    {
+        id: "right_arm", group: "limb", index: 6,
+        en: "Right arm outstretched (90° sitting)",
+        zh: "右臂水平伸展（坐姿 90°）",
+        instruction_zh: "記錄維持時間（秒）",
+        instruction_en: "Record duration in seconds",
+        type: "timed",
+        rawUnit: "秒",
+        thresholds: [240, 90, 10],
+        options: [
+            { score: 0, zh: "≥ 240 秒",  en: "≥ 240 sec" },
+            { score: 1, zh: "90–239 秒", en: "90–239 sec" },
+            { score: 2, zh: "10–89 秒",  en: "10–89 sec" },
+            { score: 3, zh: "0–9 秒",    en: "0–9 sec" },
+        ],
+    },
+    {
+        id: "left_arm", group: "limb", index: 7,
+        en: "Left arm outstretched (90° sitting)",
+        zh: "左臂水平伸展（坐姿 90°）",
+        instruction_zh: "記錄維持時間（秒）",
+        instruction_en: "Record duration in seconds",
+        type: "timed",
+        rawUnit: "秒",
+        thresholds: [240, 90, 10],
+        options: [
+            { score: 0, zh: "≥ 240 秒",  en: "≥ 240 sec" },
+            { score: 1, zh: "90–239 秒", en: "90–239 sec" },
+            { score: 2, zh: "10–89 秒",  en: "10–89 sec" },
+            { score: 3, zh: "0–9 秒",    en: "0–9 sec" },
+        ],
+    },
+    // ── Respiratory ─────────────────────────────────────────────────────
+    {
+        id: "fvc", group: "resp", index: 8,
+        en: "Forced Vital Capacity (% predicted)",
+        zh: "用力肺活量（佔預測值 %）",
+        instruction_zh: "輸入 FVC %",
+        instruction_en: "Enter FVC % predicted",
+        type: "fvc",
+        rawUnit: "%",
+        options: [
+            { score: 0, zh: "> 80%",    en: "> 80%" },
+            { score: 1, zh: "65–79%",   en: "65–79%" },
+            { score: 2, zh: "50–64%",   en: "50–64%" },
+            { score: 3, zh: "< 50%",    en: "< 50%" },
+        ],
+    },
+    // ── Grip ────────────────────────────────────────────────────────────
+    {
+        id: "right_grip", group: "grip", index: 9,
+        en: "Right hand grip (kg)",
+        zh: "右手握力（kg）",
+        instruction_zh: "輸入握力值（kg）",
+        instruction_en: "Enter grip strength in kg",
+        type: "grip",
+        rawUnit: "kg",
+        thresholds_m: [45, 15, 5],   // men:   >45=0, 15-44=1, 5-14=2, 0-4=3
+        thresholds_f: [30, 10, 5],   // women: >30=0, 10-29=1, 5-9=2,  0-4=3
+        options_m: [
+            { score: 0, zh: "> 45 kg",   en: "> 45 kg" },
+            { score: 1, zh: "15–44 kg",  en: "15–44 kg" },
+            { score: 2, zh: "5–14 kg",   en: "5–14 kg" },
+            { score: 3, zh: "0–4 kg",    en: "0–4 kg" },
+        ],
+        options_f: [
+            { score: 0, zh: "> 30 kg",   en: "> 30 kg" },
+            { score: 1, zh: "10–29 kg",  en: "10–29 kg" },
+            { score: 2, zh: "5–9 kg",    en: "5–9 kg" },
+            { score: 3, zh: "0–4 kg",    en: "0–4 kg" },
+        ],
+    },
+    {
+        id: "left_grip", group: "grip", index: 10,
+        en: "Left hand grip (kg)",
+        zh: "左手握力（kg）",
+        instruction_zh: "輸入握力值（kg）",
+        instruction_en: "Enter grip strength in kg",
+        type: "grip",
+        rawUnit: "kg",
+        thresholds_m: [35, 15, 5],
+        thresholds_f: [25, 10, 5],
+        options_m: [
+            { score: 0, zh: "> 35 kg",   en: "> 35 kg" },
+            { score: 1, zh: "15–34 kg",  en: "15–34 kg" },
+            { score: 2, zh: "5–14 kg",   en: "5–14 kg" },
+            { score: 3, zh: "0–4 kg",    en: "0–4 kg" },
+        ],
+        options_f: [
+            { score: 0, zh: "> 25 kg",   en: "> 25 kg" },
+            { score: 1, zh: "10–24 kg",  en: "10–24 kg" },
+            { score: 2, zh: "5–9 kg",    en: "5–9 kg" },
+            { score: 3, zh: "0–4 kg",    en: "0–4 kg" },
+        ],
+    },
+    // ── Axial / Lower Limb ──────────────────────────────────────────────
+    {
+        id: "head_lift", group: "axial", index: 11,
+        en: "Head lifted (45° supine)",
+        zh: "頭部抬起（仰臥 45°）",
+        instruction_zh: "記錄維持時間（秒）",
+        instruction_en: "Record duration in seconds",
+        type: "timed",
+        rawUnit: "秒",
+        thresholds: [120, 30, 1],
+        options: [
+            { score: 0, zh: "≥ 120 秒",   en: "≥ 120 sec" },
+            { score: 1, zh: "30–119 秒",  en: "30–119 sec" },
+            { score: 2, zh: "1–29 秒",    en: "1–29 sec" },
+            { score: 3, zh: "0 秒（無法維持）", en: "0 sec" },
+        ],
+    },
+    {
+        id: "right_leg", group: "axial", index: 12,
+        en: "Right leg outstretched (45° supine)",
+        zh: "右腿伸直抬起（仰臥 45°）",
+        instruction_zh: "記錄維持時間（秒）",
+        instruction_en: "Record duration in seconds",
+        type: "timed",
+        rawUnit: "秒",
+        thresholds: [100, 31, 1],
+        options: [
+            { score: 0, zh: "≥ 100 秒",   en: "≥ 100 sec" },
+            { score: 1, zh: "31–99 秒",   en: "31–99 sec" },
+            { score: 2, zh: "1–30 秒",    en: "1–30 sec" },
+            { score: 3, zh: "0 秒（無法維持）", en: "0 sec" },
+        ],
+    },
+    {
+        id: "left_leg", group: "axial", index: 13,
+        en: "Left leg outstretched (45° supine)",
+        zh: "左腿伸直抬起（仰臥 45°）",
+        instruction_zh: "記錄維持時間（秒）",
+        instruction_en: "Record duration in seconds",
+        type: "timed",
+        rawUnit: "秒",
+        thresholds: [100, 31, 1],
+        options: [
+            { score: 0, zh: "≥ 100 秒",   en: "≥ 100 sec" },
+            { score: 1, zh: "31–99 秒",   en: "31–99 sec" },
+            { score: 2, zh: "1–30 秒",    en: "1–30 sec" },
+            { score: 3, zh: "0 秒（無法維持）", en: "0 sec" },
+        ],
+    },
+];
+
+// ── Helpers ────────────────────────────────────────────────────────────────
+function scoreFromTime(val, thresholds) {
+    // thresholds = [t_mild, t_mod, t_sev] — values *above* each = lower grade
+    if (val >= thresholds[0]) return 0;
+    if (val >= thresholds[1]) return 1;
+    if (val >= thresholds[2]) return 2;
+    return 3;
+}
+function scoreFromFvc(val) {
+    if (val > 80)  return 0;
+    if (val >= 65) return 1;
+    if (val >= 50) return 2;
+    return 3;
+}
+function scoreFromGrip(val, sex, item) {
+    const thr = sex === "M" ? item.thresholds_m : item.thresholds_f;
+    if (val > thr[0]) return 0;
+    if (val >= thr[1]) return 1;
+    if (val >= thr[2]) return 2;
+    return 3;
+}
+
+function getOptions(item, sex) {
+    if (item.type === "grip") return sex === "M" ? item.options_m : item.options_f;
+    return item.options;
+}
+
+// ── CopyBtn ────────────────────────────────────────────────────────────────
+function CopyBtn({ text, label = "複製", className = "" }) {
+    const [copied, setCopied] = useState(false);
+    const copy = () => {
+        navigator.clipboard.writeText(String(text)).then(() => {
+            setCopied(true);
+            setTimeout(() => setCopied(false), 1600);
+        });
+    };
+    return (
+        <button onClick={copy}
+            className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium border transition-all
+                ${copied
+                    ? "bg-green-100 text-green-700 border-green-300"
+                    : "bg-white text-slate-500 border-slate-200 hover:border-slate-400 hover:text-slate-700"
+                } ${className}`}>
+            {copied
+                ? <><CheckIcon className="w-3 h-3"/>已複製</>
+                : <><CopyIcon className="w-3 h-3"/>{label}</>}
+        </button>
+    );
+}
+
+// ── ScoreChip ──────────────────────────────────────────────────────────────
+function ScoreChip({ score }) {
+    const colors = [
+        "bg-green-100 text-green-800 border-green-300",
+        "bg-blue-100 text-blue-800 border-blue-300",
+        "bg-amber-100 text-amber-800 border-amber-300",
+        "bg-red-100 text-red-800 border-red-300",
+    ];
+    const c = score === null ? "bg-slate-100 text-slate-400 border-slate-200" : colors[score];
+    return (
+        <span className={`inline-flex items-center justify-center w-7 h-7 rounded-full border text-sm font-bold ${c}`}>
+            {score === null ? "–" : score}
+        </span>
+    );
+}
+
+// ── Raw input → auto-grade ─────────────────────────────────────────────────
+function RawInput({ item, sex, onAutoScore }) {
+    const [raw, setRaw] = useState("");
+
+    const handleChange = (e) => {
+        const v = e.target.value;
+        setRaw(v);
+        const num = parseFloat(v);
+        if (isNaN(num) || v === "") return;
+
+        let grade = null;
+        if (item.type === "timed" || item.type === "timed_ocular") {
+            grade = scoreFromTime(num, item.thresholds || [61, 11, 1]);
+        } else if (item.type === "fvc") {
+            grade = scoreFromFvc(num);
+        } else if (item.type === "grip") {
+            grade = scoreFromGrip(num, sex, item);
+        }
+        if (grade !== null) onAutoScore(grade);
+    };
+
+    return (
+        <div className="flex items-center gap-2 px-5 py-2 bg-slate-50 border-b border-slate-100">
+            <span className="text-xs text-slate-500">實測值</span>
+            <input
+                type="number" min="0" value={raw}
+                onChange={handleChange}
+                placeholder="輸入數值自動換算"
+                className="w-36 text-sm border border-slate-300 rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-indigo-300"
+            />
+            <span className="text-xs text-slate-400">{item.rawUnit}</span>
+            {raw && <button onClick={() => { setRaw(""); }} className="text-xs text-slate-400 hover:text-slate-600">清除</button>}
+        </div>
+    );
+}
+
+// ── QuestionCard ───────────────────────────────────────────────────────────
+function QuestionCard({ item, sex, value, onChange }) {
+    const grp = GROUPS.find(g => g.id === item.group);
+    const options = getOptions(item, sex);
+    const hasRaw = ["timed", "timed_ocular", "fvc", "grip"].includes(item.type);
+
+    // For timed_ocular: option 3 is "spontaneous" — can't enter numerically
+    // Raw input only handles 0-2 for ocular items
+    const handleAutoScore = (grade) => onChange(item.id, grade);
+
+    return (
+        <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden fade-in">
+            {/* Header */}
+            <div className="flex items-center justify-between px-5 py-3 bg-slate-50 border-b border-slate-200">
+                <div className="flex items-center gap-3 min-w-0">
+                    <span className={`flex items-center justify-center w-7 h-7 rounded-full ${grp.color} text-white text-xs font-bold shrink-0`}>
+                        {item.index}
+                    </span>
+                    <div className="min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap">
+                            <span className="font-semibold text-slate-800 text-sm">{item.zh}</span>
+                            <span className={`text-xs px-1.5 py-0.5 rounded ${grp.color} text-white opacity-80`}>{grp.zh}</span>
+                        </div>
+                        <p className="text-xs text-slate-400 truncate">{item.en}</p>
+                    </div>
+                </div>
+                <div className="flex items-center gap-2 shrink-0 ml-2">
+                    <ScoreChip score={value} />
+                    {value !== null && <CopyBtn text={value} />}
+                </div>
+            </div>
+
+            {/* Instruction */}
+            {item.instruction_zh && (
+                <div className="px-5 py-1.5 bg-indigo-50 border-b border-indigo-100 text-xs text-indigo-700">
+                    📋 {item.instruction_zh}
+                    <span className="text-indigo-400 ml-1">— {item.instruction_en}</span>
+                </div>
+            )}
+
+            {/* Raw input for numeric items */}
+            {hasRaw && <RawInput item={item} sex={sex} onAutoScore={handleAutoScore} />}
+
+            {/* Options */}
+            <div className="divide-y divide-slate-100">
+                {options.map((opt) => {
+                    const selected = value === opt.score;
+                    return (
+                        <label key={opt.score}
+                            className={`flex items-start gap-4 px-5 py-2.5 cursor-pointer transition-colors
+                                ${selected ? "bg-indigo-50" : "hover:bg-slate-50"}`}>
+                            <div className="flex items-center gap-2 shrink-0 mt-0.5">
+                                <input
+                                    type="radio"
+                                    name={item.id}
+                                    value={opt.score}
+                                    checked={selected}
+                                    onChange={() => onChange(item.id, opt.score)}
+                                    className="w-4 h-4 accent-indigo-600"
+                                />
+                                <span className={`text-sm font-bold w-4 text-center
+                                    ${selected ? "text-indigo-600" : "text-slate-400"}`}>
+                                    {opt.score}
+                                </span>
+                            </div>
+                            <div className="flex-1 min-w-0">
+                                <span className={`text-sm font-medium ${selected ? "text-indigo-800" : "text-slate-700"}`}>
+                                    {opt.zh}
+                                </span>
+                                <span className="text-xs text-slate-400 ml-2">{opt.en}</span>
+                            </div>
+                        </label>
+                    );
+                })}
+            </div>
+        </div>
+    );
+}
+
+// ── ResultPanel ────────────────────────────────────────────────────────────
+function ResultPanel({ scores }) {
+    const answered = ITEMS.filter(i => scores[i.id] !== null);
+    const allDone  = answered.length === ITEMS.length;
+    const total    = allDone ? ITEMS.reduce((s, i) => s + scores[i.id], 0) : null;
+
+    const buildText = useCallback(() => {
+        const today = new Date().toLocaleDateString("zh-TW", { year: "numeric", month: "2-digit", day: "2-digit" });
+        const lines = [`QMG 評估結果　${today}`, "─".repeat(40)];
+        ITEMS.forEach((item) => {
+            const v = scores[item.id];
+            lines.push(`${item.index.toString().padStart(2)}. ${item.zh}：${v !== null ? v : "–"}`);
+        });
+        lines.push("─".repeat(40));
+        lines.push(total !== null
+            ? `Total QMG Score：${total} / 39`
+            : `Total QMG Score：尚未全部作答（${answered.length}/13）`);
+        return lines.join("\n");
+    }, [scores, total, answered.length]);
+
+    const [copiedAll, setCopiedAll] = useState(false);
+    const copyAll = () => {
+        navigator.clipboard.writeText(buildText()).then(() => {
+            setCopiedAll(true);
+            setTimeout(() => setCopiedAll(false), 2000);
+        });
+    };
+
+    // Progress bar color
+    const pct = total !== null ? Math.round((total / 39) * 100) : null;
+    const barColor = pct === null ? "bg-slate-300"
+        : pct < 33 ? "bg-emerald-500"
+        : pct < 67 ? "bg-amber-500"
+        : "bg-red-500";
+
+    return (
+        <div className="rounded-xl border-2 border-slate-200 bg-slate-50 p-5 shadow-sm">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+                <div>
+                    <div className="text-xs uppercase tracking-widest text-slate-500 mb-1">Total QMG Score</div>
+                    <div className="flex items-baseline gap-3">
+                        <span className={`text-5xl font-extrabold ${total !== null ? "text-slate-800" : "text-slate-300"}`}>
+                            {total !== null ? total : "–"}
+                        </span>
+                        <span className="text-slate-400 text-lg">/ 39</span>
+                    </div>
+                    {total !== null && (
+                        <div className="mt-2 w-48">
+                            <div className="h-2 bg-slate-200 rounded-full overflow-hidden">
+                                <div className={`h-2 rounded-full transition-all ${barColor}`}
+                                    style={{ width: `${pct}%` }}/>
+                            </div>
+                            <div className="text-xs text-slate-400 mt-0.5">
+                                MCID ≥ 3.5 分（治療反應參考）
+                            </div>
+                        </div>
+                    )}
+                    {!allDone && (
+                        <div className="text-xs text-slate-400 mt-1">
+                            已完成 {answered.length} / {ITEMS.length} 題
+                        </div>
+                    )}
+                </div>
+
+                <button onClick={copyAll}
+                    className={`no-print inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium border transition-all
+                        ${copiedAll
+                            ? "bg-green-100 text-green-700 border-green-300"
+                            : "bg-white text-slate-600 border-slate-300 hover:border-indigo-400 hover:text-indigo-700"
+                        }`}>
+                    {copiedAll
+                        ? <><CheckIcon className="w-4 h-4"/>複製完成</>
+                        : <><CopyIcon className="w-4 h-4"/>複製完整結果</>}
+                </button>
+            </div>
+
+            {/* Summary table */}
+            <div className="bg-white/70 rounded-lg overflow-hidden border border-slate-200">
+                <div className="grid grid-cols-[auto_1fr_auto_auto] text-xs font-semibold text-slate-500 uppercase tracking-wide px-4 py-2 border-b border-slate-200 bg-slate-50">
+                    <span className="w-6">#</span>
+                    <span>項目</span>
+                    <span className="w-12 text-center">分數</span>
+                    <span className="w-14 text-center no-print">複製</span>
+                </div>
+                {ITEMS.map((item, i) => {
+                    const v = scores[item.id];
+                    const grp = GROUPS.find(g => g.id === item.group);
+                    return (
+                        <div key={item.id}
+                            className={`grid grid-cols-[auto_1fr_auto_auto] items-center px-4 py-2 text-sm
+                                ${i % 2 === 0 ? "" : "bg-slate-50/60"}
+                                border-b border-slate-100 last:border-0`}>
+                            <span className="w-6 text-slate-400 text-xs">{item.index}</span>
+                            <div className="flex items-center gap-1.5 truncate pr-2">
+                                <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${grp.color}`}/>
+                                <span className="text-slate-700 truncate">{item.zh}</span>
+                            </div>
+                            <span className="w-12 flex justify-center">
+                                <ScoreChip score={v} />
+                            </span>
+                            <span className="w-14 flex justify-center no-print">
+                                {v !== null && <CopyBtn text={v} />}
+                            </span>
+                        </div>
+                    );
+                })}
+            </div>
+        </div>
+    );
+}
+
+// ── GroupHeader ────────────────────────────────────────────────────────────
+function GroupHeader({ group }) {
+    return (
+        <div className="flex items-center gap-3 mt-6 mb-2 fade-in">
+            <div className={`w-2.5 h-2.5 rounded-full ${group.color}`}/>
+            <span className="text-xs font-bold text-slate-600 uppercase tracking-widest">{group.zh}</span>
+            <span className="text-xs text-slate-400">{group.en}</span>
+            <div className="flex-1 border-t border-slate-200"/>
+        </div>
+    );
+}
+
+// ── App ────────────────────────────────────────────────────────────────────
+function App() {
+    const initScores = () => Object.fromEntries(ITEMS.map(i => [i.id, null]));
+    const [scores, setScores] = useState(initScores);
+    const [sex, setSex] = useState("M"); // "M" | "F"
+
+    const handleChange = (id, value) => setScores(prev => ({ ...prev, [id]: value }));
+
+    const reset = () => {
+        if (window.confirm("確定要清除所有作答內容？")) {
+            setScores(initScores());
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+    };
+
+    // Group items
+    const groupedItems = GROUPS.map(g => ({
+        group: g,
+        items: ITEMS.filter(i => i.group === g.id),
+    })).filter(g => g.items.length > 0);
+
+    return (
+        <div className="max-w-2xl mx-auto px-4 py-8">
+            {/* Header */}
+            <div className="mb-6 fade-in">
+                <div className="inline-block bg-indigo-100 text-indigo-700 text-xs font-semibold px-3 py-1 rounded-full mb-3 uppercase tracking-wide">
+                    Neurology · MG Assessment
+                </div>
+                <h1 className="text-2xl font-extrabold text-slate-900 leading-tight">QMG Score</h1>
+                <p className="text-slate-500 text-sm mt-1">
+                    Quantitative Myasthenia Gravis Score
+                    &nbsp;·&nbsp; 重症肌無力量化評估（醫師執行）
+                </p>
+                <p className="text-xs text-slate-400 mt-2">
+                    共 13 項，每項 0–3 分，總分 0–39 分。分數越高，障礙越嚴重。治療反應 MCID ≥ 3.5 分。
+                </p>
+            </div>
+
+            {/* Sex toggle — affects hand grip cutoffs */}
+            <div className="mb-4 fade-in">
+                <div className="inline-flex items-center gap-3 bg-white border border-slate-200 rounded-xl px-4 py-2.5 shadow-sm">
+                    <span className="text-sm font-medium text-slate-600">病患性別</span>
+                    <span className="text-xs text-slate-400">（影響握力評分標準）</span>
+                    <div className="flex rounded-lg overflow-hidden border border-slate-200">
+                        <button
+                            onClick={() => setSex("M")}
+                            className={`px-4 py-1.5 text-sm font-semibold transition-colors
+                                ${sex === "M" ? "bg-indigo-600 text-white" : "bg-white text-slate-600 hover:bg-slate-50"}`}>
+                            男 Male
+                        </button>
+                        <button
+                            onClick={() => setSex("F")}
+                            className={`px-4 py-1.5 text-sm font-semibold transition-colors
+                                ${sex === "F" ? "bg-pink-500 text-white" : "bg-white text-slate-600 hover:bg-slate-50"}`}>
+                            女 Female
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            {/* Questions by group */}
+            <div className="mb-8">
+                {groupedItems.map(({ group, items }) => (
+                    <div key={group.id}>
+                        <GroupHeader group={group} />
+                        <div className="space-y-3">
+                            {items.map(item => (
+                                <QuestionCard
+                                    key={item.id}
+                                    item={item}
+                                    sex={sex}
+                                    value={scores[item.id]}
+                                    onChange={handleChange}
+                                />
+                            ))}
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+            {/* Result */}
+            <div className="mb-6 fade-in">
+                <h2 className="text-sm font-semibold text-slate-600 uppercase tracking-widest mb-3">
+                    計算結果
+                </h2>
+                <ResultPanel scores={scores} />
+            </div>
+
+            {/* Actions */}
+            <div className="flex gap-3 justify-end no-print">
+                <button onClick={reset}
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-slate-300 text-slate-600 text-sm font-medium hover:border-red-300 hover:text-red-600 transition-colors bg-white">
+                    <RefreshIcon className="w-4 h-4"/> 重置
+                </button>
+                <button onClick={() => window.print()}
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium transition-colors shadow-sm">
+                    <PrinterIcon className="w-4 h-4"/> 列印
+                </button>
+            </div>
+
+            {/* Footer */}
+            <p className="text-center text-xs text-slate-400 mt-8 no-print">
+                來源：<a href="https://www.tnms.com.tw/en/qmg-2/" target="_blank" rel="noopener noreferrer"
+                    className="underline hover:text-indigo-500">台灣神經免疫醫學會 TNMS</a>
+                &nbsp;·&nbsp; Barohn RJ, et al. <em>Ann NY Acad Sci</em> 1998;841:769–772.
+            </p>
+        </div>
+    );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>
