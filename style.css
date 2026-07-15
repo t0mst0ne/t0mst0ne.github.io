@@ -116,6 +116,23 @@ section h2 {
     color: var(--text-muted);
 }
 
+.card-qr {
+    align-items: center;
+    text-align: center;
+}
+
+.card-qr-image {
+    display: block;
+    width: 140px;
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 1rem;
+}
+
+.card-qr .badge {
+    align-self: center;
+}
+
 /* Label/Badge */
 .badge {
     display: inline-block;
