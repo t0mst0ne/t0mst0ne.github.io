@@ -114,6 +114,7 @@
         <div class="tab active" id="tab-gemini"  onclick="selectProvider('gemini')">Gemini</div>
         <div class="tab"        id="tab-claude"  onclick="selectProvider('claude')">Claude</div>
         <div class="tab"        id="tab-openai"  onclick="selectProvider('openai')">OpenAI</div>
+        <div class="tab"        id="tab-nvidia"  onclick="selectProvider('nvidia')">NVIDIA</div>
       </div>
       <div class="settings-row">
         <label>Model</label>
@@ -170,6 +171,9 @@
     },
     openai: {
       models: ['gpt-4.1-mini', 'gpt-4o-mini', 'gpt-4o'],
+    },
+    nvidia: {
+      models: ['minimaxai/minimax-m2.7', 'meta/llama-3.3-70b-instruct', 'mistralai/mistral-large-2-instruct', 'google/gemma-3-27b-it'],
     },
   };
 
@@ -332,6 +336,42 @@ ${text}`;
       data = await res.json();
       if (!res.ok) throw new Error(data.error?.message || res.status);
       return data.choices?.[0]?.message?.content || '';
+    }
+
+    if (provider === 'nvidia') {
+      res = await fetch('https://integrate.api.nvidia.com/v1/chat/completions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${key}` },
+        body: JSON.stringify({
+          model, messages: [{ role: 'user', content: prompt }],
+          temperature: 1, top_p: 0.95, max_tokens: 8192, stream: true
+        })
+      });
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.error?.message || res.status);
+      }
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let fullText = '', buf = '';
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buf += decoder.decode(value, { stream: true });
+        const lines = buf.split('\n');
+        buf = lines.pop();
+        for (const line of lines) {
+          if (!line.startsWith('data: ')) continue;
+          const json = line.slice(6).trim();
+          if (json === '[DONE]') break;
+          try {
+            const chunk = JSON.parse(json);
+            const delta = chunk.choices?.[0]?.delta?.content;
+            if (delta) fullText += delta;
+          } catch {}
+        }
+      }
+      return fullText;
     }
 
     throw new Error('Unknown provider');

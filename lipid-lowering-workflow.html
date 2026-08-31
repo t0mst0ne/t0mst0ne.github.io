@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>降膽固醇藥物給付規定工作流程｜115.9.1 生效</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;600;700&family=Noto+Sans+TC:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F6F4EE;
+    --panel:#FFFFFF;
+    --ink:#182A32;
+    --ink-soft:#55666D;
+    --line:#DAD4C4;
+    --line-soft:#E9E4D6;
+    --extreme:#A8362A;
+    --veryhigh:#C0722A;
+    --high:#9C7B1E;
+    --mid:#2E6E52;
+    --low:#286E8C;
+    --zero:#5B6670;
+    --extreme-bg:#F7E9E6;
+    --veryhigh-bg:#F8EBDD;
+    --high-bg:#F6EFDA;
+    --mid-bg:#E4EFE8;
+    --low-bg:#E1EDF3;
+    --zero-bg:#ECEDEC;
+    --ok:#2E6E52;
+    --ok-bg:#E4EFE8;
+    --bad:#A8362A;
+    --bad-bg:#F7E9E6;
+    --warn:#B25E00;
+    --warn-bg:#FFF4E5;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Noto Sans TC',sans-serif;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  .mono{font-family:'IBM Plex Mono',monospace;}
+
+  header.top{
+    padding:38px 28px 26px;
+    max-width:980px;
+    margin:0 auto;
+    border-bottom:1px solid var(--line);
+  }
+  header.top .eff{
+    display:inline-block;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12.5px;
+    letter-spacing:.02em;
+    color:var(--ink-soft);
+    border:1px solid var(--line);
+    padding:3px 9px;
+    border-radius:3px;
+    margin-bottom:14px;
+  }
+  header.top h1{
+    font-family:'Noto Serif TC',serif;
+    font-weight:600;
+    font-size:clamp(24px,3.4vw,32px);
+    margin:0 0 8px;
+    letter-spacing:.01em;
+  }
+  header.top p{
+    margin:0 0 12px;
+    color:var(--ink-soft);
+    font-size:15px;
+    max-width:680px;
+  }
+  .notice-banner{
+    background:var(--warn-bg);
+    border:1px solid #E6B580;
+    border-radius:6px;
+    padding:10px 14px;
+    font-size:13.5px;
+    color:#7A4300;
+    margin-top:10px;
+    line-height:1.5;
+  }
+
+  nav.tabs{
+    max-width:980px;
+    margin:0 auto;
+    display:flex;
+    border-bottom:1px solid var(--line);
+    position:sticky;
+    top:0;
+    background:var(--paper);
+    z-index:20;
+  }
+  nav.tabs button{
+    flex:1;
+    padding:16px 12px;
+    background:none;
+    border:none;
+    border-bottom:3px solid transparent;
+    font-family:'Noto Sans TC',sans-serif;
+    font-size:14.5px;
+    font-weight:600;
+    color:var(--ink-soft);
+    cursor:pointer;
+    text-align:left;
+    display:flex;
+    align-items:baseline;
+    gap:8px;
+    transition:color .15s, border-color .15s;
+  }
+  nav.tabs button .num{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    color:var(--ink-soft);
+  }
+  nav.tabs button.active{
+    color:var(--ink);
+    border-bottom-color:var(--ink);
+  }
+  nav.tabs button.active .num{color:var(--ink);}
+  nav.tabs button:hover{color:var(--ink);}
+
+  main{max-width:980px;margin:0 auto;padding:32px 28px 90px;}
+  .panel{display:none;}
+  .panel.active{display:block;animation:fade .25s ease;}
+  @keyframes fade{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:translateY(0);}}
+
+  h2.section-title{
+    font-family:'Noto Serif TC',serif;
+    font-weight:600;
+    font-size:20px;
+    margin:0 0 4px;
+  }
+  p.section-desc{
+    color:var(--ink-soft);
+    font-size:14.5px;
+    margin:0 0 26px;
+    max-width:640px;
+  }
+
+  fieldset{
+    border:1px solid var(--line);
+    border-radius:6px;
+    background:var(--panel);
+    padding:18px 20px 20px;
+    margin:0 0 18px;
+  }
+  legend{
+    font-weight:700;
+    font-size:14px;
+    padding:0 6px;
+  }
+  .legend-tag{
+    display:inline-block;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    padding:1px 6px;
+    border-radius:3px;
+    margin-right:6px;
+    vertical-align:middle;
+  }
+  .tag-extreme{background:var(--extreme-bg);color:var(--extreme);}
+  .tag-veryhigh{background:var(--veryhigh-bg);color:var(--veryhigh);}
+  .tag-high{background:var(--high-bg);color:var(--high);}
+  .tag-mid{background:var(--mid-bg);color:var(--mid);}
+
+  label.opt{
+    display:flex;
+    gap:10px;
+    align-items:flex-start;
+    padding:8px 6px;
+    border-radius:4px;
+    cursor:pointer;
+    font-size:14.5px;
+  }
+  label.opt:hover{background:var(--line-soft);}
+  label.opt input{margin-top:3px;flex-shrink:0;width:16px;height:16px;accent-color:var(--ink);}
+
+  .radio-row{display:flex;flex-wrap:wrap;gap:10px;}
+  .radio-row label{
+    border:1px solid var(--line);
+    border-radius:5px;
+    padding:9px 16px;
+    font-size:14px;
+    cursor:pointer;
+    background:var(--panel);
+    display:flex;
+    align-items:center;
+    gap:8px;
+    transition:border-color .15s, background .15s;
+  }
+  .radio-row input{accent-color:var(--ink);}
+  .radio-row label:has(input:checked){
+    border-color:var(--ink);
+    background:var(--line-soft);
+    font-weight:600;
+  }
+
+  select, .textlike{
+    width:100%;
+    padding:10px 12px;
+    border:1px solid var(--line);
+    border-radius:5px;
+    background:var(--panel);
+    font-family:'Noto Sans TC',sans-serif;
+    font-size:14.5px;
+    color:var(--ink);
+  }
+
+  button.primary{
+    background:var(--ink);
+    color:var(--paper);
+    border:none;
+    padding:12px 26px;
+    border-radius:5px;
+    font-size:14.5px;
+    font-weight:600;
+    cursor:pointer;
+    font-family:'Noto Sans TC',sans-serif;
+    letter-spacing:.01em;
+  }
+  button.primary:hover{opacity:.88;}
+  button.ghost{
+    background:none;
+    border:1px solid var(--line);
+    color:var(--ink);
+    padding:11px 20px;
+    border-radius:5px;
+    font-size:14px;
+    cursor:pointer;
+    font-family:'Noto Sans TC',sans-serif;
+    font-weight:600;
+  }
+  button.ghost:hover{background:var(--line-soft);}
+
+  .result{
+    margin-top:22px;
+    border-radius:7px;
+    border:1px solid var(--line);
+    background:var(--panel);
+    overflow:hidden;
+    display:none;
+  }
+  .result.show{display:block;}
+  .result-head{
+    padding:16px 20px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    border-bottom:1px solid var(--line);
+  }
+  .result-head .dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+  .result-head h3{margin:0;font-family:'Noto Serif TC',serif;font-size:17px;font-weight:600;}
+  .result-body{padding:18px 20px 20px;}
+  .stat-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+    gap:14px;
+    margin-bottom:16px;
+  }
+  .stat{
+    border:1px solid var(--line-soft);
+    border-radius:5px;
+    padding:10px 12px;
+  }
+  .stat .k{font-size:12px;color:var(--ink-soft);margin-bottom:4px;}
+  .stat .v{font-family:'IBM Plex Mono',monospace;font-size:16px;font-weight:600;}
+  .result-body ol, .result-body ul{margin:6px 0 0;padding-left:20px;font-size:14.5px;}
+  .result-body li{margin-bottom:6px;}
+  .result-body p{font-size:14.5px;margin:6px 0;}
+  .note{
+    margin-top:14px;
+    font-size:13px;
+    color:var(--ink-soft);
+    border-left:2px solid var(--line);
+    padding-left:10px;
+    line-height:1.5;
+  }
+  .note strong{color:var(--ink);}
+
+  details{
+    border:1px solid var(--line);
+    border-radius:6px;
+    background:var(--panel);
+    padding:12px 16px;
+    margin-top:18px;
+  }
+  details summary{cursor:pointer;font-weight:600;font-size:14px;}
+  details table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13.5px;}
+  details th, details td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line-soft);}
+  details th{color:var(--ink-soft);font-weight:600;font-size:12.5px;}
+  .codelist{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--ink-soft);}
+
+  .search-input{
+    width:100%;
+    padding:8px 10px;
+    margin-top:10px;
+    border:1px solid var(--line);
+    border-radius:4px;
+    font-size:13.5px;
+    font-family:'Noto Sans TC',sans-serif;
+  }
+
+  .flow-actions{display:flex;gap:12px;align-items:center;margin-top:14px;flex-wrap:wrap;}
+  .badge-inline{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    padding:2px 8px;
+    border-radius:3px;
+    background:var(--line-soft);
+    color:var(--ink-soft);
+  }
+  .alert-box{
+    padding:10px 14px;
+    border-radius:5px;
+    margin-top:10px;
+    font-size:13.5px;
+    line-height:1.5;
+  }
+  .alert-warn{
+    background:var(--warn-bg);
+    border:1px solid #E6B580;
+    color:#7A4300;
+  }
+
+  @media (max-width:640px){
+    nav.tabs{flex-direction:row;overflow-x:auto;}
+    nav.tabs button{white-space:nowrap;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .panel.active{animation:none;}
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <span class="eff">115 年 9 月 1 日生效・全民健保降膽固醇藥物給付規定</span>
+  <h1>降膽固醇藥物給付判定工作台</h1>
+  <p>依修訂後「全民健康保險降膽固醇藥物給付規定」（2.6.1、2.6.2、2.6.3）設計，協助臨床依現有資料逐步確認 ASCVD 風險等級、治療決策路徑，以及 Ezetimibe／複方製劑之健保給付資格。</p>
+  <div class="notice-banner">
+    <strong>📌 健保給付分流重要提醒：</strong>本工作台目標值依 115.9.1 生效之「給付規定表一」新標準設計。依 2.6.1 規定，若處方表列特定 116 項舊健保碼藥品（如部分 Simvastatin, Pravastatin, Atorvastatin, Crestor, Livalo 等品項），不適用表一，僅適用「表二」舊標準。詳情可展開下方清單查詢。
+  </div>
+</header>
+
+<nav class="tabs">
+  <button class="tab-btn active" data-tab="t1"><span class="num">01</span>風險分級與血脂目標</button>
+  <button class="tab-btn" data-tab="t2"><span class="num">02</span>治療決策路徑</button>
+  <button class="tab-btn" data-tab="t3"><span class="num">03</span>Ezetimibe／複方給付資格</button>
+</nav>
+
+<main>
+
+<!-- ===================== TAB 1 ===================== -->
+<section class="panel active" id="t1">
+  <h2 class="section-title">Step 1・ASCVD 風險分級與血脂目標</h2>
+  <p class="section-desc">勾選病人現有符合的臨床狀況。只要符合任一「極高風險」或「非常高風險」項目即判定為該等級；若均未符合，再依「高風險」條件與心血管危險因子數量判定。</p>
+
+  <fieldset>
+    <legend><span class="legend-tag tag-extreme">極高風險</span>符合任一項即為極高風險</legend>
+    <label class="opt"><input type="checkbox" data-grp="A" value="a1">冠狀動脈疾病，合併一年內曾經歷心肌梗塞</label>
+    <label class="opt"><input type="checkbox" data-grp="A" value="a2">冠狀動脈疾病，合併 ≧2 次心肌梗塞病史</label>
+    <label class="opt"><input type="checkbox" data-grp="A" value="a3">冠狀動脈疾病，合併多支冠狀動脈阻塞</label>
+    <label class="opt"><input type="checkbox" data-grp="A" value="a4">冠狀動脈疾病，合併急性冠心症與糖尿病</label>
+    <label class="opt"><input type="checkbox" data-grp="A" value="a5">冠狀動脈疾病，合併周邊動脈疾病或頸動脈狹窄</label>
+    <label class="opt"><input type="checkbox" data-grp="A" value="a6">周邊動脈疾病，合併冠狀動脈疾病</label>
+    <label class="opt"><input type="checkbox" data-grp="A" value="a7">周邊動脈疾病，合併頸動脈狹窄</label>
+  </fieldset>
+
+  <fieldset>
+    <legend><span class="legend-tag tag-veryhigh">非常高風險</span>符合任一項即為非常高風險</legend>
+    <label class="opt"><input type="checkbox" data-grp="B" value="b1">臨床確診動脈硬化心血管疾病：急性冠心症病史</label>
+    <label class="opt"><input type="checkbox" data-grp="B" value="b2">臨床確診動脈硬化心血管疾病：曾接受血管再通術（心導管介入或外科冠狀動脈繞道手術）</label>
+    <label class="opt"><input type="checkbox" data-grp="B" value="b3">臨床確診動脈硬化心血管疾病：缺血性中風／短暫性腦缺血發作，合併動脈硬化相關疾病或病史</label>
+    <label class="opt"><input type="checkbox" data-grp="B" value="b4">臨床確診動脈硬化心血管疾病：周邊動脈疾病（曾接受血管再通術、有肢體缺血相關症狀或截肢）</label>
+    <label class="opt"><input type="checkbox" data-grp="B" value="b5">影像確認顯著斑塊負擔（≧50%直徑狹窄率）：冠狀動脈血管攝影</label>
+    <label class="opt"><input type="checkbox" data-grp="B" value="b6">影像確認顯著斑塊負擔（≧50%直徑狹窄率）：冠狀動脈或周邊血管電腦斷層攝影</label>
+    <label class="opt"><input type="checkbox" data-grp="B" value="b7">影像確認顯著斑塊負擔（≧50%直徑狹窄率）：頸動脈或周邊血管超音波</label>
+  </fieldset>
+
+  <fieldset>
+    <legend><span class="legend-tag tag-high">高風險</span>未符合上述兩類，但符合任一項即為高風險</legend>
+    <label class="opt"><input type="checkbox" data-grp="C" value="c1">糖尿病</label>
+    <label class="opt"><input type="checkbox" data-grp="C" value="c2">慢性腎臟病（透析前，UACR≧30mg/g 或 eGFR&lt;60mL/min/1.73m² 且持續至少 3 個月）</label>
+    <label class="opt"><input type="checkbox" data-grp="C" value="c3">LDL-C ≧190mg/dL</label>
+    <label class="opt"><input type="checkbox" data-grp="C" value="c4">冠狀動脈鈣化分數（CAC）≧400</label>
+  </fieldset>
+
+  <fieldset>
+    <legend><span class="legend-tag tag-mid">心血管風險因子</span>均未符合上述時，依下列因子數量判定中／低風險</legend>
+    <label class="opt"><input type="checkbox" data-grp="D" value="d1">高血壓</label>
+    <label class="opt"><input type="checkbox" data-grp="D" value="d2">男性 ≧45 歲 或 女性 ≧55 歲</label>
+    <label class="opt"><input type="checkbox" data-grp="D" value="d3">早發性冠心病家族史（男性 ≦55 歲、女性 ≦65 歲）</label>
+    <label class="opt"><input type="checkbox" data-grp="D" value="d4">HDL-C 偏低（男性 &lt;40mg/dL，女性 &lt;50mg/dL）</label>
+    <label class="opt"><input type="checkbox" data-grp="D" value="d5">抽菸</label>
+    <label class="opt"><input type="checkbox" data-grp="D" value="d6">代謝性症候群（腹部肥胖、血壓偏高、空腹血糖偏高、空腹 TG 偏高、HDL-C 偏低，符合 ≧3 項）</label>
+  </fieldset>
+
+  <button class="primary" onclick="computeRisk()">判定風險等級與血脂目標</button>
+
+  <div class="result" id="riskResult">
+    <div class="result-head">
+      <span class="dot" id="riskDot"></span>
+      <h3 id="riskTitle">—</h3>
+    </div>
+    <div class="result-body">
+      <div class="stat-grid">
+        <div class="stat"><div class="k">起始藥物治療門檻（LDL-C）</div><div class="v" id="riskStart">—</div></div>
+        <div class="stat"><div class="k">主要目標（LDL-C）</div><div class="v" id="riskTarget">—</div></div>
+        <div class="stat"><div class="k">次要目標（non-HDL-C）</div><div class="v" id="riskNonHdl">—</div></div>
+      </div>
+      <p id="riskApproach"></p>
+      <div id="riskClinicalTips"></div>
+      <div class="flow-actions">
+        <span class="badge-inline" id="riskBadgeInline"></span>
+        <button class="ghost" onclick="sendToStep2()">帶入「治療決策路徑」→</button>
+      </div>
+    </div>
+  </div>
+
+  <details>
+    <summary>風險等級判定原則與臨床評估規範備註</summary>
+    <ul style="font-size:13.5px;margin-top:10px;padding-left:20px;line-height:1.6;">
+      <li><strong>分級準則：</strong>中風險＝符合 2 項（含）以上心血管風險因子；低風險＝符合 1 項；0 項因子者，起始治療門檻 LDL-C ≧160mg/dL，目標 &lt;160mg/dL（未另訂 non-HDL-C 次要目標）。中、低風險及 0 項因子給藥前均應有 3–6 個月生活型態改變並處置風險因子。</li>
+      <li><strong>non-HDL-C 次要標的：</strong>當 LDL-C 達到理想治療目標後，non-HDL-C 可作為血脂治療次要標的，其計算方式為<strong>總膽固醇數值減掉 HDL-C 數值（Total Cholesterol － HDL-C）</strong>，尤其適用於合併有高三酸甘油脂、糖尿病或肥胖之病人以做進一步風險評估。</li>
+      <li><strong>極高／非常高風險採檢時效：</strong>初始評估應檢測完整血脂指標，<strong>並應於急性病人入院後 24 小時內完成血脂檢驗</strong>。同時處置各項可改善心血管風險因子（血壓、HbA1c、肥胖、抽菸、酒精攝取、生活型態）。</li>
+      <li><strong>高風險家族性高膽固醇血症 (FH) 篩檢：</strong>ASCVD 風險分級為高風險，當有嚴重高膽固醇血症、肌腱黃色瘤、早發心血管疾病或家族病史時，<strong>應依照台灣家族性高膽固醇血症診斷標準進行家族性膽固醇血症篩檢</strong>。</li>
+    </ul>
+  </details>
+
+  <details>
+    <summary>2.6.1 僅適用「表二（舊規定）」之藥品清單（共 116 項）</summary>
+    <p style="font-size:13px;color:var(--ink-soft);margin-top:8px;">依健保規定，下表所列品項<strong>不適用表一</strong>（新標準），僅適用全民健康保險降膽固醇藥物給付規定「表二」（舊標準）。可輸入健保代碼或品名搜尋：</p>
+    <input type="text" class="search-input" id="drugSearch" placeholder="輸入健保代碼或藥品名稱進行過濾..." oninput="filterTable2()">
+    <div style="max-height:280px;overflow-y:auto;margin-top:10px;">
+      <table id="table2List">
+        <thead>
+          <tr><th>成分名稱</th><th>健保代碼</th><th>藥品名稱</th></tr>
+        </thead>
+        <tbody>
+<tr><td>simvastatin</td><td class="codelist">AC46402100</td><td>Simvatin film coating tablets 20mg</td></tr>
+<tr><td>simvastatin</td><td class="codelist">AB47348100</td><td>Vatatin F.C. tablets 20mg "STANDARD"</td></tr>
+<tr><td>simvastatin</td><td class="codelist">BC24339100</td><td>Simvahexal film-coated tablets 40mg</td></tr>
+<tr><td>simvastatin</td><td class="codelist">AC49672100</td><td>Simatin F.C. tablets 20mg</td></tr>
+<tr><td>simvastatin</td><td class="codelist">AC49841100</td><td>Simpotin F.C. tablets 20 mg "Weidar"</td></tr>
+<tr><td>simvastatin</td><td class="codelist">AC47924100</td><td>Zostatin F.C. tablets 20 mg "S.C."</td></tr>
+<tr><td>simvastatin</td><td class="codelist">BC23970100</td><td>Simvahexal film-coated tablets 20mg</td></tr>
+<tr><td>simvastatin</td><td class="codelist">AC49360100</td><td>Bezostatin F.C. tablets 40 mg "S.C."</td></tr>
+<tr><td>simvastatin</td><td class="codelist">AC48813100</td><td>Simvatenin F.C. tablets 20mg (simvastatin)</td></tr>
+<tr><td>simvastatin</td><td class="codelist">AC56804100</td><td>Simvastatin F.C. tablets 20mg "CYH"</td></tr>
+<tr><td>simvastatin</td><td class="codelist">AC49699100</td><td>Simatin F.C. tablets 10mg</td></tr>
+<tr><td>simvastatin</td><td class="codelist">AC47907100</td><td>Sinty F.C. tablets 20mg</td></tr>
+<tr><td>simvastatin</td><td class="codelist">AC48926100</td><td>Simva F.C. tablets 20 mg</td></tr>
+<tr><td>simvastatin</td><td class="codelist">AC49190100</td><td>Sivasin film coated tablets 40mg</td></tr>
+<tr><td>simvastatin</td><td class="codelist">AC58207100</td><td>Simvatin film coating tablets 40mg</td></tr>
+<tr><td>simvastatin</td><td class="codelist">AC48608100</td><td>Simva F.C. tablets 20mg "Union"</td></tr>
+<tr><td>simvastatin</td><td class="codelist">AC49997100</td><td>Simatin F.C. tablets 40 mg</td></tr>
+<tr><td>simvastatin</td><td class="codelist">A055967100</td><td>Simva F.C. tablets 40mg "Union"</td></tr>
+<tr><td>simvastatin</td><td class="codelist">AC56806100</td><td>Sinty F.C. tablets 40mg</td></tr>
+<tr><td>lovastatin</td><td class="codelist">AC39403100</td><td>Lozutin tablets 20mg (lovastatin)</td></tr>
+<tr><td>lovastatin</td><td class="codelist">AC39307100</td><td>Delipic tablets 20mg "Standard" (lovastatin)</td></tr>
+<tr><td>lovastatin</td><td class="codelist">A042389100</td><td>Lovatin tablets 20mg "PANBIOTIC"</td></tr>
+<tr><td>pravastatin</td><td class="codelist">BC23596100</td><td>Mevalotin protect 40mg tablets</td></tr>
+<tr><td>pravastatin</td><td class="codelist">AC52581100</td><td>Joinlo tablets 40mg “EVEREST”</td></tr>
+<tr><td>pravastatin</td><td class="codelist">AB49454100</td><td>Pratin tablets 40 mg (pravastatin sodium)</td></tr>
+<tr><td>pravastatin</td><td class="codelist">AB48586100</td><td>Pavatin protect tablets 20mg "Standard" (pravastatin sodium)</td></tr>
+<tr><td>pravastatin</td><td class="codelist">AB48681100</td><td>U-Chu Pavadin tablets 20 mg</td></tr>
+<tr><td>pravastatin</td><td class="codelist">AB46029100</td><td>Pratin tablets 10mg (pravastatin sodium)</td></tr>
+<tr><td>pravastatin</td><td class="codelist">AB48644100</td><td>Mechol tablets 20mg "Yung Shin"</td></tr>
+<tr><td>pravastatin</td><td class="codelist">AB49021100</td><td>Pratin tablets 20 mg</td></tr>
+<tr><td>pravastatin</td><td class="codelist">BC23597100</td><td>Mevalotin protect 20mg tablets</td></tr>
+<tr><td>pravastatin</td><td class="codelist">AC57126100</td><td>Pavatin protect tablets 40mg "Standard" (pravastatin sodium)</td></tr>
+<tr><td>pravastatin</td><td class="codelist">AC48469100</td><td>Mechol tablets 10mg "Yung Shin"</td></tr>
+<tr><td>pravastatin</td><td class="codelist">AC57741100</td><td>Joinlo tablet 20mg EVEREST</td></tr>
+<tr><td>fluvastatin</td><td class="codelist">BC23556100</td><td>Lescol XL film-coated tablets 80mg</td></tr>
+<tr><td>fluvastatin</td><td class="codelist">BC26147100</td><td>Fluvastatin XL film-coated tablets 80mg</td></tr>
+<tr><td>fluvastatin</td><td class="codelist">AC56629100</td><td>Lecitol XL film-coated Tablets 80mg</td></tr>
+<tr><td>atorvastatin</td><td class="codelist">AC55272100</td><td>Atorva film-coated tablets 10mg "Standard" (atorvastatin)</td></tr>
+<tr><td>atorvastatin</td><td class="codelist">BA25337100</td><td>Tulip 20mg film coated tablets</td></tr>
+<tr><td>atorvastatin</td><td class="codelist">BA25200100</td><td>Tulip 10mg film coated tablets</td></tr>
+<tr><td>atorvastatin</td><td class="codelist">AC48879100</td><td>Anxolipo F.C. tablet 10 mg</td></tr>
+<tr><td>atorvastatin</td><td class="codelist">AC57267100</td><td>Atotin F.C. tablets 10mg</td></tr>
+<tr><td>atorvastatin</td><td class="codelist">AC51598100</td><td>Atoty F.C. tablets 10 mg</td></tr>
+<tr><td>atorvastatin</td><td class="codelist">AC58211100</td><td>Atotin F.C. tablets 20mg</td></tr>
+<tr><td>atorvastatin</td><td class="codelist">AC49226100</td><td>Anxolightor F.C. tablets 20 mg</td></tr>
+<tr><td>atorvastatin</td><td class="codelist">AC58517100</td><td>Atoroty F.C. tablets 20mg</td></tr>
+<tr><td>atorvastatin</td><td class="codelist">AC57805100</td><td>Atorva F.C. tab. 20mg "Standard" (atorvastatin)</td></tr>
+<tr><td>atorvastatin</td><td class="codelist">AA49543100</td><td>Atorin F.C. tablet 10mg</td></tr>
+<tr><td>atorvastatin</td><td class="codelist">BA25201100</td><td>Tulip 40mg film coated tablets</td></tr>
+<tr><td>atorvastatin</td><td class="codelist">AA57774100</td><td>Atover F.C. Tab. 10mg P.L.</td></tr>
+<tr><td>atorvastatin</td><td class="codelist">AC52530100</td><td>Atorin F.C. tablets 20mg</td></tr>
+<tr><td>atorvastatin</td><td class="codelist">AC55583100</td><td>Atorcal F.C. tablets 20mg "S.C."</td></tr>
+<tr><td>atorvastatin</td><td class="codelist">AC55895100</td><td>Atorcal F.C. tablets 10mg "S.C."</td></tr>
+<tr><td>atorvastatin</td><td class="codelist">AA57950100</td><td>Atover F.C. tablets 20mg P.L.</td></tr>
+<tr><td>atorvastatin</td><td class="codelist">AC55268100</td><td>Atorva film-coated tablets 40mg "Standard"(atorvastatin)</td></tr>
+<tr><td>atorvastatin</td><td class="codelist">AC55952100</td><td>Atoty F.C. tablets 20 mg</td></tr>
+<tr><td>atorvastatin</td><td class="codelist">AA56739100</td><td>Anxolipo F.C. tablets 20mg</td></tr>
+<tr><td>atorvastatin</td><td class="codelist">AC55956100</td><td>Lipiminus F.C. tablets 20mg</td></tr>
+<tr><td>atorvastatin</td><td class="codelist">AB54967100</td><td>Atover F.C. tablets 40 mg "P.L."</td></tr>
+<tr><td>atorvastatin</td><td class="codelist">AA49288100</td><td>Anxolipo F.C. tablets 40mg</td></tr>
+<tr><td>atorvastatin</td><td class="codelist">AC56319100</td><td>Lipiminus F.C.tablets 10mg</td></tr>
+<tr><td>atorvastatin</td><td class="codelist">AC57133100</td><td>Atotin F.C. tablets 40mg</td></tr>
+<tr><td>atorvastatin</td><td class="codelist">AC52301100</td><td>Lipiminus F.C tablets 40mg</td></tr>
+<tr><td>atorvastatin</td><td class="codelist">AC57930100</td><td>Atova F.C. tablets 10mg "Yu Sheng"</td></tr>
+<tr><td>atorvastatin</td><td class="codelist">AC56682100</td><td>Atoroty F.C. tablets 10mg</td></tr>
+<tr><td>atorvastatin</td><td class="codelist">AC50086100</td><td>Atorcal F.C. tablets 40 mg "S.C."</td></tr>
+<tr><td>atorvastatin</td><td class="codelist">AB57967100</td><td>Atorstin film coated tablets 10mg</td></tr>
+<tr><td>atorvastatin</td><td class="codelist">AC58041100</td><td>Atoty F.C. tablets 40mg</td></tr>
+<tr><td>atorvastatin</td><td class="codelist">AB57772100</td><td>Atorstin film coated tablets 40mg</td></tr>
+<tr><td>atorvastatin</td><td class="codelist">AB58049100</td><td>Atorstin film coated tablets 20mg</td></tr>
+<tr><td>atorvastatin</td><td class="codelist">AB51732100</td><td>Atorin F.C. tablets 40mg</td></tr>
+<tr><td>atorvastatin</td><td class="codelist">AC58262100</td><td>Atoroty F.C. tablets 40mg</td></tr>
+<tr><td>rosuvastatin</td><td class="codelist">AA57802100</td><td>Roty F.C. tablets 10mg</td></tr>
+<tr><td>rosuvastatin</td><td class="codelist">AA57843100</td><td>Roty F.C. tablets 5mg</td></tr>
+<tr><td>rosuvastatin</td><td class="codelist">BC24597100</td><td>Crestor 5mg film-coated tablets</td></tr>
+<tr><td>rosuvastatin</td><td class="codelist">AC57803100</td><td>Roty F.C. tablets 20mg</td></tr>
+<tr><td>rosuvastatin</td><td class="codelist">BC24129100</td><td>Crestor 20mg film-coated tablets</td></tr>
+<tr><td>rosuvastatin</td><td class="codelist">AB57940100</td><td>Rosulator F.C. tablets 10mg "S.C."</td></tr>
+<tr><td>rosuvastatin</td><td class="codelist">BC26543100</td><td>Alvostat film coated tablets 10mg</td></tr>
+<tr><td>rosuvastatin</td><td class="codelist">AC59266100</td><td>Rostatin F.C. tablets 5mg "Standard"</td></tr>
+<tr><td>rosuvastatin</td><td class="codelist">AC58282100</td><td>Rostatin F.C. tablets 10mg "Standard"</td></tr>
+<tr><td>rosuvastatin</td><td class="codelist">AC58384100</td><td>Rosu F.C. tablets 10mg</td></tr>
+<tr><td>rosuvastatin</td><td class="codelist">AC57130100</td><td>Rotlip film-coated tablets 10mg</td></tr>
+<tr><td>rosuvastatin</td><td class="codelist">AC59652100</td><td>Rosulator F.C. tablets 5mg "S.C."</td></tr>
+<tr><td>rosuvastatin</td><td class="codelist">AC57809100</td><td>Rolipostatin 10mg F.C. tablets "Macro"</td></tr>
+<tr><td>rosuvastatin</td><td class="codelist">BC26900100</td><td>Zyrova 20 (rosuvastatin tablets 20mg)</td></tr>
+<tr><td>rosuvastatin</td><td class="codelist">BC27782100</td><td>Zyrova 5 (rosuvastatin tablets 5mg)</td></tr>
+<tr><td>rosuvastatin</td><td class="codelist">AC58969100</td><td>Aladdin F.C. tablets 10mg</td></tr>
+<tr><td>rosuvastatin</td><td class="codelist">BC27781100</td><td>Zyrova 10 (rosuvastatin tablets 10mg)</td></tr>
+<tr><td>rosuvastatin</td><td class="codelist">AC58067100</td><td>Rosutor film-coated tablets 10mg</td></tr>
+<tr><td>rosuvastatin</td><td class="codelist">BC26544100</td><td>Alvostat film coated tablets 20mg</td></tr>
+<tr><td>rosuvastatin</td><td class="codelist">AC60114100</td><td>Rosutor film-coated tablets 5mg</td></tr>
+<tr><td>rosuvastatin</td><td class="codelist">AC59649100</td><td>Rosulip F.C. tablets 5mg C.H.</td></tr>
+<tr><td>rosuvastatin</td><td class="codelist">AC58270100</td><td>Crosuty F.C. tablets 10mg</td></tr>
+<tr><td>rosuvastatin</td><td class="codelist">AC58622100</td><td>Rotlip film-coated tablets 5mg</td></tr>
+<tr><td>rosuvastatin</td><td class="codelist">AC58098100</td><td>Crosuty F.C. tablets 5mg</td></tr>
+<tr><td>rosuvastatin</td><td class="codelist">AC60197100</td><td>Rosutor film-coated tablets 20mg</td></tr>
+<tr><td>pitavastatin</td><td class="codelist">BC25350100</td><td>Livalo tablets 2mg</td></tr>
+<tr><td>pitavastatin</td><td class="codelist">AA58648100</td><td>Pitarty F.C. tablets 2mg</td></tr>
+<tr><td>pitavastatin</td><td class="codelist">BC27002100</td><td>Livalo OD tablets 2mg</td></tr>
+<tr><td>pitavastatin</td><td class="codelist">AC58526100</td><td>Pitastatin F.C. tablets 2mg</td></tr>
+<tr><td>pitavastatin</td><td class="codelist">AC58633100</td><td>Pitarty F.C. tablets 4mg</td></tr>
+<tr><td>pitavastatin</td><td class="codelist">AC58525100</td><td>Pitastatin F.C. tablets 4mg</td></tr>
+<tr><td>pitavastatin</td><td class="codelist">AC59398100</td><td>Pivas F.C. tablets 2mg</td></tr>
+<tr><td>pitavastatin</td><td class="codelist">AC59192100</td><td>Pitanxo F.C. tablets 4mg</td></tr>
+<tr><td>pitavastatin</td><td class="codelist">AC60561100</td><td>"EVEREST" Huiton F.C. tablets 2mg</td></tr>
+<tr><td>pitavastatin</td><td class="codelist">AC61795100</td><td>Pistatin F.C. tablets 2mg</td></tr>
+<tr><td>pitavastatin</td><td class="codelist">AC58078100</td><td>Pitavol F.C.tablets 2mg</td></tr>
+<tr><td>pitavastatin</td><td class="codelist">AC60174100</td><td>Pitavastatin F.C. tablets 2mg "CYH"</td></tr>
+<tr><td>pitavastatin</td><td class="codelist">AC59193100</td><td>Pitanxo F.C. tablets 2mg</td></tr>
+<tr><td>pitavastatin</td><td class="codelist">AC60290100</td><td>Lavitol film coated tablets 4mg</td></tr>
+<tr><td>pravastatin 及 fenofibrate 複方</td><td class="codelist">BC26169100</td><td>Pravafen 40mg/160mg hard capsules</td></tr>
+<tr><td>atorvastatin 及 amlodipine 複方</td><td class="codelist">BC24392100</td><td>Caduet 5mg/20mg tablet</td></tr>
+<tr><td>atorvastatin 及 amlodipine 複方</td><td class="codelist">BC24391100</td><td>Caduet 5mg/10mg tablet</td></tr>
+<tr><td>atorvastatin 及 amlodipine 複方</td><td class="codelist">AC59887100</td><td>Dualpress F.C. tablets 5mg/10mg</td></tr>
+<tr><td>atorvastatin 及 amlodipine 複方</td><td class="codelist">AC60836100</td><td>Dualpress F.C. tablets 5mg/20mg</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </details>
+</section>
+
+<!-- ===================== TAB 2 ===================== -->
+<section class="panel" id="t2">
+  <h2 class="section-title">Step 2・治療決策路徑</h2>
+  <p class="section-desc">選擇病人的 ASCVD 風險等級與目前所處的治療階段，系統將依修訂後給付規定處方通則給出下一步建議與追蹤頻率。</p>
+
+  <fieldset>
+    <legend>風險等級</legend>
+    <div class="radio-row" id="riskLevelRow">
+      <label><input type="radio" name="lvl" value="extreme">極高風險</label>
+      <label><input type="radio" name="lvl" value="veryhigh">非常高風險</label>
+      <label><input type="radio" name="lvl" value="high">高風險</label>
+      <label><input type="radio" name="lvl" value="mid">中風險</label>
+      <label><input type="radio" name="lvl" value="low">低風險</label>
+      <label><input type="radio" name="lvl" value="zero">0 項風險因子</label>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>目前治療階段</legend>
+    <select id="stageSelect"></select>
+  </fieldset>
+
+  <fieldset id="metFieldset" style="display:none;">
+    <legend>本次複查血脂是否達標？</legend>
+    <div class="radio-row">
+      <label><input type="radio" name="met" value="yes">已達標</label>
+      <label><input type="radio" name="met" value="no">未達標</label>
+    </div>
+  </fieldset>
+
+  <button class="primary" onclick="computeStep2()">產生建議</button>
+
+  <div class="result" id="step2Result">
+    <div class="result-head">
+      <span class="dot" id="s2Dot" style="background:var(--ink);"></span>
+      <h3 id="s2Title">建議</h3>
+    </div>
+    <div class="result-body" id="s2Body"></div>
+  </div>
+</section>
+
+<!-- ===================== TAB 3 ===================== -->
+<section class="panel" id="t3">
+  <h2 class="section-title">Step 3・Ezetimibe／複方製劑給付資格判定</h2>
+  <p class="section-desc">依 2.6.2（Ezetimibe 單方）與 2.6.3（Ezetimibe＋Statin 複方）修訂條文，逐項確認病人是否符合健保給付資格。</p>
+
+  <fieldset>
+    <legend>1. 診斷</legend>
+    <div class="radio-row" id="dxRow">
+      <label><input type="radio" name="dx" value="primary">原發性高膽固醇血症</label>
+      <label><input type="radio" name="dx" value="hofh">同型接合子家族性高膽固醇血症（HoFH）</label>
+      <label><input type="radio" name="dx" value="sito">同型接合子性麥脂醇血症（植物固醇血症）</label>
+      <label><input type="radio" name="dx" value="other">以上皆非</label>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>2. 擬使用藥品類型</legend>
+    <div class="radio-row" id="drugTypeRow">
+      <label><input type="radio" name="drugtype" value="mono">Ezetimibe 單方製劑 (2.6.2)</label>
+      <label><input type="radio" name="drugtype" value="combo">Ezetimibe＋Statin 複方製劑 (2.6.3)</label>
+    </div>
+    <div id="comboNotice" class="alert-box alert-warn" style="display:none;margin-top:10px;">
+      ℹ️ <strong>法規提示：</strong>複方製劑（2.6.3）含有 Statin 成分，健保規定<strong>無「對 Statin 不耐受」之給付途徑</strong>，須經 Statin 單一治療未達標始得使用，且不得與 gemfibrozil 併用。
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>3. 是否對 statin 類藥品發生無法耐受之不良反應（如嚴重肌痛 Severe myalgia、肌炎 Myositis）？</legend>
+    <div class="radio-row" id="intolRow">
+      <label><input type="radio" name="intol" value="yes">是（發生無法耐受不良反應）</label>
+      <label><input type="radio" name="intol" value="no">否（可耐受 statin 或尚未發生）</label>
+    </div>
+  </fieldset>
+
+  <fieldset id="trialFieldset">
+    <legend>4. Statin 單一治療是否已達標？治療多久？</legend>
+    <div class="radio-row" style="margin-bottom:12px;">
+      <label><input type="radio" name="atgoal" value="no">未達治療目標</label>
+      <label><input type="radio" name="atgoal" value="yes">已達治療目標</label>
+    </div>
+    <div class="radio-row" id="durRow">
+      <label><input type="radio" name="dur" value="lt6w">尚未滿 6 週</label>
+      <label><input type="radio" name="dur" value="6to8w">已達 6–8 週，未滿 3 個月</label>
+      <label><input type="radio" name="dur" value="ge3m">已達 3 個月（含）以上</label>
+    </div>
+  </fieldset>
+
+  <fieldset id="listFieldset">
+    <legend>5. 擬使用之品項是否為公告清單中「需滿 3 個月試驗」品項？</legend>
+    <p style="font-size:13px;color:var(--ink-soft);margin:0 0 10px;">此類品項須先經 statin 單一治療滿 3 個月未達標，始得使用或併用（一般品項僅需 6–8 週）。可於下方展開清單核對品項代碼。</p>
+    <div class="radio-row" id="onListRow">
+      <label><input type="radio" name="onlist" value="no">不在清單內（適用一般 6–8 週規定）</label>
+      <label><input type="radio" name="onlist" value="yes">在清單內（需滿 3 個月）</label>
+    </div>
+  </fieldset>
+
+  <button class="primary" onclick="computeStep3()">判定給付資格</button>
+
+  <div class="result" id="step3Result">
+    <div class="result-head">
+      <span class="dot" id="s3Dot"></span>
+      <h3 id="s3Title">—</h3>
+    </div>
+    <div class="result-body" id="s3Body"></div>
+  </div>
+
+  <details>
+    <summary>需經 3 個月 Statin 試驗之公告清單品項對照（2.6.2 / 2.6.3）</summary>
+    <table>
+      <tr><th>條文類別</th><th>健保代碼</th><th>藥品名稱</th></tr>
+      <tr><td>2.6.2 Ezetimibe 單方</td><td class="codelist">AC60610100</td><td>Ezetity tablets 10mg</td></tr>
+      <tr><td>2.6.2 Ezetimibe 單方</td><td class="codelist">BC27311100</td><td>Ezzicad (ezetimibe) 10mg Tablets</td></tr>
+      <tr><td>2.6.2 Ezetimibe 單方</td><td class="codelist">BC28252100</td><td>Ezta 10 (ezetimibe Tablets 10mg)</td></tr>
+      <tr><td>2.6.2 Ezetimibe 單方</td><td class="codelist">BC26552100</td><td>Ezetimibe Sandoz 10mg tablets</td></tr>
+      <tr><td>2.6.3 複方製劑</td><td class="codelist">AC59251100</td><td>Agitin tablets 10/20mg</td></tr>
+      <tr><td>2.6.3 複方製劑</td><td class="codelist">AC60402100</td><td>Sacure tablets 10/20mg</td></tr>
+      <tr><td>2.6.3 複方製劑</td><td class="codelist">BC28502100</td><td>Ezta-SM 10+20 (ezetimibe and simvastatin tablets 10mg/20mg)</td></tr>
+      <tr><td>2.6.3 複方製劑</td><td class="codelist">AC62052100</td><td>Zoliton tablets 10/20mg</td></tr>
+      <tr><td>2.6.3 複方製劑</td><td class="codelist">AC62053100</td><td>Zoliton tablets 10/10mg</td></tr>
+      <tr><td>2.6.3 複方製劑</td><td class="codelist">AC62140100</td><td>Zovastin tablets 10/10mg</td></tr>
+      <tr><td>2.6.3 複方製劑</td><td class="codelist">AC62139100</td><td>Zovastin tablets 10/20mg</td></tr>
+      <tr><td>2.6.3 複方製劑</td><td class="codelist">BC28181100</td><td>Cretrol Tab. 10/10 mg</td></tr>
+      <tr><td>2.6.3 複方製劑</td><td class="codelist">BC28182100</td><td>Cretrol Tab. 10/20 mg</td></tr>
+      <tr><td>2.6.3 複方製劑</td><td class="codelist">BC28884100</td><td>Livazebe combination tablets HD (for 4mg)</td></tr>
+    </table>
+    <p style="font-size:12.5px;color:var(--ink-soft);margin-top:10px;">未列於上表之品項（如原廠 Ezetrol、Vytorin、Atozet、Tonvasca 等）適用一般 6–8 週規定。複方製劑一律不得與 gemfibrozil 併用。</p>
+  </details>
+</section>
+
+</main>
+
+<script>
+// ---------- Tab switching ----------
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+  });
+});
+
+// ---------- STEP 1 ----------
+const riskLevels = {
+  extreme:{label:'極高風險', color:'var(--extreme)', bg:'var(--extreme-bg)', start:'≧55mg/dL', target:'<55mg/dL', nonhdl:'<85mg/dL', approach:'處置各項可改善心血管風險因子與藥物治療並行。'},
+  veryhigh:{label:'非常高風險', color:'var(--veryhigh)', bg:'var(--veryhigh-bg)', start:'≧70mg/dL', target:'<70mg/dL', nonhdl:'<100mg/dL', approach:'處置各項可改善心血管風險因子與藥物治療並行。'},
+  high:{label:'高風險', color:'var(--high)', bg:'var(--high-bg)', start:'≧100mg/dL', target:'<100mg/dL', nonhdl:'<130mg/dL', approach:'生活型態改變與藥物治療並行。'},
+  mid:{label:'中風險', color:'var(--mid)', bg:'var(--mid-bg)', start:'≧115mg/dL', target:'<115mg/dL', nonhdl:'<145mg/dL', approach:'給藥前應有 3–6 個月生活型態改變，並處置心血管風險因子。'},
+  low:{label:'低風險', color:'var(--low)', bg:'var(--low-bg)', start:'≧130mg/dL', target:'<130mg/dL', nonhdl:'<160mg/dL', approach:'給藥前應有 3–6 個月生活型態改變，並處置心血管風險因子。'},
+  zero:{label:'0 項心血管風險因子', color:'var(--zero)', bg:'var(--zero-bg)', start:'≧160mg/dL', target:'<160mg/dL', nonhdl:'未另訂次要目標', approach:'給藥前應有 3–6 個月生活型態改變，並處置心血管風險因子。'}
+};
+
+let currentRiskKey = null;
+
+function computeRisk(){
+  const checked = g => Array.from(document.querySelectorAll(`input[data-grp="${g}"]:checked`)).length;
+  let key;
+  if(checked('A') > 0){ key='extreme'; }
+  else if(checked('B') > 0){ key='veryhigh'; }
+  else if(checked('C') > 0){ key='high'; }
+  else{
+    const d = checked('D');
+    if(d >= 2) key='mid';
+    else if(d === 1) key='low';
+    else key='zero';
+  }
+  currentRiskKey = key;
+  const r = riskLevels[key];
+  document.getElementById('riskDot').style.background = r.color;
+  document.getElementById('riskTitle').textContent = r.label;
+  document.getElementById('riskStart').textContent = 'LDL-C ' + r.start;
+  document.getElementById('riskTarget').textContent = 'LDL-C ' + r.target;
+  document.getElementById('riskNonHdl').textContent = 'non-HDL-C ' + r.nonhdl;
+  document.getElementById('riskApproach').innerHTML = '<strong>非藥物治療策略：</strong>' + r.approach;
+  
+  let tipsHtml = '';
+  if(key === 'extreme' || key === 'veryhigh'){
+    tipsHtml = '<p class="note"><strong>採檢時效提醒：</strong>初始評估應檢測完整血脂指標，<strong>急性病人應於入院後 24 小時內完成血脂檢驗</strong>。積極處置血壓、HbA1c、肥胖、抽菸、飲酒等危險因子。</p>';
+  } else if(key === 'high'){
+    tipsHtml = '<p class="note"><strong>FH 篩檢提醒：</strong>若病人合併嚴重高膽固醇血症、肌腱黃色瘤、早發心血管疾病或家族病史，應依台灣家族性高膽固醇血症診斷標準進行篩檢。</p>';
+  }
+  if(r.nonhdl !== '未另訂次要目標'){
+    tipsHtml += '<p class="note"><strong>次要指標說明：</strong>non-HDL-C 計算公式為 <code>總膽固醇 (TC) － HDL-C</code>。於 LDL-C 達標後，特別適用於合併高三酸甘油脂 (TG)、糖尿病或肥胖之病人。</p>';
+  }
+  document.getElementById('riskClinicalTips').innerHTML = tipsHtml;
+
+  document.getElementById('riskBadgeInline').textContent = '判定依據：' + (key==='extreme'?'極高風險條件':key==='veryhigh'?'非常高風險條件':key==='high'?'高風險條件':'風險因子計數 ' + checked('D') + ' 項');
+  document.getElementById('riskResult').classList.add('show');
+  document.getElementById('riskResult').scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+function sendToStep2(){
+  if(!currentRiskKey) return;
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelector('.tab-btn[data-tab="t2"]').classList.add('active');
+  document.getElementById('t2').classList.add('active');
+  const radio = document.querySelector(`#riskLevelRow input[value="${currentRiskKey}"]`);
+  if(radio){ radio.checked = true; populateStages(); }
+}
+
+function filterTable2(){
+  const query = document.getElementById('drugSearch').value.toLowerCase().trim();
+  const rows = document.querySelectorAll('#table2List tbody tr');
+  rows.forEach(r=>{
+    const text = r.textContent.toLowerCase();
+    r.style.display = text.includes(query) ? '' : 'none';
+  });
+}
+
+// ---------- STEP 2 ----------
+const highGroupStages = [
+  {v:'pre', t:'起始治療前（尚未用藥）'},
+  {v:'review1', t:'起始治療 6–8 週後複查'},
+  {v:'review2', t:'更動治療後 1–3 個月複查'}
+];
+const lowMidGroupStages = [
+  {v:'pre', t:'起始（生活型態改變）前'},
+  {v:'review1', t:'生活型態改變 3–6 個月後複查'},
+  {v:'review2', t:'中強度 statin 治療 6–8 週後複查'},
+  {v:'review3', t:'更動治療後複查'}
+];
+
+function isHighGroup(key){ return key==='extreme' || key==='veryhigh' || key==='high'; }
+
+document.querySelectorAll('#riskLevelRow input').forEach(r=>{
+  r.addEventListener('change', populateStages);
+});
+
+function populateStages(){
+  const key = document.querySelector('#riskLevelRow input:checked')?.value;
+  const sel = document.getElementById('stageSelect');
+  sel.innerHTML = '';
+  if(!key){ return; }
+  const stages = isHighGroup(key) ? highGroupStages : lowMidGroupStages;
+  stages.forEach(s=>{
+    const opt = document.createElement('option');
+    opt.value = s.v; opt.textContent = s.t;
+    sel.appendChild(opt);
+  });
+  toggleMetField();
+}
+document.getElementById('stageSelect').addEventListener('change', toggleMetField);
+function toggleMetField(){
+  const stage = document.getElementById('stageSelect').value;
+  document.getElementById('metFieldset').style.display = (stage==='pre') ? 'none' : 'block';
+}
+populateStages();
+
+function computeStep2(){
+  const key = document.querySelector('#riskLevelRow input:checked')?.value;
+  if(!key){ alert('請先選擇風險等級'); return; }
+  const stage = document.getElementById('stageSelect').value;
+  const met = document.querySelector('input[name="met"]:checked')?.value;
+  const r = riskLevels[key];
+  const high = isHighGroup(key);
+  let title='', body='';
+
+  if(stage==='pre'){
+    if(high){
+      title = '起始治療建議';
+      const assessBasis = (key==='extreme' || key==='veryhigh') ? '基線血脂值、用藥史和臨床狀況' : '基線血脂值與臨床狀況，同時進行生活型態改變';
+      body = `<p>依據${assessBasis}，給予中至高強度 statin 或合併 ezetimibe。</p>
+      <p>治療目標：LDL-C ${r.target}（non-HDL-C ${r.nonhdl}）。</p>
+      <p>建議經起始治療 6–8 週後檢測血脂指標，並回到本畫面選擇「起始治療 6–8 週後複查」。</p>
+      <div class="note"><strong>【健保申報重要提醒】</strong>處方通則雖指出極高/非常高/高風險起始可考慮合併 ezetimibe，但依健保 2.6.2 及 2.6.3 給付規定，Ezetimibe（單方併用或複方）之健保給付仍要求須先經 statin 單一治療 6–8 週（或清單 3 個月）未達標或對 statin 不耐受。初發病患起始即合併使用時，請留意健保審查規範。</div>`;
+    }else{
+      title = '起始非藥物治療建議';
+      body = `<p>起始進行生活型態改變，並處置心血管風險因子（給藥前應有 3–6 個月生活型態改變）。尚不需立即開立降血脂藥物。</p>
+      <p>治療目標：LDL-C ${r.target}（${r.nonhdl==='未另訂次要目標'?'未另訂 non-HDL-C 次要目標':'non-HDL-C '+r.nonhdl}）。</p>
+      <p>建議經生活型態改變 3–6 個月後檢測血脂指標，並回到本畫面選擇「生活型態改變 3–6 個月後複查」。</p>`;
+    }
+  }else{
+    if(!met){ alert('請選擇本次複查血脂是否達標'); return; }
+    if(met==='yes'){
+      title = '血脂已達標：維持治療';
+      body = `<p>維持目前治療方案。</p>
+      <p>後續追蹤頻率：${high ? '應每 6 個月追蹤血脂指標。' : '應每 6–12 個月追蹤血脂指標。'}</p>`;
+    }else{
+      if(high && stage==='review1'){
+        title = '未達標：調整治療';
+        body = `<ol>
+          <li>先檢視服藥狀況與遵從性。</li>
+          <li>考慮調整至高強度 statin 或最大耐受 statin 劑量。</li>
+          <li>同時考慮合併 non-statin 治療，包含：ezetimibe、PCSK9 單株抗體、siRNA、ATP citrate lyase (ACL) 抑制劑。</li>
+          <li>更動治療 1–3 個月內需追蹤血脂值是否達標，回到本畫面選擇「更動治療後 1–3 個月複查」。</li>
+        </ol>`;
+      }else if(high && stage==='review2'){
+        title = '未達標：再次調整藥物組合';
+        body = `<p>檢視服藥狀況，並考慮調整藥物組合（調整 statin 劑量／種類，或加用／更換 non-statin 藥物）。</p>
+        <p>更動治療後 1–3 個月內持續追蹤血脂值直到達標；達標後維持治療並每 6 個月追蹤一次。</p>`;
+      }else if(!high && stage==='review1'){
+        title = '未達標：開始中強度 Statin 治療';
+        body = `<p>經生活型態改變 3–6 個月後血脂仍未達標，給予<strong>中強度 statin</strong>。</p>
+        <p>中強度 statin 治療 6–8 週後追蹤血脂值，回到本畫面選擇「中強度 statin 治療 6–8 週後複查」。</p>`;
+      }else if(!high && stage==='review2'){
+        title = '未達標：升級至高強度或合併治療';
+        body = `<ol>
+          <li>檢視服藥狀況。</li>
+          <li>可給予高強度 statin 或最大耐受 statin 劑量，或合併 non-statin 治療。</li>
+          <li>更動治療後持續追蹤，治療達標後維持治療，並應每 6–12 個月追蹤血脂指標。</li>
+        </ol>`;
+      }else{
+        title = '未達標：持續調整藥物組合';
+        body = `<p>檢視服藥狀況，並考慮調整藥物組合，持續追蹤至達標，達標後維持治療並每 6–12 個月追蹤血脂指標。</p>`;
+      }
+    }
+  }
+
+  document.getElementById('s2Dot').style.background = r.color;
+  document.getElementById('s2Title').textContent = title;
+  document.getElementById('s2Body').innerHTML = body + `<div class="note"><strong>目前風險等級：</strong>${r.label}（起始門檻 LDL-C ${r.start}，主要目標 ${r.target}，次要目標 non-HDL-C ${r.nonhdl}）</div>`;
+  document.getElementById('step2Result').classList.add('show');
+  document.getElementById('step2Result').scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+// ---------- STEP 3 ----------
+function updateStep3UI(){
+  const drugtype = document.querySelector('input[name="drugtype"]:checked')?.value;
+  const intol = document.querySelector('input[name="intol"]:checked')?.value;
+
+  const comboNotice = document.getElementById('comboNotice');
+  if(comboNotice){
+    comboNotice.style.display = (drugtype === 'combo') ? 'block' : 'none';
+  }
+
+  const trialFieldset = document.getElementById('trialFieldset');
+  const listFieldset = document.getElementById('listFieldset');
+  
+  if(intol === 'yes' && drugtype === 'mono'){
+    // Mono with intolerance qualifies immediately without prior statin trial
+    trialFieldset.style.opacity = '.4';
+    listFieldset.style.opacity = '.4';
+  } else {
+    trialFieldset.style.opacity = '1';
+    listFieldset.style.opacity = '1';
+  }
+}
+
+document.querySelectorAll('#drugTypeRow input, #intolRow input').forEach(r=>{
+  r.addEventListener('change', updateStep3UI);
+});
+updateStep3UI();
+
+function computeStep3(){
+  const dx = document.querySelector('input[name="dx"]:checked')?.value;
+  const drugtype = document.querySelector('input[name="drugtype"]:checked')?.value;
+  const intol = document.querySelector('input[name="intol"]:checked')?.value;
+
+  if(!dx || !drugtype || !intol){
+    alert('請先完成第 1–3 題');
+    return;
+  }
+
+  const dot = document.getElementById('s3Dot');
+  const titleEl = document.getElementById('s3Title');
+  const bodyEl = document.getElementById('s3Body');
+
+  function render(eligible, title, html){
+    dot.style.background = eligible ? 'var(--ok)' : 'var(--bad)';
+    titleEl.textContent = title;
+    bodyEl.innerHTML = html;
+    document.getElementById('step3Result').classList.add('show');
+    document.getElementById('step3Result').scrollIntoView({behavior:'smooth', block:'nearest'});
+  }
+
+  // 1. Diagnosis gate
+  if(dx === 'other'){
+    render(false, '不符合給付資格（適應症不符）', `<p>Ezetimibe 單方與複方製劑均限用於原發性高膽固醇血症、同型接合子家族性高膽固醇血症（HoFH），及（單方另包含）同型接合子性麥脂醇血症（植物固醇血症）患者。本案診斷不在健保給付適應症範圍內。</p>`);
+    return;
+  }
+  if(drugtype === 'combo' && dx === 'sito'){
+    render(false, '不符合複方給付資格（植物固醇血症不適用複方）', `<p>依 2.6.3 給付規定，含 ezetimibe 及 statin 類之複方製劑僅限用於<strong>原發性高膽固醇血症</strong>、<strong>同型接合子家族性高膽固醇血症（HoFH）</strong>病患，<strong>不包含</strong>植物固醇血症（同型接合子性麥脂醇血症）患者。</p><p>植物固醇血症患者如需使用 ezetimibe，應依 2.6.2 申請 Ezetimibe 單方製劑。</p>`);
+    return;
+  }
+
+  // 2. Statin intolerance logic check
+  if(intol === 'yes'){
+    if(drugtype === 'combo'){
+      render(false, '不符合複方給付資格（複方含 Statin）', `<p><strong>含 ezetimibe 及 statin 類之複方製劑（2.6.3）含有 statin 成分，健保給付規定中並無「對 statin 無法耐受」之給付途徑。</strong></p><p>若病人確實對 statin 類藥品發生無法耐受之不良反應（如 Severe myalgia、Myositis），應改為評估使用 <strong>2.6.2 Ezetimibe 單方製劑</strong>（可單獨使用）。</p><p>若欲使用 2.6.3 複方製劑，必須符合經 statin 單一治療未達標之條件。</p>`);
+      return;
+    } else {
+      render(true, '符合給付資格（Statin 無法耐受）', `<p>病人對 statin 類藥品發生無法耐受之不良反應（如 Severe myalgia、Myositis），符合 <strong>2.6.2 給付條件 1</strong>，不需先經 statin 治療期間即可單獨或合併使用 Ezetimibe 單方製劑。</p>`);
+      return;
+    }
+  }
+
+  // 3. Statin tolerant path (intol === 'no'): Requires prior statin monotherapy trial not at goal
+  const atgoal = document.querySelector('input[name="atgoal"]:checked')?.value;
+  const dur = document.querySelector('input[name="dur"]:checked')?.value;
+  const onlist = document.querySelector('input[name="onlist"]:checked')?.value;
+
+  if(!atgoal || !dur || !onlist){
+    alert('病人對 statin 無不耐受情況，請完成第 4、5 題（statin 治療達標情形、治療期間、品項清單）');
+    return;
+  }
+  if(atgoal === 'yes'){
+    render(false, '尚不符合給付資格（已達標）', `<p>病人 statin 單一治療已達治療目標，不符合「statin 單一治療未達治療目標」之給付條件，暫不需加用 ezetimibe 或改用複方製劑。</p>`);
+    return;
+  }
+
+  const requiredWeeks = (onlist === 'yes') ? '3 個月' : '6–8 週';
+  const durOk = (onlist === 'yes') ? (dur === 'ge3m') : (dur === '6to8w' || dur === 'ge3m');
+
+  if(durOk){
+    if(drugtype === 'mono'){
+      render(true, '符合給付資格（單方併用）', `<p>病人經 statin 類藥品單一治療滿 <strong>${requiredWeeks}</strong> 仍未達治療目標，符合 <strong>2.6.2 給付條件 2</strong>，得合併使用 Ezetimibe 單方製劑與 statins 類藥品。</p>`);
+    } else {
+      render(true, '符合給付資格（複方製劑）', `<p>病人經 statin 類藥品單一治療滿 <strong>${requiredWeeks}</strong> 仍未達治療目標，符合 <strong>2.6.3 給付規定</strong>，得使用含 ezetimibe 及 statin 類之複方製劑。</p><p class="note"><strong>重要規範：</strong>依 2.6.3 規定，本品一律<strong>不得與 gemfibrozil 併用</strong>。</p>`);
+    }
+  }else{
+    render(false, '尚未符合給付資格（療程時間未滿）', `<p>擬使用之品項${onlist==='yes'?'列於公告清單，':''}須經 statin 類藥品單一治療滿 <strong>${requiredWeeks}</strong> 仍未達治療目標，始得${drugtype==='combo'?'使用複方製劑':'與 statins 類藥品併用'}。病人目前治療期間尚未滿 ${requiredWeeks}，建議持續單一 statin 治療並於期滿後重新抽血檢測評估。</p>`);
+  }
+}
+</script>
+</body>
+</html>
