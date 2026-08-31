@@ -521,6 +521,131 @@
     color:#7A4300;
   }
 
+  /* Tab 4 Drug Reference Styles */
+  .drug-card{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:18px 20px;
+    margin-bottom:20px;
+    transition:box-shadow .2s;
+  }
+  .drug-card:hover{
+    box-shadow:0 3px 12px rgba(0,0,0,0.06);
+  }
+  .drug-card-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:12px;
+    margin-bottom:12px;
+    flex-wrap:wrap;
+  }
+  .drug-card-title{
+    font-size:16.5px;
+    font-weight:700;
+    color:var(--ink);
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-wrap:wrap;
+  }
+  .drug-efficacy-badge{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:13px;
+    font-weight:700;
+    padding:3px 11px;
+    border-radius:20px;
+    background:#ECFDF5;
+    color:#047857;
+    border:1px solid #A7F3D0;
+    white-space:nowrap;
+  }
+  .drug-efficacy-badge.badge-ultra{
+    background:#FEF2F2;
+    color:#991B1B;
+    border-color:#FECACA;
+  }
+  .drug-efficacy-badge.badge-high{
+    background:#EFF6FF;
+    color:#1D4ED8;
+    border-color:#BFDBFE;
+  }
+  .drug-efficacy-badge.badge-mid{
+    background:#F0FDFA;
+    color:#0F766E;
+    border-color:#99F6E4;
+  }
+  .drug-moa{
+    font-size:13.5px;
+    color:var(--ink-soft);
+    line-height:1.55;
+    margin-bottom:14px;
+  }
+  .drug-table-mini{
+    width:100%;
+    border-collapse:collapse;
+    margin-bottom:12px;
+    font-size:13.5px;
+  }
+  .drug-table-mini th{
+    background:var(--panel);
+    text-align:left;
+    padding:8px 10px;
+    border:1px solid var(--line);
+    font-weight:600;
+    font-size:12.5px;
+  }
+  .drug-table-mini td{
+    padding:8px 10px;
+    border:1px solid var(--line);
+    vertical-align:top;
+  }
+  .drug-keypoints{
+    background:var(--panel);
+    border-left:4px solid var(--ink);
+    padding:10px 14px;
+    border-radius:0 6px 6px 0;
+    font-size:13px;
+    line-height:1.6;
+    color:var(--ink);
+    margin-top:10px;
+  }
+  .efficacy-ladder{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(180px, 1fr));
+    gap:10px;
+    margin:14px 0 22px;
+  }
+  .ladder-card{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:12px 14px;
+    text-align:center;
+    transition:transform .15s, border-color .15s;
+  }
+  .ladder-card:hover{
+    transform:translateY(-2px);
+    border-color:var(--ink);
+  }
+  .ladder-card .ladder-val{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:20px;
+    font-weight:700;
+    color:var(--ink);
+    margin:4px 0;
+  }
+  .ladder-card .ladder-title{
+    font-size:12.5px;
+    font-weight:700;
+    color:var(--ink);
+  }
+  .ladder-card .ladder-sub{
+    font-size:11px;
+    color:var(--ink-soft);
+  }
+
   @media (max-width:640px){
     nav.tabs{flex-direction:row;overflow-x:auto;}
     nav.tabs button{white-space:nowrap;}
@@ -545,6 +670,7 @@
   <button class="tab-btn active" data-tab="t1"><span class="num">01</span>風險分級與血脂目標</button>
   <button class="tab-btn" data-tab="t2"><span class="num">02</span>治療決策路徑</button>
   <button class="tab-btn" data-tab="t3"><span class="num">03</span>Ezetimibe／複方給付資格</button>
+  <button class="tab-btn" data-tab="t4"><span class="num">04</span>各類降血脂藥物速查</button>
 </nav>
 
 <main>
@@ -997,6 +1123,366 @@
     </table>
     <p style="font-size:12.5px;color:var(--ink-soft);margin-top:10px;">未列於上表之品項（如原廠 Ezetrol、Vytorin、Atozet、Tonvasca 等）適用一般 6–8 週規定。複方製劑一律不得與 gemfibrozil 併用。</p>
   </details>
+<!-- ===================== TAB 4 ===================== -->
+<section class="panel" id="t4">
+  <h2 class="section-title">Step 4・降血脂各類藥物速查表（Statin & Non-Statin 藥品全覽）</h2>
+  <p class="section-desc">依台灣動脈硬化心血管疾病 (ASCVD) 血脂管理指引、國際臨床試驗與健保給付規範彙整。提供 Statin 各強度劑量、Ezetimibe 單複方、PCSK9 單株抗體、siRNA (Inclisiran)、ACL 抑制劑 (Bempedoic acid) 及其他輔助藥物之機轉、劑量、降幅與臨床特點。</p>
+
+  <!-- Visual Efficacy Ladder -->
+  <div style="margin:16px 0 6px;">
+    <h3 style="font-size:14px;color:var(--ink-soft);font-weight:700;margin-bottom:6px;">📊 各類治療方案預期 LDL-C 降幅階梯：</h3>
+    <div class="efficacy-ladder">
+      <div class="ladder-card">
+        <div class="ladder-title">高強度 Statin + Ezetimibe + PCSK9 mAb</div>
+        <div class="ladder-val" style="color:#991B1B;">約 85%</div>
+        <div class="ladder-sub">三重極致強化降脂</div>
+      </div>
+      <div class="ladder-card">
+        <div class="ladder-title">高強度 Statin + Ezetimibe</div>
+        <div class="ladder-val" style="color:#B91C1C;">約 65%</div>
+        <div class="ladder-sub">口服一線強化複方</div>
+      </div>
+      <div class="ladder-card">
+        <div class="ladder-title">PCSK9 單株抗體</div>
+        <div class="ladder-val" style="color:#1D4ED8;">50%–60%</div>
+        <div class="ladder-sub">Repatha / Praluent (Q2W/QM)</div>
+      </div>
+      <div class="ladder-card">
+        <div class="ladder-title">siRNA 抑制劑</div>
+        <div class="ladder-val" style="color:#2563EB;">約 50%</div>
+        <div class="ladder-sub">Leqvio (半年注射一劑)</div>
+      </div>
+      <div class="ladder-card">
+        <div class="ladder-title">高強度 Statin 單用</div>
+        <div class="ladder-val" style="color:#047857;">≧ 50%</div>
+        <div class="ladder-sub">Atorva 40-80 / Rosuva 20-40</div>
+      </div>
+      <div class="ladder-card">
+        <div class="ladder-title">ACL 抑制劑 + Ezetimibe</div>
+        <div class="ladder-val" style="color:#0D9488;">35%–40%</div>
+        <div class="ladder-sub">Nexlizet (無肌肉副作用)</div>
+      </div>
+      <div class="ladder-card">
+        <div class="ladder-title">中強度 Statin 單用</div>
+        <div class="ladder-val" style="color:#0284C7;">30%–49%</div>
+        <div class="ladder-sub">Atorva 10-20 / Rosuva 5-10 等</div>
+      </div>
+      <div class="ladder-card">
+        <div class="ladder-title">Ezetimibe / ACLi 單用</div>
+        <div class="ladder-val" style="color:#64748B;">15%–25%</div>
+        <div class="ladder-sub">單藥阻斷吸收 / 合成</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filter & Search Bar -->
+  <div style="margin:20px 0 16px;">
+    <input type="text" id="drugRefSearch" class="textlike" placeholder="🔍 輸入學名、商品名（如 Repatha, Leqvio, Atozet, Nexletol, Crestor）或機轉關鍵字過濾..." oninput="filterDrugRefList()" style="margin-bottom:12px;">
+    <div class="category-filter-bar" style="margin-bottom:0;">
+      <span class="filter-label">類別速選：</span>
+      <button type="button" class="filter-pill active" onclick="filterDrugRefClass('all', this)">全部類別</button>
+      <button type="button" class="filter-pill" onclick="filterDrugRefClass('pcsk9', this)">💉 PCSK9 單株抗體</button>
+      <button type="button" class="filter-pill" onclick="filterDrugRefClass('sirna', this)">🧬 siRNA (Leqvio)</button>
+      <button type="button" class="filter-pill" onclick="filterDrugRefClass('acl', this)">🔬 ACL 抑制劑 (Bempedoic acid)</button>
+      <button type="button" class="filter-pill" onclick="filterDrugRefClass('ezetimibe', this)">🧪 Ezetimibe (單方/複方)</button>
+      <button type="button" class="filter-pill" onclick="filterDrugRefClass('statin', this)">💊 Statin 類 (高/中/低強度)</button>
+      <button type="button" class="filter-pill" onclick="filterDrugRefClass('other', this)">🐟 魚油 EPA / Fibrates / 樹脂</button>
+    </div>
+  </div>
+
+  <div id="drugCardsContainer">
+
+    <!-- Card 1: PCSK9 mAbs -->
+    <div class="drug-card" data-drug-class="pcsk9">
+      <div class="drug-card-head">
+        <div class="drug-card-title">
+          <span>💉 PCSK9 單株抗體 (PCSK9 Monoclonal Antibodies)</span>
+        </div>
+        <span class="drug-efficacy-badge badge-ultra">額外降 LDL-C 50%–60%</span>
+      </div>
+      <div class="drug-moa">
+        <strong>作用機轉：</strong>專一性結合細胞外循環中的 PCSK9 蛋白質，阻斷 PCSK9 與 LDL 受體 (LDL-R) 結合，避免 LDL-R 進入溶體降解，大幅增加肝細胞表面 LDL-R 數量，加速自血液中清除 LDL-C。
+      </div>
+      <table class="drug-table-mini">
+        <thead>
+          <tr>
+            <th style="width:25%;">成分學名 (Generic)</th>
+            <th style="width:25%;">代表商品名 (Trade Name)</th>
+            <th style="width:25%;">常用劑量與給藥途徑</th>
+            <th style="width:25%;">大型臨床試驗與實證</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Evolocumab</strong></td>
+            <td>Repatha® 瑞百安 (140mg / Auto-injector)</td>
+            <td>皮下注射 (SC)：<br>• 140 mg 每 2 週一次 (Q2W)，或<br>• 420 mg 每月一次 (QM)</td>
+            <td><strong>FOURIER 試驗</strong><br>顯著降低主要不良心血管事件 (MACE) 達 15%–20%。</td>
+          </tr>
+          <tr>
+            <td><strong>Alirocumab</strong></td>
+            <td>Praluent® 保脂通 (75mg, 150mg / Pen)</td>
+            <td>皮下注射 (SC)：<br>• 75 mg 或 150 mg 每 2 週一次 (Q2W)</td>
+            <td><strong>ODYSSEY OUTCOMES 試驗</strong><br>ACS 後高風險病患顯著降低心血管事件與全因死亡率。</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="drug-keypoints">
+        📌 <strong>臨床與健保要點：</strong>
+        <ul style="margin:4px 0 0;padding-left:18px;line-height:1.6;">
+          <li><strong>健保事前審查：</strong>適用於極高/非常高風險 ASCVD 或雜合子家族性高膽固醇血症 (HeFH)，經高強度 statin + ezetimibe 達最大耐受劑量治療 ≧3 個月，LDL-C 仍未達標（如 ≧70 或 ≧100 mg/dL），或對 statin 嚴重不耐受者。</li>
+          <li><strong>給藥優勢：</strong>降幅極大且迅速，皮下注射每 2–4 週一次，病人耐受性極佳（僅少數有注射部位輕微紅腫）。</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Card 2: siRNA -->
+    <div class="drug-card" data-drug-class="sirna">
+      <div class="drug-card-head">
+        <div class="drug-card-title">
+          <span>🧬 siRNA 小干擾 RNA (PCSK9 基因轉譯抑制劑)</span>
+        </div>
+        <span class="drug-efficacy-badge badge-ultra">長效降 LDL-C 約 50%</span>
+      </div>
+      <div class="drug-moa">
+        <strong>作用機轉：</strong>利用 RNA 干擾 (RNAi) 技術，專一性進入肝細胞並誘導裂解 PCSK9 mRNA，自源頭阻斷 PCSK9 蛋白質的轉譯合成，長效提升肝細胞表面 LDL 受體循環再利用。
+      </div>
+      <table class="drug-table-mini">
+        <thead>
+          <tr>
+            <th style="width:25%;">成分學名 (Generic)</th>
+            <th style="width:25%;">代表商品名 (Trade Name)</th>
+            <th style="width:25%;">給藥時程與途徑</th>
+            <th style="width:25%;">大型臨床實證</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Inclisiran</strong></td>
+            <td>Leqvio® 樂捷脂 (284mg / 1.5mL 預充填針劑)</td>
+            <td>皮下注射 (SC)：<br><strong>第 0 個月、第 3 個月各注射一劑，之後每 6 個月注射一次（半年一針）</strong></td>
+            <td><strong>ORION-9, 10, 11 試驗</strong><br>維持平穩強效降 LDL-C 約 50%，長期安全性良好。</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="drug-keypoints">
+        📌 <strong>臨床與順從性優勢：</strong>
+        <ul style="margin:4px 0 0;padding-left:18px;line-height:1.6;">
+          <li><strong>突破性半年一劑：</strong>每年僅需注射兩次，可配合病人每半年定期門診回診施打，徹底解決傳統每日口服藥或每兩週注射之用藥順從性不佳問題。</li>
+          <li><strong>肝臟專一性標靶：</strong>經由 GalNAc 碳水化合物連接肝臟 ASGPR 受體精準遞送，全身性暴露極低，無肌肉副作用。</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Card 3: ACL Inhibitor -->
+    <div class="drug-card" data-drug-class="acl">
+      <div class="drug-card-head">
+        <div class="drug-card-title">
+          <span>🔬 ACL 抑制劑 (ATP Citrate Lyase Inhibitor)</span>
+        </div>
+        <span class="drug-efficacy-badge badge-high">單用降 15%–25% ｜ 合併 Ezetimibe 降 35%–40%</span>
+      </div>
+      <div class="drug-moa">
+        <strong>作用機轉：</strong>抑制膽固醇生物合成路徑中位於 HMG-CoA 還原酶上游之「ATP 檸檬酸裂解酶 (ACL)」，阻斷乙醯輔酶 A (Acetyl-CoA) 生成，進而抑制肝臟膽固醇內生性合成並上調 LDL-R。
+      </div>
+      <table class="drug-table-mini">
+        <thead>
+          <tr>
+            <th style="width:25%;">成分學名 (Generic)</th>
+            <th style="width:25%;">代表商品名 (Trade Name)</th>
+            <th style="width:25%;">劑量與用法</th>
+            <th style="width:25%;">臨床特點與試驗</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Bempedoic acid</strong></td>
+            <td>Nexletol® (180mg)</td>
+            <td>口服：180 mg 每日一次 (QD)，可與或不與食物併服</td>
+            <td><strong>CLEAR Outcomes 試驗</strong><br>在 Statin 不耐受病人中顯著降低 MACE 達 13%–15%。</td>
+          </tr>
+          <tr>
+            <td><strong>Bempedoic acid + Ezetimibe</strong></td>
+            <td>Nexlizet® (180mg / 10mg 複方錠)</td>
+            <td>口服：每日一錠 (QD)</td>
+            <td><strong>雙機轉口服降脂</strong><br>同步抑制上游肝臟合成與小腸吸收，LDL-C 降幅達 38%。</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="drug-keypoints">
+        📌 <strong>Statin 不耐受患者首選亮點：</strong>
+        <ul style="margin:4px 0 0;padding-left:18px;line-height:1.6;">
+          <li><strong>完全無肌肉痠痛副作用：</strong>Bempedoic acid 為前驅藥 (Prodrug)，需要肝臟專屬之極長鏈乙醯輔酶 A 合成酶-1 (ACSVL1) 才能活化成活性代謝物。<strong>人體骨骼肌中缺少 ACSVL1 酵素</strong>，因此藥物在肌肉組織保持無活性狀態，<strong>完全不引發 Statin 常見之肌痛 (Myalgia) 或肌炎 (Myositis)</strong>。</li>
+          <li><strong>注意事項：</strong>可能使血中尿酸濃度微幅升高（痛風病史病患需定期監測尿酸），極少數報告可能有肌腱發炎風險。</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Card 4: Ezetimibe -->
+    <div class="drug-card" data-drug-class="ezetimibe">
+      <div class="drug-card-head">
+        <div class="drug-card-title">
+          <span>🧪 Ezetimibe（NPC1L1 膽固醇吸收抑制劑）</span>
+        </div>
+        <span class="drug-efficacy-badge badge-mid">單用降 15%–20% ｜ 合併 Statin 額外再降 15%–25%</span>
+      </div>
+      <div class="drug-moa">
+        <strong>作用機轉：</strong>專一性結合於小腸刷狀緣之 Niemann-Pick C1-Like 1 (NPC1L1) 轉運蛋白，阻斷飲食中及膽汁排出的膽固醇在小腸之吸收，減少肝臟膽固醇儲存量，使肝臟上調 LDL-R。
+      </div>
+      <table class="drug-table-mini">
+        <thead>
+          <tr>
+            <th style="width:25%;">類別 / 成分</th>
+            <th style="width:30%;">代表商品名 (Trade Names)</th>
+            <th style="width:20%;">常用劑量</th>
+            <th style="width:25%;">臨床與健保規範 (2.6.2 / 2.6.3)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Ezetimibe 單方 (2.6.2)</strong></td>
+            <td>Ezetrol® 怡妥、Ezetity 脂停、Ezzicad 怡脂卡、Ezta 10 等</td>
+            <td>10 mg QD</td>
+            <td>Statin 不耐受可單獨給付；或經 statin 單一治療 6–8 週（部分品項 3 個月）未達標合併使用。</td>
+          </tr>
+          <tr>
+            <td><strong>Ezetimibe + Atorvastatin (2.6.3)</strong></td>
+            <td>Atozet® 亞妥妥、Agitin 壓脂妥、Sacure 等 (10/10, 10/20, 10/40 mg)</td>
+            <td>每日一錠 QD</td>
+            <td>強效口服複方，高強度劑量可使 LDL-C 總降幅達 65%。</td>
+          </tr>
+          <tr>
+            <td><strong>Ezetimibe + Rosuvastatin (2.6.3)</strong></td>
+            <td>Tonvasca® 妥復脂、Cretrol 冠寧妥、Zoliton、Zovastin (10/5, 10/10, 10/20 mg)</td>
+            <td>每日一錠 QD</td>
+            <td>兼具強效水溶性 Statin 與吸收抑制，臨床降幅強大。</td>
+          </tr>
+          <tr>
+            <td><strong>Ezetimibe + Simvastatin (2.6.3)</strong></td>
+            <td>Vytorin® 複妥、Ezta-SM (10/20, 10/40 mg)</td>
+            <td>每日一錠 QD</td>
+            <td><strong>IMPROVE-IT 試驗</strong>證實 ACS 病人合併治療顯著降低心血管事件。</td>
+          </tr>
+          <tr>
+            <td><strong>Ezetimibe + Pitavastatin (2.6.3)</strong></td>
+            <td>Livazebe® 利脂妥 (10/2, 10/4 mg)</td>
+            <td>每日一錠 QD</td>
+            <td>對血糖代謝干擾極小，適合糖尿病或代謝症候群患者。</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="drug-keypoints">
+        📌 <strong>臨床亮點：「Statin 劑量翻倍原則 vs. 加用 Ezetimibe」</strong>
+        <p style="margin:4px 0 0;line-height:1.6;">Statin 劑量每加倍一次（Rule of 6%），LDL-C 僅多降約 6%，但肌肉與肝功能異常風險增加；<strong>若維持原 Statin 劑量並加上 Ezetimibe 10mg，可立即額外降低 15%–25% LDL-C</strong>，且耐受性極佳，是目前國內外指引極度推崇之首選合併策略。</p>
+      </div>
+    </div>
+
+    <!-- Card 5: Statins -->
+    <div class="drug-card" data-drug-class="statin">
+      <div class="drug-card-head">
+        <div class="drug-card-title">
+          <span>💊 Statin 類藥品（HMG-CoA 還原酶抑制劑）強度劑量分級</span>
+        </div>
+        <span class="drug-efficacy-badge badge-high">高強度 ≧50% ｜ 中強度 30%–49% ｜ 低強度 &lt;30%</span>
+      </div>
+      <div class="drug-moa">
+        <strong>作用機轉：</strong>競爭性抑制肝臟膽固醇生合成之限速酵素 HMG-CoA 還原酶，減少細胞內膽固醇濃度，促使肝細胞表面大量表達 LDL 受體，加速清除血液中 LDL-C。
+      </div>
+      <table class="drug-table-mini">
+        <thead>
+          <tr>
+            <th style="width:20%;">降脂強度分級</th>
+            <th style="width:25%;">預期 LDL-C 降幅</th>
+            <th style="width:30%;">成分與每日劑量 (Daily Dose)</th>
+            <th style="width:25%;">代表藥品品名 (Trade Names)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="background:rgba(254, 242, 242, 0.4);">
+            <td><span class="legend-tag tag-extreme">高強度 (High)</span></td>
+            <td><strong>≧ 50%</strong></td>
+            <td>
+              • <strong>Atorvastatin 40–80 mg</strong><br>
+              • <strong>Rosuvastatin 20–40 mg</strong>
+            </td>
+            <td>Lipitor 立普妥, Crestor 冠脂妥, Atorin, Roty, Tulip, Rostatin 等</td>
+          </tr>
+          <tr style="background:rgba(239, 246, 255, 0.4);">
+            <td><span class="legend-tag tag-high">中強度 (Moderate)</span></td>
+            <td><strong>30% – 49%</strong></td>
+            <td>
+              • <strong>Atorvastatin 10–20 mg</strong><br>
+              • <strong>Rosuvastatin 5–10 mg</strong><br>
+              • <strong>Pitavastatin 2–4 mg</strong><br>
+              • <strong>Simvastatin 20–40 mg</strong><br>
+              • <strong>Pravastatin 40–80 mg</strong><br>
+              • <strong>Fluvastatin XL 80 mg</strong>
+            </td>
+            <td>Livalo 力平之, Zocor 素果, Mevalotin 美百樂鎮, Lescol XL 益脂可, Pitarty, Joinlo 等</td>
+          </tr>
+          <tr style="background:rgba(248, 250, 252, 0.4);">
+            <td><span class="legend-tag tag-low">低強度 (Low)</span></td>
+            <td><strong>&lt; 30%</strong></td>
+            <td>
+              • Simvastatin 10 mg<br>
+              • Pravastatin 10–20 mg<br>
+              • Lovastatin 20 mg<br>
+              • Fluvastatin 20–40 mg
+            </td>
+            <td>Lozutin, Delipic, Pavatin 20, Pratin 等</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="drug-keypoints">
+        📌 <strong>監測與安全性：</strong>
+        <ul style="margin:4px 0 0;padding-left:18px;line-height:1.6;">
+          <li><strong>安全性監測：</strong>用藥前評估 ALT/AST 與 CK 基準值；若出現不明原因肌肉痠痛、無力或茶色尿，應即刻檢驗 CK 值。</li>
+          <li><strong>高風險首選：</strong>極高/非常高/高風險 ASCVD 病患，起始建議直接給予「高強度 statin」或耐受最大劑量，以求迅速達標。</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Card 6: Others -->
+    <div class="drug-card" data-drug-class="other">
+      <div class="drug-card-head">
+        <div class="drug-card-title">
+          <span>🐟 其他非 Statin 類輔助藥品 (EPA 魚油 / Fibrates / 膽酸結合劑)</span>
+        </div>
+        <span class="drug-efficacy-badge badge-mid">針對高 TG、殘餘心血管風險或輔助降 LDL</span>
+      </div>
+      <table class="drug-table-mini">
+        <thead>
+          <tr>
+            <th style="width:25%;">藥品類別 / 成分</th>
+            <th style="width:25%;">代表商品名與劑量</th>
+            <th style="width:25%;">主要機轉與效果</th>
+            <th style="width:25%;">臨床指引與注意事項</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>高純度 EPA 魚油<br>(Icosapent Ethyl)</strong></td>
+            <td>Vascepa® (1g/capsule)<br>常用劑量：2 g BID (4g/天) 隨餐服</td>
+            <td>高純度二十碳五烯酸乙酯，降低肝臟 VLDL 合成，抗發炎、穩定斑塊與抗血栓。</td>
+            <td><strong>REDUCE-IT 試驗證實：</strong><br>Statin 治療後 TG 仍 135–499 mg/dL 之 ASCVD 或糖尿病合併危險因子病患，可<strong>顯著降低 25% 心血管事件與心血管死亡</strong>。</td>
+          </tr>
+          <tr>
+            <td><strong>Fibrates 纖維酸類<br>(PPAR-α 致效劑)</strong></td>
+            <td>Fenofibrate (Lipanthyl® 力平之 160mg, 200mg)<br>Gemfibrozil 600mg BID</td>
+            <td>活化 PPAR-α，刺激 LPL 表現，<strong>大幅降低三酸甘油脂 30%–50%</strong>，升高 HDL-C 10%–20%。</td>
+            <td>⚠️ <strong>重要交互作用禁忌：</strong>Gemfibrozil 抑制 statin 葡萄糖醛酸化，<strong>嚴禁與 Statin 或複方製劑併用</strong>（橫紋肌溶解風險大增）；如需併用 Statin 應優先選擇 Fenofibrate。</td>
+          </tr>
+          <tr>
+            <td><strong>膽酸結合樹脂<br>(Bile Acid Sequestrants)</strong></td>
+            <td>Cholestyramine (Questran® 貴舒特 4g/包)<br>劑量：4–16 g/day 口服懸浮液</td>
+            <td>在腸道與膽酸結合形成不溶性錯合物隨糞便排出，阻斷腸肝循環，促使肝臟消耗膽固醇合成膽酸，<strong>降 LDL-C 15%–30%</strong>。</td>
+            <td>不經全身吸收，適合孕婦或 statin 禁忌者；注意可能使 TG 上升（TG ≧300 禁用），且易有胃腸脹氣便秘等副作用。</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
 </section>
 
 </main>
@@ -1386,9 +1872,10 @@ function computeStep2(){
     <h4 style="margin:0 0 10px;font-size:15.5px;color:var(--ink);font-weight:700;">💡 Step 2 臨床建議：${title}</h4>
     ${body}
     <div style="margin-top:14px;padding-top:12px;border-top:1px dashed var(--line);display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
-      <span style="font-size:13px;font-weight:600;color:var(--ink-soft);">健保給付檢驗：</span>
-      <button type="button" class="ghost" style="padding:6px 12px;font-size:13px;" onclick="sendToStep3('mono')">👉 檢驗 Ezetimibe 單方給付資格 (2.6.2)</button>
-      <button type="button" class="ghost" style="padding:6px 12px;font-size:13px;" onclick="sendToStep3('combo')">👉 檢驗 Ezetimibe＋Statin 複方給付資格 (2.6.3)</button>
+      <span style="font-size:13px;font-weight:600;color:var(--ink-soft);">快速指引與判定：</span>
+      <button type="button" class="ghost" style="padding:6px 12px;font-size:13px;" onclick="sendToDrugRef('all')">💊 降血脂各類藥物速查表 (Ezetimibe / PCSK9 / siRNA / ACL)</button>
+      <button type="button" class="ghost" style="padding:6px 12px;font-size:13px;" onclick="sendToStep3('mono')">👉 檢驗 Ezetimibe 單方給付 (2.6.2)</button>
+      <button type="button" class="ghost" style="padding:6px 12px;font-size:13px;" onclick="sendToStep3('combo')">👉 檢驗 Ezetimibe 複方給付 (2.6.3)</button>
     </div>
   </div>`;
 
@@ -1525,6 +2012,42 @@ function computeStep3(){
   }else{
     render(false, '尚未符合給付資格（療程時間未滿）', `<p>擬使用之品項${onlist==='yes'?'列於公告清單，':''}須經 statin 類藥品單一治療滿 <strong>${requiredWeeks}</strong> 仍未達治療目標，始得${drugtype==='combo'?'使用複方製劑':'與 statins 類藥品併用'}。病人目前治療期間尚未滿 ${requiredWeeks}，建議持續單一 statin 治療並於期滿後重新抽血檢測評估。</p>`);
   }
+}
+
+// ---------- STEP 4: Drug Reference ----------
+function sendToDrugRef(cat){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelector('.tab-btn[data-tab="t4"]').classList.add('active');
+  document.getElementById('t4').classList.add('active');
+
+  const btn = document.querySelector(`#t4 .category-filter-bar button[onclick*="'${cat}'"]`) || document.querySelector('#t4 .category-filter-bar button');
+  filterDrugRefClass(cat, btn);
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function filterDrugRefClass(cat, btn){
+  document.querySelectorAll('#t4 .filter-pill').forEach(b => b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+
+  const cards = document.querySelectorAll('#drugCardsContainer .drug-card');
+  const query = document.getElementById('drugRefSearch')?.value.toLowerCase().trim() || '';
+
+  cards.forEach(card => {
+    const cardClass = card.getAttribute('data-drug-class');
+    const classMatch = (cat === 'all') || (cardClass === cat);
+    const textMatch = !query || card.textContent.toLowerCase().includes(query);
+
+    card.style.display = (classMatch && textMatch) ? 'block' : 'none';
+  });
+}
+
+function filterDrugRefList(){
+  const activeBtn = document.querySelector('#t4 .filter-pill.active');
+  const onclickStr = activeBtn?.getAttribute('onclick') || '';
+  const match = onclickStr.match(/'([^']+)'/);
+  const cat = match ? match[1] : 'all';
+  filterDrugRefClass(cat, activeBtn);
 }
 </script>
 </body>
