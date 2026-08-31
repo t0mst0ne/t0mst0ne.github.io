@@ -784,7 +784,7 @@
     <label class="opt">
       <input type="checkbox" data-grp="C" value="c2">
       <span class="domain-tag tag-meta">🫘 腎臟病</span>
-      <span class="opt-label-text">慢性腎臟病（透析前，UACR≧30mg/g 或 eGFR&lt;60mL/min/1.73m² 且持續至少 3 個月）</span>
+      <span class="opt-label-text">慢性腎臟病（透析前；UACR≧30mg/g 或 eGFR&lt;60mL/min/1.73m²，且上述異常持續至少 3 個月）</span>
     </label>
     <label class="opt">
       <input type="checkbox" data-grp="C" value="c3">
@@ -823,7 +823,7 @@
     </label>
     <label class="opt">
       <input type="checkbox" data-grp="D" value="d6">
-      <span class="opt-label-text">代謝性症候群（腹部肥胖、血壓偏高、空腹血糖偏高、空腹 TG 偏高、HDL-C 偏低，符合 ≧3 項）</span>
+      <span class="opt-label-text">代謝性症候群（下列 5 項符合 ≧3 項：腹圍男性≧90cm／女性≧80cm；血壓≧130/85mmHg 或使用降壓藥；空腹血糖≧100mg/dL 或使用糖尿病藥；空腹 TG≧150mg/dL 或使用降 TG 藥；HDL-C 男性&lt;40mg/dL／女性&lt;50mg/dL）</span>
     </label>
   </fieldset>
 
@@ -994,17 +994,18 @@
 <!-- ===================== TAB 2 ===================== -->
 <section class="panel" id="t2">
   <h2 class="section-title">Step 2・治療決策路徑</h2>
-  <p class="section-desc">選擇病人的 ASCVD 風險等級與目前所處的治療階段，系統將依修訂後給付規定處方通則給出下一步建議與追蹤頻率。</p>
+  <p class="section-desc">ASCVD 風險等級由 Step 1 判定並自動帶入；選擇目前治療階段後，系統將依修訂後給付規定處方通則給出下一步建議與追蹤頻率。</p>
 
   <fieldset>
     <legend>風險等級</legend>
+    <p style="font-size:13px;color:var(--ink-soft);margin:0 0 10px;">此欄為 Step 1 判定結果，不接受手動覆寫。若尚未帶入，請先返回 Step 1 完成評估。</p>
     <div class="radio-row" id="riskLevelRow">
-      <label><input type="radio" name="lvl" value="extreme">極高風險</label>
-      <label><input type="radio" name="lvl" value="veryhigh">非常高風險</label>
-      <label><input type="radio" name="lvl" value="high">高風險</label>
-      <label><input type="radio" name="lvl" value="mid">中風險</label>
-      <label><input type="radio" name="lvl" value="low">低風險</label>
-      <label><input type="radio" name="lvl" value="zero">0 項風險因子</label>
+      <label><input type="radio" name="lvl" value="extreme" disabled>極高風險</label>
+      <label><input type="radio" name="lvl" value="veryhigh" disabled>非常高風險</label>
+      <label><input type="radio" name="lvl" value="high" disabled>高風險</label>
+      <label><input type="radio" name="lvl" value="mid" disabled>中風險</label>
+      <label><input type="radio" name="lvl" value="low" disabled>低風險</label>
+      <label><input type="radio" name="lvl" value="zero" disabled>0 項風險因子</label>
     </div>
   </fieldset>
 
@@ -1038,13 +1039,13 @@
   <p class="section-desc">依 2.6.2（Ezetimibe 單方）與 2.6.3（Ezetimibe＋Statin 複方）修訂條文，逐項確認病人是否符合健保給付資格。</p>
 
   <div class="alert-box" style="background:#E0F2FE;border:1px solid #BAE6FD;color:#0369A1;margin-bottom:16px;">
-    💡 <strong>臨床適應症說明：</strong>所有冠心病 (CAD)、缺血性中風 (Stroke)、周邊動脈疾病 (PAD)、糖尿病 (DM) 或高血脂合併危險因子病患，於健保藥品給付規定之適應症分類均屬於<strong>「原發性高膽固醇血症」</strong>（Primary Hypercholesterolemia）範圍。
+    💡 <strong>適應症必須獨立確認：</strong>請依病歷診斷確認是否屬於下列適應症。冠心病、中風、周邊動脈疾病或糖尿病本身，<strong>不可在未確認高膽固醇血症診斷時自動視為「原發性高膽固醇血症」</strong>。
   </div>
 
   <fieldset>
     <legend>1. 診斷（適應症）</legend>
     <div class="radio-row" id="dxRow">
-      <label><input type="radio" name="dx" value="primary" checked><strong>原發性高膽固醇血症</strong>（含冠心病、中風、周邊動脈、糖尿病等 ASCVD 與高血脂病患）</label>
+      <label><input type="radio" name="dx" value="primary"><strong>原發性高膽固醇血症</strong>（須有明確診斷）</label>
       <label><input type="radio" name="dx" value="hofh">同型接合子家族性高膽固醇血症（HoFH）</label>
       <label><input type="radio" name="dx" value="sito">同型接合子性麥脂醇血症（植物固醇血症）</label>
       <label><input type="radio" name="dx" value="other">其他非高膽固醇相關診斷（非本藥適應症）</label>
@@ -1058,7 +1059,7 @@
       <label><input type="radio" name="drugtype" value="combo">Ezetimibe＋Statin 複方製劑 (2.6.3)</label>
     </div>
     <div id="comboNotice" class="alert-box alert-warn" style="display:none;margin-top:10px;">
-      ℹ️ <strong>法規提示：</strong>複方製劑（2.6.3）含有 Statin 成分，健保規定<strong>無「對 Statin 不耐受」之給付途徑</strong>，須經 Statin 單一治療未達標始得使用，且不得與 gemfibrozil 併用。
+      ℹ️ <strong>法規提示：</strong>複方製劑（2.6.3）無「僅憑 Statin 不耐受」之給付途徑，仍須確認曾經 Statin 單一治療未達標；本品且不得與 gemfibrozil 併用。
     </div>
   </fieldset>
 
@@ -1073,7 +1074,7 @@
   <fieldset id="goalFieldset">
     <legend>4. Statin 單一治療血脂是否已達標？</legend>
     <div class="radio-row" id="atGoalRow">
-      <label><input type="radio" name="atgoal" value="no" checked>⚠️ 未達治療目標（擬合併或更動治療）</label>
+      <label><input type="radio" name="atgoal" value="no">⚠️ 依適用表別判定仍未達治療目標（擬合併或更動治療）</label>
       <label><input type="radio" name="atgoal" value="yes">✓ 已達治療目標</label>
     </div>
   </fieldset>
@@ -1091,8 +1092,16 @@
     <legend>6. 擬使用之品項是否為公告清單中「需滿 3 個月試驗」品項？</legend>
     <p style="font-size:13px;color:var(--ink-soft);margin:0 0 10px;">特定清單品項須先經 statin 單一治療滿 3 個月未達標始得給付（原廠 Ezetrol、Atozet、Tonvasca、Vytorin 等非清單品項僅需滿 6–8 週）。</p>
     <div class="radio-row" id="onListRow">
-      <label><input type="radio" name="onlist" value="no" checked>不在清單內（適用一般 6–8 週規定）</label>
+      <label><input type="radio" name="onlist" value="no">不在清單內（適用一般 6–8 週規定）</label>
       <label><input type="radio" name="onlist" value="yes">在清單內（需滿 3 個月）</label>
+    </div>
+  </fieldset>
+
+  <fieldset id="gemFieldset" style="display:none;">
+    <legend>7. 是否擬與 gemfibrozil 併用？（僅複方製劑）</legend>
+    <div class="radio-row" id="gemRow">
+      <label><input type="radio" name="gem" value="yes">是</label>
+      <label><input type="radio" name="gem" value="no">否</label>
     </div>
   </fieldset>
 
@@ -1133,6 +1142,7 @@
 <section class="panel" id="t4">
   <h2 class="section-title">Step 4・降血脂各類藥物速查表（Statin & Non-Statin 藥品全覽）</h2>
   <p class="section-desc">依台灣動脈硬化心血管疾病 (ASCVD) 血脂管理指引、國際臨床試驗與健保給付規範彙整。提供 Statin 各強度劑量、Ezetimibe 單複方、PCSK9 單株抗體、siRNA (Inclisiran)、ACL 抑制劑 (Bempedoic acid) 及其他輔助藥物之機轉、劑量、降幅與臨床特點。</p>
+  <div class="alert-box alert-warn" style="margin-bottom:16px;"><strong>來源界線：</strong>本附件只足以核對 2.6.1–2.6.3；本頁其他藥物療效、試驗與給付資訊不屬於本附件可驗證範圍，不應單獨作為健保資格判定依據。</div>
 
   <!-- Visual Efficacy Ladder -->
   <div style="margin:16px 0 6px;">
@@ -1516,18 +1526,20 @@ const riskLevels = {
 
 let currentRiskKey = null;
 
+function determineRiskKey(){
+  const checked = g => Array.from(document.querySelectorAll(`input[data-grp="${g}"]:checked`)).length;
+  if(checked('A') > 0) return 'extreme';
+  if(checked('B') > 0) return 'veryhigh';
+  if(checked('C') > 0) return 'high';
+  const d = checked('D');
+  if(d >= 2) return 'mid';
+  if(d === 1) return 'low';
+  return 'zero';
+}
+
 function computeRisk(){
   const checked = g => Array.from(document.querySelectorAll(`input[data-grp="${g}"]:checked`)).length;
-  let key;
-  if(checked('A') > 0){ key='extreme'; }
-  else if(checked('B') > 0){ key='veryhigh'; }
-  else if(checked('C') > 0){ key='high'; }
-  else{
-    const d = checked('D');
-    if(d >= 2) key='mid';
-    else if(d === 1) key='low';
-    else key='zero';
-  }
+  const key = determineRiskKey();
   currentRiskKey = key;
   const r = riskLevels[key];
   document.getElementById('riskDot').style.background = r.color;
@@ -1552,6 +1564,14 @@ function computeRisk(){
   document.getElementById('riskResult').classList.add('show');
   document.getElementById('riskResult').scrollIntoView({behavior:'smooth', block:'nearest'});
 }
+
+document.querySelectorAll('input[data-grp]').forEach(input=>{
+  input.addEventListener('change',()=>{
+    currentRiskKey = null;
+    document.getElementById('riskResult').classList.remove('show');
+    document.getElementById('step2Result').classList.remove('show');
+  });
+});
 
 function sendToStep2(){
   if(!currentRiskKey) return;
@@ -1606,14 +1626,16 @@ const highGroupStages = [
 const lowMidGroupStages = [
   {v:'pre', t:'起始（生活型態改變）前'},
   {v:'review1', t:'生活型態改變 3–6 個月後複查'},
-  {v:'review2', t:'中強度 statin 治療 6–8 週後複查'},
-  {v:'review3', t:'更動治療後複查'}
+  {v:'review2', t:'中強度 statin 治療 6–8 週後複查'}
 ];
 
 function isHighGroup(key){ return key==='extreme' || key==='veryhigh' || key==='high'; }
 
 document.querySelectorAll('#riskLevelRow input').forEach(r=>{
-  r.addEventListener('change', populateStages);
+  r.addEventListener('change',()=>{
+    populateStages();
+    document.getElementById('step2Result').classList.remove('show');
+  });
 });
 
 function populateStages(){
@@ -1629,10 +1651,18 @@ function populateStages(){
   });
   toggleMetField();
 }
-document.getElementById('stageSelect').addEventListener('change', toggleMetField);
+document.getElementById('stageSelect').addEventListener('change',()=>{
+  toggleMetField();
+  document.getElementById('step2Result').classList.remove('show');
+});
+document.querySelectorAll('input[name="met"]').forEach(r=>r.addEventListener('change',()=>document.getElementById('step2Result').classList.remove('show')));
 function toggleMetField(){
   const stage = document.getElementById('stageSelect').value;
+  const key = document.querySelector('#riskLevelRow input:checked')?.value;
   document.getElementById('metFieldset').style.display = (stage==='pre') ? 'none' : 'block';
+  if(stage === 'pre'){
+    document.querySelectorAll('input[name="met"]').forEach(r=>{ r.checked = false; });
+  }
 }
 populateStages();
 
@@ -1659,7 +1689,7 @@ function buildStep1RationaleHtml(key){
   let html = '';
 
   if(totalChecked === 0){
-    html = `<p style="margin:4px 0 0;font-size:13.5px;color:var(--ink-soft);">（Step 1 尚未勾選特定臨床條件；目前依本步驟選擇之<strong>${r.label}</strong>進行路徑決策）</p>`;
+    html = `<p style="margin:4px 0 0;font-size:13.5px;color:var(--ink-soft);">未勾選高風險以上條件或心血管風險因子；判定為<strong>${r.label}</strong>。</p>`;
   } else {
     html += `<div style="font-size:13px;color:var(--ink-soft);margin-bottom:6px;">Step 1 勾選項目（共 ${totalChecked} 項）：</div><ul style="margin:4px 0 8px 0;padding-left:18px;font-size:13.5px;line-height:1.6;">`;
     
@@ -1747,7 +1777,7 @@ function buildCopyText(dateStr, key, stage, met, title, plainAdvice){
     text += basisLines.join('\n') + `\n`;
     text += `  • [結論] ${logicText} -> 判定為 ${r.label}\n`;
   } else {
-    text += `  • （手動指定為 ${r.label}）\n`;
+    text += `  • 未勾選高風險以上條件或心血管風險因子\n`;
   }
   text += `血脂治療目標：\n`;
   text += `  • 起始治療門檻：LDL-C ${r.start}\n`;
@@ -1796,12 +1826,22 @@ function showCopiedFeedback(btn){
 
 function computeStep2(){
   const key = document.querySelector('#riskLevelRow input:checked')?.value;
-  if(!key){ alert('請先選擇風險等級'); return; }
+  if(!currentRiskKey || !key){
+    alert('請先返回 Step 1，判定風險等級並將結果帶入 Step 2。');
+    document.querySelector('.tab-btn[data-tab="t1"]')?.click();
+    return;
+  }
+  const expectedKey = determineRiskKey();
+  if(key !== currentRiskKey || key !== expectedKey){
+    alert(`Step 2 風險等級與 Step 1 條件不一致；依 Step 1 應為「${riskLevels[expectedKey].label}」。請重新判定後帶入。`);
+    document.querySelector('.tab-btn[data-tab="t1"]')?.click();
+    return;
+  }
   const stage = document.getElementById('stageSelect').value;
   const met = document.querySelector('input[name="met"]:checked')?.value;
   const r = riskLevels[key];
   const high = isHighGroup(key);
-  let title='', body='', plainAdvice='';
+  let title='', body='', plainAdvice='', quickActions=[];
 
   if(stage==='pre'){
     if(high){
@@ -1810,8 +1850,9 @@ function computeStep2(){
       body = `<p>依據${assessBasis}，給予中至高強度 statin 或合併 ezetimibe。</p>
       <p>治療目標：LDL-C ${r.target}（non-HDL-C ${r.nonhdl}）。</p>
       <p>建議經起始治療 6–8 週後檢測血脂指標，並回到本畫面選擇「起始治療 6–8 週後複查」。</p>
-      <div class="note"><strong>【健保申報重要提醒】</strong>處方通則雖指出極高/非常高/高風險起始可考慮合併 ezetimibe，但依健保 2.6.2 及 2.6.3 給付規定，Ezetimibe（單方併用或複方）之健保給付仍要求須先經 statin 單一治療 6–8 週（或清單 3 個月）未達標或對 statin 不耐受。初發病患起始即合併使用時，請留意健保審查規範。</div>`;
-      plainAdvice = `依據${assessBasis}，給予中至高強度 statin 或合併 ezetimibe。\n主要目標 LDL-C ${r.target}、次要目標 non-HDL-C ${r.nonhdl}。\n建議起始治療 6–8 週後檢測血脂指標並複查。\n（健保提醒：Ezetimibe 給付需先經 statin 治療 6–8 週未達標或對 statin 不耐受）`;
+      <div class="note"><strong>【健保申報重要提醒】</strong>處方通則雖指出極高/非常高/高風險起始可考慮合併 ezetimibe，但依健保 2.6.2 及 2.6.3 給付規定，Ezetimibe（單方併用或複方）之健保給付仍要求須先經 statin 單一治療 6–8 週（或清單 3 個月）未達標，或單方製劑符合 statin 不耐受條件。初發病患起始即合併使用時，請留意健保審查規範。</div>`;
+      plainAdvice = `依據${assessBasis}，給予中至高強度 statin 或合併 ezetimibe。\n主要目標 LDL-C ${r.target}、次要目標 non-HDL-C ${r.nonhdl}。\n建議起始治療 6–8 週後檢測血脂指標並複查。\n（健保提醒：Ezetimibe 給付仍須另行符合 2.6.2 或 2.6.3）`;
+      quickActions = ['drug-all', 'ez-mono', 'ez-combo'];
     }else{
       title = '起始非藥物治療建議';
       body = `<p>起始進行生活型態改變，並處置心血管風險因子（給藥前應有 3–6 個月生活型態改變）。尚不需立即開立降血脂藥物。</p>
@@ -1830,23 +1871,27 @@ function computeStep2(){
     }else{
       if(high && stage==='review1'){
         title = '未達標：調整治療';
-        body = `<ol>
-          <li>先檢視服藥狀況與遵從性。</li>
-          <li>考慮調整至高強度 statin 或最大耐受 statin 劑量。</li>
-          <li>同時考慮合併 non-statin 治療，包含：ezetimibe、PCSK9 單株抗體、siRNA、ATP citrate lyase (ACL) 抑制劑。</li>
-          <li>更動治療 1–3 個月內需追蹤血脂值是否達標，回到本畫面選擇「更動治療後 1–3 個月複查」。</li>
-        </ol>`;
-        plainAdvice = `1. 先檢視服藥狀況與遵從性。\n2. 考慮調整至高強度 statin 或最大耐受 statin 劑量。\n3. 同時考慮合併 non-statin 治療（Ezetimibe、PCSK9 單株抗體、siRNA、ACL 抑制劑等）。\n4. 更動治療 1–3 個月內需追蹤血脂值是否達標。`;
+        const nonStatinText = 'non-statin 治療，包含：ezetimibe、PCSK9 單株抗體、siRNA、ATP citrate lyase (ACL) 抑制劑';
+        const escalationHtml = key === 'high'
+          ? `<li>考慮使用高強度 statin、最大耐受 statin 劑量，或同時合併 ${nonStatinText}。</li>`
+          : `<li>考慮調整至高強度 statin 或最大耐受 statin 劑量。</li><li>同時考慮合併 ${nonStatinText}。</li>`;
+        body = `<ol><li>先檢視服藥狀況與遵從性。</li>${escalationHtml}<li>更動治療 1–3 個月內需追蹤血脂值是否達標，回到本畫面選擇「更動治療後 1–3 個月複查」。</li></ol>`;
+        plainAdvice = key === 'high'
+          ? `1. 先檢視服藥狀況與遵從性。\n2. 考慮使用高強度 statin、最大耐受 statin 劑量，或同時合併 non-statin 治療。\n3. 更動治療 1–3 個月內需追蹤血脂值是否達標。`
+          : `1. 先檢視服藥狀況與遵從性。\n2. 考慮調整至高強度 statin 或最大耐受 statin 劑量。\n3. 同時考慮合併 non-statin 治療。\n4. 更動治療 1–3 個月內需追蹤血脂值是否達標。`;
+        quickActions = ['drug-all', 'ez-mono', 'ez-combo'];
       }else if(high && stage==='review2'){
         title = '未達標：再次調整藥物組合';
         body = `<p>檢視服藥狀況，並考慮調整藥物組合（調整 statin 劑量／種類，或加用／更換 non-statin 藥物）。</p>
         <p>更動治療後 1–3 個月內持續追蹤血脂值直到達標；達標後維持治療並每 6 個月追蹤一次。</p>`;
         plainAdvice = `檢視服藥狀況，考慮調整藥物組合（調整 statin 劑量/種類，或加用/更換 non-statin 藥物）。\n更動治療後 1–3 個月內持續追蹤血脂值直到達標；達標後維持治療並每 6 個月追蹤一次。`;
+        quickActions = ['drug-all', 'ez-mono', 'ez-combo'];
       }else if(!high && stage==='review1'){
         title = '未達標：開始中強度 Statin 治療';
         body = `<p>經生活型態改變 3–6 個月後血脂仍未達標，給予<strong>中強度 statin</strong>。</p>
         <p>中強度 statin 治療 6–8 週後追蹤血脂值，回到本畫面選擇「中強度 statin 治療 6–8 週後複查」。</p>`;
         plainAdvice = `經生活型態改變 3–6 個月後血脂仍未達標，給予中強度 statin 治療。\n中強度 statin 治療 6–8 週後追蹤血脂值。`;
+        quickActions = ['drug-statin'];
       }else if(!high && stage==='review2'){
         title = '未達標：升級至高強度或合併治療';
         body = `<ol>
@@ -1855,6 +1900,7 @@ function computeStep2(){
           <li>更動治療後持續追蹤，治療達標後維持治療，並應每 6–12 個月追蹤血脂指標。</li>
         </ol>`;
         plainAdvice = `1. 檢視服藥狀況。\n2. 可給予高強度 statin 或最大耐受 statin 劑量，或合併 non-statin 治療。\n3. 更動治療後持續追蹤，治療達標後維持治療，並每 6–12 個月追蹤血脂指標。`;
+        quickActions = ['drug-all', 'ez-mono', 'ez-combo'];
       }else{
         title = '未達標：持續調整藥物組合';
         body = `<p>檢視服藥狀況，並考慮調整藥物組合，持續追蹤至達標，達標後維持治療並每 6–12 個月追蹤血脂指標。</p>`;
@@ -1872,17 +1918,23 @@ function computeStep2(){
 
   const rationaleBox = buildStep1RationaleHtml(key);
   const copyText = buildCopyText(dateStr, key, stage, met, title, plainAdvice);
+  const quickActionButtons = {
+    'drug-all': `<button type="button" class="ghost" style="padding:6px 12px;font-size:13px;" onclick="sendToDrugRef('all')">💊 查看建議藥物速查</button>`,
+    'drug-statin': `<button type="button" class="ghost" style="padding:6px 12px;font-size:13px;" onclick="sendToDrugRef('statin')">💊 查看 Statin 強度與劑量</button>`,
+    'ez-mono': `<button type="button" class="ghost" style="padding:6px 12px;font-size:13px;" onclick="sendToStep3('mono')">👉 檢驗 Ezetimibe 單方給付</button>`,
+    'ez-combo': `<button type="button" class="ghost" style="padding:6px 12px;font-size:13px;" onclick="sendToStep3('combo')">👉 檢驗 Ezetimibe 複方給付</button>`
+  };
+  const quickActionsHtml = quickActions.length ? `
+    <div style="margin-top:14px;padding-top:12px;border-top:1px dashed var(--line);display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+      <span style="font-size:13px;font-weight:600;color:var(--ink-soft);">依本次建議可進一步查看：</span>
+      ${quickActions.map(action=>quickActionButtons[action]).join('')}
+    </div>` : '';
 
   const adviceBox = `
   <div style="margin-bottom:16px;">
     <h4 style="margin:0 0 10px;font-size:15.5px;color:var(--ink);font-weight:700;">💡 Step 2 臨床建議：${title}</h4>
     ${body}
-    <div style="margin-top:14px;padding-top:12px;border-top:1px dashed var(--line);display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
-      <span style="font-size:13px;font-weight:600;color:var(--ink-soft);">快速指引與判定：</span>
-      <button type="button" class="ghost" style="padding:6px 12px;font-size:13px;" onclick="sendToDrugRef('all')">💊 降血脂各類藥物速查表 (Ezetimibe / PCSK9 / siRNA / ACL)</button>
-      <button type="button" class="ghost" style="padding:6px 12px;font-size:13px;" onclick="sendToStep3('mono')">👉 檢驗 Ezetimibe 單方給付 (2.6.2)</button>
-      <button type="button" class="ghost" style="padding:6px 12px;font-size:13px;" onclick="sendToStep3('combo')">👉 檢驗 Ezetimibe 複方給付 (2.6.3)</button>
-    </div>
+    ${quickActionsHtml}
   </div>`;
 
   const copySection = `
@@ -1907,10 +1959,6 @@ function sendToStep3(drugType){
   document.querySelector('.tab-btn[data-tab="t3"]').classList.add('active');
   document.getElementById('t3').classList.add('active');
   
-  // Pre-select primary diagnosis (standard for ASCVD / CAD / Stroke / DM / Dyslipidemia)
-  const dxRadio = document.querySelector('input[name="dx"][value="primary"]');
-  if(dxRadio) dxRadio.checked = true;
-
   if(drugType){
     const dtRadio = document.querySelector(`input[name="drugtype"][value="${drugType}"]`);
     if(dtRadio){
@@ -1918,36 +1966,19 @@ function sendToStep3(drugType){
     }
   }
 
-  // Statin intolerance default to 'no'
-  const intolNo = document.querySelector('input[name="intol"][value="no"]');
-  if(intolNo && !document.querySelector('input[name="intol"]:checked')) intolNo.checked = true;
-
   // Auto-sync from Step 2's stage and met status
   const s2Stage = document.getElementById('stageSelect')?.value;
   const s2Met = document.querySelector('input[name="met"]:checked')?.value;
 
-  if(s2Met === 'yes'){
+  document.querySelectorAll('input[name="atgoal"]').forEach(r=>{ r.checked = false; });
+
+  if(s2Stage !== 'pre' && s2Met === 'yes'){
     const atGoalYes = document.querySelector('input[name="atgoal"][value="yes"]');
     if(atGoalYes) atGoalYes.checked = true;
-  } else {
+  } else if(s2Stage !== 'pre' && s2Met === 'no') {
     const atGoalNo = document.querySelector('input[name="atgoal"][value="no"]');
     if(atGoalNo) atGoalNo.checked = true;
   }
-
-  if(s2Stage === 'review1'){
-    const dur6to8 = document.querySelector('input[name="dur"][value="6to8w"]');
-    if(dur6to8) dur6to8.checked = true;
-  } else if(s2Stage === 'review2' || s2Stage === 'review3'){
-    const dur3m = document.querySelector('input[name="dur"][value="ge3m"]');
-    if(dur3m) dur3m.checked = true;
-  } else if(s2Stage === 'pre'){
-    const durLt6 = document.querySelector('input[name="dur"][value="lt6w"]');
-    if(durLt6) durLt6.checked = true;
-  }
-
-  // Onlist default to 'no' if not set
-  const onListNo = document.querySelector('input[name="onlist"][value="no"]');
-  if(onListNo && !document.querySelector('input[name="onlist"]:checked')) onListNo.checked = true;
 
   updateStep3UI();
   window.scrollTo({top:0, behavior:'smooth'});
@@ -1966,28 +1997,41 @@ function updateStep3UI(){
   const goalFieldset = document.getElementById('goalFieldset');
   const durFieldset = document.getElementById('durFieldset');
   const listFieldset = document.getElementById('listFieldset');
-  
-  if(intol === 'yes' && drugtype === 'mono'){
-    // Mono with intolerance qualifies immediately without prior statin trial
-    if(goalFieldset) goalFieldset.style.opacity = '.4';
-    if(durFieldset) durFieldset.style.opacity = '.4';
-    if(listFieldset) listFieldset.style.opacity = '.4';
-  } else {
-    if(goalFieldset) goalFieldset.style.opacity = '1';
-    if(durFieldset) durFieldset.style.opacity = '1';
-    if(listFieldset) listFieldset.style.opacity = '1';
+  const gemFieldset = document.getElementById('gemFieldset');
+
+  const monoIntolerancePath = intol === 'yes' && drugtype === 'mono';
+  [goalFieldset, durFieldset, listFieldset].forEach(fieldset=>{
+    if(!fieldset) return;
+    fieldset.style.opacity = monoIntolerancePath ? '.4' : '1';
+    fieldset.querySelectorAll('input').forEach(input=>{
+      input.disabled = monoIntolerancePath;
+      if(monoIntolerancePath) input.checked = false;
+    });
+  });
+  if(gemFieldset){
+    gemFieldset.style.display = (drugtype === 'combo') ? 'block' : 'none';
+    if(drugtype !== 'combo'){
+      gemFieldset.querySelectorAll('input').forEach(input=>{ input.checked = false; });
+    }
   }
 }
 
-document.querySelectorAll('#dxRow input, #drugTypeRow input, #intolRow input, #atGoalRow input, #durRow input, #onListRow input').forEach(r=>{
-  r.addEventListener('change', updateStep3UI);
+document.querySelectorAll('#dxRow input, #drugTypeRow input, #intolRow input, #atGoalRow input, #durRow input, #onListRow input, #gemRow input').forEach(r=>{
+  r.addEventListener('change',()=>{
+    updateStep3UI();
+    document.getElementById('step3Result').classList.remove('show');
+  });
 });
 updateStep3UI();
 
 function computeStep3(){
-  const dx = document.querySelector('input[name="dx"]:checked')?.value || 'primary';
-  const drugtype = document.querySelector('input[name="drugtype"]:checked')?.value || 'mono';
-  const intol = document.querySelector('input[name="intol"]:checked')?.value || 'no';
+  const dx = document.querySelector('input[name="dx"]:checked')?.value;
+  const drugtype = document.querySelector('input[name="drugtype"]:checked')?.value;
+  const intol = document.querySelector('input[name="intol"]:checked')?.value;
+
+  if(!dx){ alert('請先選擇第 1 題診斷（適應症）。'); return; }
+  if(!drugtype){ alert('請先選擇第 2 題擬使用藥品類型。'); return; }
+  if(!intol){ alert('請先選擇第 3 題 Statin 不耐受狀況。'); return; }
 
   const dot = document.getElementById('s3Dot');
   const titleEl = document.getElementById('s3Title');
@@ -2003,7 +2047,7 @@ function computeStep3(){
 
   // 1. Diagnosis gate
   if(dx === 'other'){
-    render(false, '不符合給付資格（適應症不符）', `<p>Ezetimibe 單方與複方製劑均限用於<strong>原發性高膽固醇血症</strong>（包含冠心病、缺血性中風、周邊動脈疾病、糖尿病合併高血脂等 ASCVD 病患）、<strong>同型接合子家族性高膽固醇血症（HoFH）</strong>，及（單方另包含）<strong>植物固醇血症</strong>患者。</p><p>💡 若病人為上述 ASCVD 或高膽固醇血症病患，請將第 1 題選擇為「<strong>原發性高膽固醇血症</strong>」。</p>`);
+    render(false, '不符合給付資格（適應症不符）', `<p>Ezetimibe 單方限用於<strong>原發性高膽固醇血症</strong>、<strong>同型接合子家族性高膽固醇血症（HoFH）</strong>或<strong>植物固醇血症</strong>；複方製劑限前兩者。</p><p>請依病歷確認適應症，不可僅因存在冠心病、中風、周邊動脈疾病或糖尿病而自動改選原發性高膽固醇血症。</p>`);
     return;
   }
   if(drugtype === 'combo' && dx === 'sito'){
@@ -2013,38 +2057,52 @@ function computeStep3(){
 
   // 2. Statin intolerance logic check
   if(intol === 'yes'){
-    if(drugtype === 'combo'){
-      render(false, '不符合複方給付資格（複方含 Statin）', `<p><strong>含 ezetimibe 及 statin 類之複方製劑（2.6.3）含有 statin 成分，健保給付規定中並無「對 statin 無法耐受」之給付途徑。</strong></p><p>若病人確實對 statin 類藥品發生無法耐受之不良反應（如 Severe myalgia、Myositis），應改為評估使用 <strong>2.6.2 Ezetimibe 單方製劑</strong>（可單獨使用）。</p><p>若欲使用 2.6.3 複方製劑，必須符合經 statin 單一治療未達標之條件。</p>`);
-      return;
-    } else {
-      render(true, '符合給付資格（Statin 無法耐受）', `<p>病人對 statin 類藥品發生無法耐受之不良反應（如 Severe myalgia、Myositis），符合 <strong>2.6.2 給付條件 1</strong>，不需先經 statin 治療期間即可單獨或合併使用 Ezetimibe 單方製劑。</p>`);
+    if(drugtype === 'mono'){
+      render(true, '符合給付資格（Statin 無法耐受）', `<p>病人對 statin 類藥品發生無法耐受之不良反應（如 Severe myalgia、Myositis），符合 <strong>2.6.2 給付條件 1</strong>，得使用 Ezetimibe 單方製劑，不需先滿足 statin 單一治療期間。</p>`);
       return;
     }
   }
 
-  // 3. Statin tolerant path (intol === 'no'): Requires prior statin monotherapy trial not at goal
-  const atgoal = document.querySelector('input[name="atgoal"]:checked')?.value || 'no';
+  // 3. Prior statin monotherapy path. For combination products, intolerance alone
+  // is neither an eligibility route nor an automatic exclusion.
+  const atgoal = document.querySelector('input[name="atgoal"]:checked')?.value;
   const dur = document.querySelector('input[name="dur"]:checked')?.value;
-  const onlist = document.querySelector('input[name="onlist"]:checked')?.value || 'no';
+  const onlist = document.querySelector('input[name="onlist"]:checked')?.value;
 
-  if(!dur){
-    alert('病人可耐受 statin，請選擇「第 5 題：Statin 單一治療已持續多久？」');
-    document.getElementById('durFieldset')?.scrollIntoView({behavior:'smooth', block:'center'});
-    return;
-  }
+  if(!atgoal){ alert('請回答第 4 題：Statin 單一治療血脂是否已達標。'); return; }
   if(atgoal === 'yes'){
     render(false, '尚不符合給付資格（已達標）', `<p>病人 statin 單一治療已達治療目標，不符合「statin 單一治療未達治療目標」之給付條件，暫不需加用 ezetimibe 或改用複方製劑。</p>`);
     return;
   }
 
+  // 2.6.3 explicitly prohibits concomitant gemfibrozil. Ask only after the
+  // prior-statin path is relevant (not when treatment is already at goal).
+  if(drugtype === 'combo'){
+    const gem = document.querySelector('input[name="gem"]:checked')?.value;
+    if(!gem){ alert('請回答第 7 題：是否擬與 gemfibrozil 併用。'); return; }
+    if(gem === 'yes'){
+      render(false, '不符合複方給付規定（不得與 Gemfibrozil 併用）', `<p>依 <strong>2.6.3 給付規定</strong>，含 ezetimibe 及 statin 類之複方製劑不得與 gemfibrozil 併用。</p>`);
+      return;
+    }
+  }
+  if(!dur){
+    alert('請選擇第 5 題：Statin 單一治療已持續多久？');
+    document.getElementById('durFieldset')?.scrollIntoView({behavior:'smooth', block:'center'});
+    return;
+  }
+  if(!onlist){ alert('請回答第 6 題：擬使用品項是否為需滿 3 個月試驗的公告清單品項。'); return; }
+
   const requiredWeeks = (onlist === 'yes') ? '3 個月' : '6–8 週';
   const durOk = (onlist === 'yes') ? (dur === 'ge3m') : (dur === '6to8w' || dur === 'ge3m');
+  const intoleranceNote = (drugtype === 'combo' && intol === 'yes')
+    ? `<p class="note"><strong>判定依據：</strong>本次符合資格係依完成 statin 單一治療且未達標之路徑；「Statin 不耐受」本身不是 2.6.3 複方製劑的獨立給付條件。</p>`
+    : '';
 
   if(durOk){
     if(drugtype === 'mono'){
       render(true, '符合給付資格（單方併用）', `<p>病人經 statin 類藥品單一治療滿 <strong>${requiredWeeks}</strong> 仍未達治療目標，符合 <strong>2.6.2 給付條件 2</strong>，得合併使用 Ezetimibe 單方製劑與 statins 類藥品。</p>`);
     } else {
-      render(true, '符合給付資格（複方製劑）', `<p>病人經 statin 類藥品單一治療滿 <strong>${requiredWeeks}</strong> 仍未達治療目標，符合 <strong>2.6.3 給付規定</strong>，得使用含 ezetimibe 及 statin 類之複方製劑。</p><p class="note"><strong>重要規範：</strong>依 2.6.3 規定，本品一律<strong>不得與 gemfibrozil 併用</strong>。</p>`);
+      render(true, '符合給付資格（複方製劑）', `<p>病人經 statin 類藥品單一治療滿 <strong>${requiredWeeks}</strong> 仍未達治療目標，符合 <strong>2.6.3 給付規定</strong>，得使用含 ezetimibe 及 statin 類之複方製劑。</p>${intoleranceNote}<p class="note"><strong>重要規範：</strong>依 2.6.3 規定，本品一律<strong>不得與 gemfibrozil 併用</strong>。</p>`);
     }
   }else{
     render(false, '尚未符合給付資格（療程時間未滿）', `<p>擬使用之品項${onlist==='yes'?'列於公告清單，':''}須經 statin 類藥品單一治療滿 <strong>${requiredWeeks}</strong> 仍未達治療目標，始得${drugtype==='combo'?'使用複方製劑':'與 statins 類藥品併用'}。病人目前治療期間尚未滿 ${requiredWeeks}，建議持續單一 statin 治療並於期滿後重新抽血檢測評估。</p>`);
