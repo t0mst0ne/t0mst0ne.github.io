@@ -167,6 +167,8 @@
   .tag-veryhigh{background:var(--veryhigh-bg);color:var(--veryhigh);}
   .tag-high{background:var(--high-bg);color:var(--high);}
   .tag-mid{background:var(--mid-bg);color:var(--mid);}
+  .tag-low{background:var(--low-bg);color:var(--low);}
+  .tag-zero{background:var(--zero-bg);color:var(--zero);}
 
   label.opt{
     display:flex;
@@ -814,6 +816,56 @@ function toggleMetField(){
 }
 populateStages();
 
+function buildStep1RationaleHtml(key){
+  const r = riskLevels[key];
+  const grpA = Array.from(document.querySelectorAll('input[data-grp="A"]:checked')).map(cb => cb.parentElement.textContent.trim());
+  const grpB = Array.from(document.querySelectorAll('input[data-grp="B"]:checked')).map(cb => cb.parentElement.textContent.trim());
+  const grpC = Array.from(document.querySelectorAll('input[data-grp="C"]:checked')).map(cb => cb.parentElement.textContent.trim());
+  const grpD = Array.from(document.querySelectorAll('input[data-grp="D"]:checked')).map(cb => cb.parentElement.textContent.trim());
+  
+  const totalChecked = grpA.length + grpB.length + grpC.length + grpD.length;
+  let html = '';
+
+  if(totalChecked === 0){
+    html = `<p style="margin:4px 0 0;font-size:13.5px;color:var(--ink-soft);">（Step 1 尚未勾選特定臨床條件；目前依本步驟選擇之<strong>${r.label}</strong>進行路徑決策）</p>`;
+  } else {
+    html += `<div style="font-size:13px;color:var(--ink-soft);margin-bottom:6px;">Step 1 勾選項目（共 ${totalChecked} 項）：</div><ul style="margin:4px 0 8px 0;padding-left:18px;font-size:13.5px;line-height:1.6;">`;
+    
+    grpA.forEach(text => {
+      html += `<li><span class="legend-tag tag-extreme">極高風險條件</span>${text}</li>`;
+    });
+    grpB.forEach(text => {
+      html += `<li><span class="legend-tag tag-veryhigh">非常高風險條件</span>${text}</li>`;
+    });
+    grpC.forEach(text => {
+      html += `<li><span class="legend-tag tag-high">高風險條件</span>${text}</li>`;
+    });
+    grpD.forEach(text => {
+      html += `<li><span class="legend-tag tag-mid">心血管風險因子</span>${text}</li>`;
+    });
+    html += `</ul>`;
+
+    let logicText = '';
+    if(grpA.length > 0) logicText = `符合 ${grpA.length} 項「極高風險」條件，判定為極高風險。`;
+    else if(grpB.length > 0) logicText = `符合 ${grpB.length} 項「非常高風險」條件，判定為非常高風險。`;
+    else if(grpC.length > 0) logicText = `符合 ${grpC.length} 項「高風險」條件，判定為高風險。`;
+    else if(grpD.length >= 2) logicText = `符合 ${grpD.length} 項心血管風險因子（≧2 項），判定為中風險。`;
+    else if(grpD.length === 1) logicText = `符合 1 項心血管風險因子，判定為低風險。`;
+    else logicText = `未符合任何高風險以上條件且無心血管危險因子，判定為 0 項因子。`;
+
+    html += `<div style="font-size:12.5px;color:var(--ink-soft);border-top:1px dashed var(--line);padding-top:6px;"><strong>分級判定依據：</strong>${logicText}</div>`;
+  }
+
+  return `
+  <div style="margin-top:16px;padding:12px 16px;background:var(--paper);border:1px solid var(--line);border-radius:6px;">
+    <div style="font-weight:700;font-size:13.5px;color:var(--ink);margin-bottom:6px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+      <span>📋 Step 1 風險判定依據：<span style="color:${r.color}">${r.label}</span></span>
+      <span class="mono" style="font-size:12px;font-weight:normal;color:var(--ink-soft);">門檻 LDL-C ${r.start} ｜ 主要目標 ${r.target} ｜ 次要目標 non-HDL-C ${r.nonhdl}</span>
+    </div>
+    ${html}
+  </div>`;
+}
+
 function computeStep2(){
   const key = document.querySelector('#riskLevelRow input:checked')?.value;
   if(!key){ alert('請先選擇風險等級'); return; }
@@ -874,9 +926,10 @@ function computeStep2(){
     }
   }
 
+  const rationaleBox = buildStep1RationaleHtml(key);
   document.getElementById('s2Dot').style.background = r.color;
   document.getElementById('s2Title').textContent = title;
-  document.getElementById('s2Body').innerHTML = body + `<div class="note"><strong>目前風險等級：</strong>${r.label}（起始門檻 LDL-C ${r.start}，主要目標 ${r.target}，次要目標 non-HDL-C ${r.nonhdl}）</div>`;
+  document.getElementById('s2Body').innerHTML = body + rationaleBox;
   document.getElementById('step2Result').classList.add('show');
   document.getElementById('step2Result').scrollIntoView({behavior:'smooth', block:'nearest'});
 }
