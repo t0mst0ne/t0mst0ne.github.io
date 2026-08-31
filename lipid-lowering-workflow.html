@@ -170,17 +170,139 @@
   .tag-low{background:var(--low-bg);color:var(--low);}
   .tag-zero{background:var(--zero-bg);color:var(--zero);}
 
+  /* Domain Tags & Category Accents */
+  .domain-tag{
+    display:inline-flex;
+    align-items:center;
+    gap:2px;
+    font-size:11.5px;
+    font-weight:700;
+    padding:1.5px 7px;
+    border-radius:4px;
+    white-space:nowrap;
+    flex-shrink:0;
+    line-height:1.4;
+    margin-right:2px;
+  }
+  .tag-cad{
+    background:#FFE4E6;
+    color:#9F1239;
+    border:1px solid #FECDD3;
+  }
+  .tag-stroke{
+    background:#E0E7FF;
+    color:#3730A3;
+    border:1px solid #C7D2FE;
+  }
+  .tag-pad{
+    background:#CCFBF1;
+    color:#115E59;
+    border:1px solid #99F6E4;
+  }
+  .tag-meta{
+    background:#FEF3C7;
+    color:#92400E;
+    border:1px solid #FDE68A;
+  }
+
   label.opt{
     display:flex;
     gap:10px;
     align-items:flex-start;
-    padding:8px 6px;
-    border-radius:4px;
+    padding:8px 10px;
+    border-radius:6px;
     cursor:pointer;
     font-size:14.5px;
+    border:1px solid transparent;
+    transition:background .15s, border-color .15s;
+    margin-bottom:4px;
   }
   label.opt:hover{background:var(--line-soft);}
-  label.opt input{margin-top:3px;flex-shrink:0;width:16px;height:16px;accent-color:var(--ink);}
+  label.opt input{margin-top:4px;flex-shrink:0;width:16px;height:16px;accent-color:var(--ink);}
+
+  /* Color accents for CAD & Stroke */
+  label.opt.opt-cad{
+    border-left:4px solid #E11D48;
+    background:rgba(255, 228, 230, 0.35);
+  }
+  label.opt.opt-cad:hover{
+    background:rgba(255, 228, 230, 0.6);
+  }
+  label.opt.opt-stroke{
+    border-left:4px solid #4F46E5;
+    background:rgba(224, 231, 255, 0.35);
+  }
+  label.opt.opt-stroke:hover{
+    background:rgba(224, 231, 255, 0.6);
+  }
+  label.opt.opt-pad{
+    border-left:4px solid #0D9488;
+    background:rgba(204, 251, 241, 0.3);
+  }
+  label.opt.opt-pad:hover{
+    background:rgba(204, 251, 241, 0.55);
+  }
+  label.opt.opt-cad.opt-stroke{
+    border-left:4px solid #7C3AED;
+    background:linear-gradient(90deg, rgba(255,228,230,0.4) 0%, rgba(224,231,255,0.4) 100%);
+  }
+  label.opt.opt-cad.opt-stroke:hover{
+    background:linear-gradient(90deg, rgba(255,228,230,0.65) 0%, rgba(224,231,255,0.65) 100%);
+  }
+
+  .category-filter-bar{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin:0 0 16px;
+    flex-wrap:wrap;
+    background:var(--panel);
+    padding:10px 14px;
+    border:1px solid var(--line);
+    border-radius:6px;
+  }
+  .category-filter-bar .filter-label{
+    font-size:13px;
+    font-weight:700;
+    color:var(--ink);
+    margin-right:2px;
+  }
+  .filter-pill{
+    padding:4px 12px;
+    border-radius:16px;
+    font-size:12.5px;
+    font-weight:600;
+    cursor:pointer;
+    border:1px solid var(--line);
+    background:var(--paper);
+    color:var(--ink-soft);
+    transition:all .15s ease;
+    font-family:'Noto Sans TC',sans-serif;
+  }
+  .filter-pill:hover{
+    border-color:var(--ink);
+    color:var(--ink);
+  }
+  .filter-pill.active{
+    background:var(--ink);
+    color:var(--paper);
+    border-color:var(--ink);
+  }
+  .filter-pill.pill-cad.active{
+    background:#9F1239;
+    border-color:#9F1239;
+    color:#fff;
+  }
+  .filter-pill.pill-stroke.active{
+    background:#3730A3;
+    border-color:#3730A3;
+    color:#fff;
+  }
+  .filter-pill.pill-pad.active{
+    background:#115E59;
+    border-color:#115E59;
+    color:#fff;
+  }
 
   .radio-row{display:flex;flex-wrap:wrap;gap:10px;}
   .radio-row label{
@@ -428,48 +550,155 @@
 <main>
 
 <!-- ===================== TAB 1 ===================== -->
-<section class="panel active" id="t1">
+<<section class="panel active" id="t1">
   <h2 class="section-title">Step 1・ASCVD 風險分級與血脂目標</h2>
   <p class="section-desc">勾選病人現有符合的臨床狀況。只要符合任一「極高風險」或「非常高風險」項目即判定為該等級；若均未符合，再依「高風險」條件與心血管危險因子數量判定。</p>
 
+  <!-- Category filter bar -->
+  <div class="category-filter-bar">
+    <span class="filter-label">類別標示與篩選：</span>
+    <button type="button" class="filter-pill active" onclick="filterStep1Category('all', this)">全部顯示</button>
+    <button type="button" class="filter-pill pill-cad" onclick="filterStep1Category('cad', this)">🫀 冠心病相關 (CAD)</button>
+    <button type="button" class="filter-pill pill-stroke" onclick="filterStep1Category('stroke', this)">🧠 腦中風・頸動脈 (Stroke)</button>
+    <button type="button" class="filter-pill pill-pad" onclick="filterStep1Category('pad', this)">🦵 周邊動脈 (PAD)</button>
+  </div>
+
   <fieldset>
     <legend><span class="legend-tag tag-extreme">極高風險</span>符合任一項即為極高風險</legend>
-    <label class="opt"><input type="checkbox" data-grp="A" value="a1">冠狀動脈疾病，合併一年內曾經歷心肌梗塞</label>
-    <label class="opt"><input type="checkbox" data-grp="A" value="a2">冠狀動脈疾病，合併 ≧2 次心肌梗塞病史</label>
-    <label class="opt"><input type="checkbox" data-grp="A" value="a3">冠狀動脈疾病，合併多支冠狀動脈阻塞</label>
-    <label class="opt"><input type="checkbox" data-grp="A" value="a4">冠狀動脈疾病，合併急性冠心症與糖尿病</label>
-    <label class="opt"><input type="checkbox" data-grp="A" value="a5">冠狀動脈疾病，合併周邊動脈疾病或頸動脈狹窄</label>
-    <label class="opt"><input type="checkbox" data-grp="A" value="a6">周邊動脈疾病，合併冠狀動脈疾病</label>
-    <label class="opt"><input type="checkbox" data-grp="A" value="a7">周邊動脈疾病，合併頸動脈狹窄</label>
+    <label class="opt opt-cad">
+      <input type="checkbox" data-grp="A" value="a1">
+      <span class="domain-tag tag-cad">🫀 冠心病</span>
+      <span class="opt-label-text">冠狀動脈疾病，合併一年內曾經歷心肌梗塞</span>
+    </label>
+    <label class="opt opt-cad">
+      <input type="checkbox" data-grp="A" value="a2">
+      <span class="domain-tag tag-cad">🫀 冠心病</span>
+      <span class="opt-label-text">冠狀動脈疾病，合併 ≧2 次心肌梗塞病史</span>
+    </label>
+    <label class="opt opt-cad">
+      <input type="checkbox" data-grp="A" value="a3">
+      <span class="domain-tag tag-cad">🫀 冠心病</span>
+      <span class="opt-label-text">冠狀動脈疾病，合併多支冠狀動脈阻塞</span>
+    </label>
+    <label class="opt opt-cad">
+      <input type="checkbox" data-grp="A" value="a4">
+      <span class="domain-tag tag-cad">🫀 冠心病</span>
+      <span class="domain-tag tag-meta">🩸 糖尿病</span>
+      <span class="opt-label-text">冠狀動脈疾病，合併急性冠心症與糖尿病</span>
+    </label>
+    <label class="opt opt-cad opt-stroke opt-pad">
+      <input type="checkbox" data-grp="A" value="a5">
+      <span class="domain-tag tag-cad">🫀 冠心病</span>
+      <span class="domain-tag tag-stroke">🧠 頸動脈</span>
+      <span class="domain-tag tag-pad">🦵 周邊動脈</span>
+      <span class="opt-label-text">冠狀動脈疾病，合併周邊動脈疾病或頸動脈狹窄</span>
+    </label>
+    <label class="opt opt-cad opt-pad">
+      <input type="checkbox" data-grp="A" value="a6">
+      <span class="domain-tag tag-cad">🫀 冠心病</span>
+      <span class="domain-tag tag-pad">🦵 周邊動脈</span>
+      <span class="opt-label-text">周邊動脈疾病，合併冠狀動脈疾病</span>
+    </label>
+    <label class="opt opt-stroke opt-pad">
+      <input type="checkbox" data-grp="A" value="a7">
+      <span class="domain-tag tag-stroke">🧠 頸動脈</span>
+      <span class="domain-tag tag-pad">🦵 周邊動脈</span>
+      <span class="opt-label-text">周邊動脈疾病，合併頸動脈狹窄</span>
+    </label>
   </fieldset>
 
   <fieldset>
     <legend><span class="legend-tag tag-veryhigh">非常高風險</span>符合任一項即為非常高風險</legend>
-    <label class="opt"><input type="checkbox" data-grp="B" value="b1">臨床確診動脈硬化心血管疾病：急性冠心症病史</label>
-    <label class="opt"><input type="checkbox" data-grp="B" value="b2">臨床確診動脈硬化心血管疾病：曾接受血管再通術（心導管介入或外科冠狀動脈繞道手術）</label>
-    <label class="opt"><input type="checkbox" data-grp="B" value="b3">臨床確診動脈硬化心血管疾病：缺血性中風／短暫性腦缺血發作，合併動脈硬化相關疾病或病史</label>
-    <label class="opt"><input type="checkbox" data-grp="B" value="b4">臨床確診動脈硬化心血管疾病：周邊動脈疾病（曾接受血管再通術、有肢體缺血相關症狀或截肢）</label>
-    <label class="opt"><input type="checkbox" data-grp="B" value="b5">影像確認顯著斑塊負擔（≧50%直徑狹窄率）：冠狀動脈血管攝影</label>
-    <label class="opt"><input type="checkbox" data-grp="B" value="b6">影像確認顯著斑塊負擔（≧50%直徑狹窄率）：冠狀動脈或周邊血管電腦斷層攝影</label>
-    <label class="opt"><input type="checkbox" data-grp="B" value="b7">影像確認顯著斑塊負擔（≧50%直徑狹窄率）：頸動脈或周邊血管超音波</label>
+    <label class="opt opt-cad">
+      <input type="checkbox" data-grp="B" value="b1">
+      <span class="domain-tag tag-cad">🫀 冠心病</span>
+      <span class="opt-label-text">臨床確診動脈硬化心血管疾病：急性冠心症病史</span>
+    </label>
+    <label class="opt opt-cad">
+      <input type="checkbox" data-grp="B" value="b2">
+      <span class="domain-tag tag-cad">🫀 冠心病</span>
+      <span class="opt-label-text">臨床確診動脈硬化心血管疾病：曾接受血管再通術（心導管介入或外科冠狀動脈繞道手術）</span>
+    </label>
+    <label class="opt opt-stroke">
+      <input type="checkbox" data-grp="B" value="b3">
+      <span class="domain-tag tag-stroke">🧠 腦中風</span>
+      <span class="opt-label-text">臨床確診動脈硬化心血管疾病：缺血性中風／短暫性腦缺血發作，合併動脈硬化相關疾病或病史</span>
+    </label>
+    <label class="opt opt-pad">
+      <input type="checkbox" data-grp="B" value="b4">
+      <span class="domain-tag tag-pad">🦵 周邊動脈</span>
+      <span class="opt-label-text">臨床確診動脈硬化心血管疾病：周邊動脈疾病（曾接受血管再通術、有肢體缺血相關症狀或截肢）</span>
+    </label>
+    <label class="opt opt-cad">
+      <input type="checkbox" data-grp="B" value="b5">
+      <span class="domain-tag tag-cad">🫀 冠心病</span>
+      <span class="opt-label-text">影像確認顯著斑塊負擔（≧50%直徑狹窄率）：冠狀動脈血管攝影</span>
+    </label>
+    <label class="opt opt-cad opt-pad">
+      <input type="checkbox" data-grp="B" value="b6">
+      <span class="domain-tag tag-cad">🫀 冠心病</span>
+      <span class="domain-tag tag-pad">🦵 周邊血管</span>
+      <span class="opt-label-text">影像確認顯著斑塊負擔（≧50%直徑狹窄率）：冠狀動脈或周邊血管電腦斷層攝影</span>
+    </label>
+    <label class="opt opt-stroke opt-pad">
+      <input type="checkbox" data-grp="B" value="b7">
+      <span class="domain-tag tag-stroke">🧠 頸動脈</span>
+      <span class="domain-tag tag-pad">🦵 周邊血管</span>
+      <span class="opt-label-text">影像確認顯著斑塊負擔（≧50%直徑狹窄率）：頸動脈或周邊血管超音波</span>
+    </label>
   </fieldset>
 
   <fieldset>
     <legend><span class="legend-tag tag-high">高風險</span>未符合上述兩類，但符合任一項即為高風險</legend>
-    <label class="opt"><input type="checkbox" data-grp="C" value="c1">糖尿病</label>
-    <label class="opt"><input type="checkbox" data-grp="C" value="c2">慢性腎臟病（透析前，UACR≧30mg/g 或 eGFR&lt;60mL/min/1.73m² 且持續至少 3 個月）</label>
-    <label class="opt"><input type="checkbox" data-grp="C" value="c3">LDL-C ≧190mg/dL</label>
-    <label class="opt"><input type="checkbox" data-grp="C" value="c4">冠狀動脈鈣化分數（CAC）≧400</label>
+    <label class="opt">
+      <input type="checkbox" data-grp="C" value="c1">
+      <span class="domain-tag tag-meta">🩸 糖尿病</span>
+      <span class="opt-label-text">糖尿病</span>
+    </label>
+    <label class="opt">
+      <input type="checkbox" data-grp="C" value="c2">
+      <span class="domain-tag tag-meta">🫘 腎臟病</span>
+      <span class="opt-label-text">慢性腎臟病（透析前，UACR≧30mg/g 或 eGFR&lt;60mL/min/1.73m² 且持續至少 3 個月）</span>
+    </label>
+    <label class="opt">
+      <input type="checkbox" data-grp="C" value="c3">
+      <span class="domain-tag tag-meta">🧪 高血脂</span>
+      <span class="opt-label-text">LDL-C ≧190mg/dL</span>
+    </label>
+    <label class="opt opt-cad">
+      <input type="checkbox" data-grp="C" value="c4">
+      <span class="domain-tag tag-cad">🫀 冠心鈣化</span>
+      <span class="opt-label-text">冠狀動脈鈣化分數（CAC）≧400</span>
+    </label>
   </fieldset>
 
   <fieldset>
     <legend><span class="legend-tag tag-mid">心血管風險因子</span>均未符合上述時，依下列因子數量判定中／低風險</legend>
-    <label class="opt"><input type="checkbox" data-grp="D" value="d1">高血壓</label>
-    <label class="opt"><input type="checkbox" data-grp="D" value="d2">男性 ≧45 歲 或 女性 ≧55 歲</label>
-    <label class="opt"><input type="checkbox" data-grp="D" value="d3">早發性冠心病家族史（男性 ≦55 歲、女性 ≦65 歲）</label>
-    <label class="opt"><input type="checkbox" data-grp="D" value="d4">HDL-C 偏低（男性 &lt;40mg/dL，女性 &lt;50mg/dL）</label>
-    <label class="opt"><input type="checkbox" data-grp="D" value="d5">抽菸</label>
-    <label class="opt"><input type="checkbox" data-grp="D" value="d6">代謝性症候群（腹部肥胖、血壓偏高、空腹血糖偏高、空腹 TG 偏高、HDL-C 偏低，符合 ≧3 項）</label>
+    <label class="opt">
+      <input type="checkbox" data-grp="D" value="d1">
+      <span class="opt-label-text">高血壓</span>
+    </label>
+    <label class="opt">
+      <input type="checkbox" data-grp="D" value="d2">
+      <span class="opt-label-text">男性 ≧45 歲 或 女性 ≧55 歲</span>
+    </label>
+    <label class="opt opt-cad">
+      <input type="checkbox" data-grp="D" value="d3">
+      <span class="domain-tag tag-cad">🫀 早發冠心</span>
+      <span class="opt-label-text">早發性冠心病家族史（男性 ≦55 歲、女性 ≦65 歲）</span>
+    </label>
+    <label class="opt">
+      <input type="checkbox" data-grp="D" value="d4">
+      <span class="opt-label-text">HDL-C 偏低（男性 &lt;40mg/dL，女性 &lt;50mg/dL）</span>
+    </label>
+    <label class="opt">
+      <input type="checkbox" data-grp="D" value="d5">
+      <span class="opt-label-text">抽菸</span>
+    </label>
+    <label class="opt">
+      <input type="checkbox" data-grp="D" value="d6">
+      <span class="opt-label-text">代謝性症候群（腹部肥胖、血壓偏高、空腹血糖偏高、空腹 TG 偏高、HDL-C 偏低，符合 ≧3 項）</span>
+    </label>
   </fieldset>
 
   <button class="primary" onclick="computeRisk()">判定風險等級與血脂目標</button>
@@ -847,6 +1076,31 @@ function filterTable2(){
   });
 }
 
+function filterStep1Category(cat, btn){
+  document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  const opts = document.querySelectorAll('#t1 label.opt');
+  opts.forEach(opt => {
+    if(cat === 'all'){
+      opt.style.display = 'flex';
+      opt.style.opacity = '1';
+    } else {
+      const match = opt.classList.contains('opt-' + cat);
+      const isChecked = opt.querySelector('input').checked;
+      if(match){
+        opt.style.display = 'flex';
+        opt.style.opacity = '1';
+      } else if(isChecked){
+        opt.style.display = 'flex';
+        opt.style.opacity = '0.45';
+      } else {
+        opt.style.display = 'none';
+      }
+    }
+  });
+}
+
 // ---------- STEP 2 ----------
 const highGroupStages = [
   {v:'pre', t:'起始治療前（尚未用藥）'},
@@ -886,12 +1140,24 @@ function toggleMetField(){
 }
 populateStages();
 
+function getCheckedItems(grp){
+  return Array.from(document.querySelectorAll(`input[data-grp="${grp}"]:checked`)).map(cb => {
+    const parent = cb.parentElement;
+    const text = parent.querySelector('.opt-label-text')?.textContent.trim() || parent.textContent.trim();
+    const domainTags = Array.from(parent.querySelectorAll('.domain-tag')).map(t => ({
+      html: t.outerHTML,
+      text: t.textContent.trim()
+    }));
+    return { text, domainTags };
+  });
+}
+
 function buildStep1RationaleHtml(key){
   const r = riskLevels[key];
-  const grpA = Array.from(document.querySelectorAll('input[data-grp="A"]:checked')).map(cb => cb.parentElement.textContent.trim());
-  const grpB = Array.from(document.querySelectorAll('input[data-grp="B"]:checked')).map(cb => cb.parentElement.textContent.trim());
-  const grpC = Array.from(document.querySelectorAll('input[data-grp="C"]:checked')).map(cb => cb.parentElement.textContent.trim());
-  const grpD = Array.from(document.querySelectorAll('input[data-grp="D"]:checked')).map(cb => cb.parentElement.textContent.trim());
+  const grpA = getCheckedItems('A');
+  const grpB = getCheckedItems('B');
+  const grpC = getCheckedItems('C');
+  const grpD = getCheckedItems('D');
   
   const totalChecked = grpA.length + grpB.length + grpC.length + grpD.length;
   let html = '';
@@ -901,17 +1167,21 @@ function buildStep1RationaleHtml(key){
   } else {
     html += `<div style="font-size:13px;color:var(--ink-soft);margin-bottom:6px;">Step 1 勾選項目（共 ${totalChecked} 項）：</div><ul style="margin:4px 0 8px 0;padding-left:18px;font-size:13.5px;line-height:1.6;">`;
     
-    grpA.forEach(text => {
-      html += `<li><span class="legend-tag tag-extreme">極高風險條件</span>${text}</li>`;
+    grpA.forEach(item => {
+      const tagHtml = item.domainTags.map(t => t.html).join('');
+      html += `<li><span class="legend-tag tag-extreme">極高風險條件</span>${tagHtml ? tagHtml + ' ' : ''}${item.text}</li>`;
     });
-    grpB.forEach(text => {
-      html += `<li><span class="legend-tag tag-veryhigh">非常高風險條件</span>${text}</li>`;
+    grpB.forEach(item => {
+      const tagHtml = item.domainTags.map(t => t.html).join('');
+      html += `<li><span class="legend-tag tag-veryhigh">非常高風險條件</span>${tagHtml ? tagHtml + ' ' : ''}${item.text}</li>`;
     });
-    grpC.forEach(text => {
-      html += `<li><span class="legend-tag tag-high">高風險條件</span>${text}</li>`;
+    grpC.forEach(item => {
+      const tagHtml = item.domainTags.map(t => t.html).join('');
+      html += `<li><span class="legend-tag tag-high">高風險條件</span>${tagHtml ? tagHtml + ' ' : ''}${item.text}</li>`;
     });
-    grpD.forEach(text => {
-      html += `<li><span class="legend-tag tag-mid">心血管風險因子</span>${text}</li>`;
+    grpD.forEach(item => {
+      const tagHtml = item.domainTags.map(t => t.html).join('');
+      html += `<li><span class="legend-tag tag-mid">心血管風險因子</span>${tagHtml ? tagHtml + ' ' : ''}${item.text}</li>`;
     });
     html += `</ul>`;
 
@@ -938,20 +1208,32 @@ function buildStep1RationaleHtml(key){
 
 function buildCopyText(dateStr, key, stage, met, title, plainAdvice){
   const r = riskLevels[key];
-  const grpA = Array.from(document.querySelectorAll('input[data-grp="A"]:checked')).map(cb => cb.parentElement.textContent.trim());
-  const grpB = Array.from(document.querySelectorAll('input[data-grp="B"]:checked')).map(cb => cb.parentElement.textContent.trim());
-  const grpC = Array.from(document.querySelectorAll('input[data-grp="C"]:checked')).map(cb => cb.parentElement.textContent.trim());
-  const grpD = Array.from(document.querySelectorAll('input[data-grp="D"]:checked')).map(cb => cb.parentElement.textContent.trim());
+  const grpA = getCheckedItems('A');
+  const grpB = getCheckedItems('B');
+  const grpC = getCheckedItems('C');
+  const grpD = getCheckedItems('D');
   
   const stageSelect = document.getElementById('stageSelect');
   const stageText = stageSelect.options[stageSelect.selectedIndex]?.text || '';
   const metText = (stage === 'pre') ? '' : (met === 'yes' ? '（已達標）' : '（未達標）');
 
   let basisLines = [];
-  grpA.forEach(t => basisLines.push(`  • [極高風險] ${t}`));
-  grpB.forEach(t => basisLines.push(`  • [非常高風險] ${t}`));
-  grpC.forEach(t => basisLines.push(`  • [高風險] ${t}`));
-  grpD.forEach(t => basisLines.push(`  • [心血管風險因子] ${t}`));
+  grpA.forEach(item => {
+    const tagStr = item.domainTags.map(t => `[${t.text}]`).join('');
+    basisLines.push(`  • [極高風險]${tagStr ? tagStr + ' ' : ''}${item.text}`);
+  });
+  grpB.forEach(item => {
+    const tagStr = item.domainTags.map(t => `[${t.text}]`).join('');
+    basisLines.push(`  • [非常高風險]${tagStr ? tagStr + ' ' : ''}${item.text}`);
+  });
+  grpC.forEach(item => {
+    const tagStr = item.domainTags.map(t => `[${t.text}]`).join('');
+    basisLines.push(`  • [高風險]${tagStr ? tagStr + ' ' : ''}${item.text}`);
+  });
+  grpD.forEach(item => {
+    const tagStr = item.domainTags.map(t => `[${t.text}]`).join('');
+    basisLines.push(`  • [心血管風險因子]${tagStr ? tagStr + ' ' : ''}${item.text}`);
+  });
 
   let logicText = '';
   if(grpA.length > 0) logicText = `符合 ${grpA.length} 項「極高風險」條件`;
@@ -983,6 +1265,7 @@ function buildCopyText(dateStr, key, stage, met, title, plainAdvice){
   text += plainAdvice.split('\n').map(line => `  ${line}`).join('\n');
   return text;
 }
+
 
 function copyStep2Summary(btn){
   const textarea = document.getElementById('s2CopyText');
