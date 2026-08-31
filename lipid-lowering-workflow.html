@@ -284,6 +284,76 @@
   }
   .note strong{color:var(--ink);}
 
+  .step-panel-box{
+    padding:14px 16px;
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:6px;
+    margin-bottom:18px;
+  }
+  .step-panel-header{
+    font-weight:700;
+    font-size:14px;
+    color:var(--ink);
+    margin-bottom:8px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:6px;
+  }
+  .copy-section{
+    margin-top:20px;
+    border-top:1px solid var(--line);
+    padding-top:16px;
+  }
+  .copy-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:8px;
+    flex-wrap:wrap;
+    gap:8px;
+  }
+  .copy-header span{
+    font-weight:700;
+    font-size:13.5px;
+    color:var(--ink);
+  }
+  .copy-textarea{
+    width:100%;
+    font-family:'IBM Plex Mono',monospace,sans-serif;
+    font-size:13px;
+    line-height:1.6;
+    padding:10px 12px;
+    border:1px solid var(--line);
+    border-radius:5px;
+    background:var(--paper);
+    color:var(--ink);
+    resize:vertical;
+    box-sizing:border-box;
+  }
+  .copy-btn{
+    padding:6px 14px;
+    font-size:13px;
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:4px;
+    cursor:pointer;
+    font-weight:600;
+    font-family:'Noto Sans TC',sans-serif;
+    transition:all .15s ease;
+  }
+  .copy-btn:hover{
+    background:var(--ink);
+    color:var(--paper);
+  }
+  .copy-btn.copied{
+    background:var(--ok);
+    color:#fff;
+    border-color:var(--ok);
+  }
+
   details{
     border:1px solid var(--line);
     border-radius:6px;
@@ -857,13 +927,92 @@ function buildStep1RationaleHtml(key){
   }
 
   return `
-  <div style="margin-top:16px;padding:12px 16px;background:var(--paper);border:1px solid var(--line);border-radius:6px;">
-    <div style="font-weight:700;font-size:13.5px;color:var(--ink);margin-bottom:6px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;">
-      <span>📋 Step 1 風險判定依據：<span style="color:${r.color}">${r.label}</span></span>
+  <div class="step-panel-box">
+    <div class="step-panel-header">
+      <span>📋 Step 1 風險判定結果：<span style="color:${r.color}">${r.label}</span></span>
       <span class="mono" style="font-size:12px;font-weight:normal;color:var(--ink-soft);">門檻 LDL-C ${r.start} ｜ 主要目標 ${r.target} ｜ 次要目標 non-HDL-C ${r.nonhdl}</span>
     </div>
     ${html}
   </div>`;
+}
+
+function buildCopyText(dateStr, key, stage, met, title, plainAdvice){
+  const r = riskLevels[key];
+  const grpA = Array.from(document.querySelectorAll('input[data-grp="A"]:checked')).map(cb => cb.parentElement.textContent.trim());
+  const grpB = Array.from(document.querySelectorAll('input[data-grp="B"]:checked')).map(cb => cb.parentElement.textContent.trim());
+  const grpC = Array.from(document.querySelectorAll('input[data-grp="C"]:checked')).map(cb => cb.parentElement.textContent.trim());
+  const grpD = Array.from(document.querySelectorAll('input[data-grp="D"]:checked')).map(cb => cb.parentElement.textContent.trim());
+  
+  const stageSelect = document.getElementById('stageSelect');
+  const stageText = stageSelect.options[stageSelect.selectedIndex]?.text || '';
+  const metText = (stage === 'pre') ? '' : (met === 'yes' ? '（已達標）' : '（未達標）');
+
+  let basisLines = [];
+  grpA.forEach(t => basisLines.push(`  • [極高風險] ${t}`));
+  grpB.forEach(t => basisLines.push(`  • [非常高風險] ${t}`));
+  grpC.forEach(t => basisLines.push(`  • [高風險] ${t}`));
+  grpD.forEach(t => basisLines.push(`  • [心血管風險因子] ${t}`));
+
+  let logicText = '';
+  if(grpA.length > 0) logicText = `符合 ${grpA.length} 項「極高風險」條件`;
+  else if(grpB.length > 0) logicText = `符合 ${grpB.length} 項「非常高風險」條件`;
+  else if(grpC.length > 0) logicText = `符合 ${grpC.length} 項「高風險」條件`;
+  else if(grpD.length >= 2) logicText = `符合 ${grpD.length} 項心血管風險因子（≧2 項）`;
+  else if(grpD.length === 1) logicText = `符合 1 項心血管風險因子`;
+  else logicText = `未勾選高風險以上條件且無心血管風險因子（0 項因子）`;
+
+  let text = `【降膽固醇治療評估與決策紀錄】\n`;
+  text += `評估日期：${dateStr}\n`;
+  text += `ASCVD 風險等級：${r.label}\n`;
+  text += `判定依據：\n`;
+  if(basisLines.length > 0){
+    text += basisLines.join('\n') + `\n`;
+    text += `  • [結論] ${logicText} -> 判定為 ${r.label}\n`;
+  } else {
+    text += `  • （手動指定為 ${r.label}）\n`;
+  }
+  text += `血脂治療目標：\n`;
+  text += `  • 起始治療門檻：LDL-C ${r.start}\n`;
+  text += `  • 主要治療目標：LDL-C ${r.target}\n`;
+  if(r.nonhdl !== '未另訂次要目標'){
+    text += `  • 次要治療目標：non-HDL-C ${r.nonhdl}\n`;
+  }
+  text += `治療階段：${stageText}${metText}\n`;
+  text += `臨床建議與處置：\n`;
+  text += `  【${title}】\n`;
+  text += plainAdvice.split('\n').map(line => `  ${line}`).join('\n');
+  return text;
+}
+
+function copyStep2Summary(btn){
+  const textarea = document.getElementById('s2CopyText');
+  if(!textarea) return;
+  
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(textarea.value).then(()=>{
+      showCopiedFeedback(btn);
+    }).catch(()=>{
+      fallbackCopy(textarea, btn);
+    });
+  } else {
+    fallbackCopy(textarea, btn);
+  }
+}
+
+function fallbackCopy(textarea, btn){
+  textarea.select();
+  document.execCommand('copy');
+  showCopiedFeedback(btn);
+}
+
+function showCopiedFeedback(btn){
+  const originalText = btn.textContent;
+  btn.textContent = '✓ 已複製！';
+  btn.classList.add('copied');
+  setTimeout(()=>{
+    btn.textContent = originalText;
+    btn.classList.remove('copied');
+  }, 2000);
 }
 
 function computeStep2(){
@@ -873,7 +1022,7 @@ function computeStep2(){
   const met = document.querySelector('input[name="met"]:checked')?.value;
   const r = riskLevels[key];
   const high = isHighGroup(key);
-  let title='', body='';
+  let title='', body='', plainAdvice='';
 
   if(stage==='pre'){
     if(high){
@@ -883,18 +1032,22 @@ function computeStep2(){
       <p>治療目標：LDL-C ${r.target}（non-HDL-C ${r.nonhdl}）。</p>
       <p>建議經起始治療 6–8 週後檢測血脂指標，並回到本畫面選擇「起始治療 6–8 週後複查」。</p>
       <div class="note"><strong>【健保申報重要提醒】</strong>處方通則雖指出極高/非常高/高風險起始可考慮合併 ezetimibe，但依健保 2.6.2 及 2.6.3 給付規定，Ezetimibe（單方併用或複方）之健保給付仍要求須先經 statin 單一治療 6–8 週（或清單 3 個月）未達標或對 statin 不耐受。初發病患起始即合併使用時，請留意健保審查規範。</div>`;
+      plainAdvice = `依據${assessBasis}，給予中至高強度 statin 或合併 ezetimibe。\n主要目標 LDL-C ${r.target}、次要目標 non-HDL-C ${r.nonhdl}。\n建議起始治療 6–8 週後檢測血脂指標並複查。\n（健保提醒：Ezetimibe 給付需先經 statin 治療 6–8 週未達標或對 statin 不耐受）`;
     }else{
       title = '起始非藥物治療建議';
       body = `<p>起始進行生活型態改變，並處置心血管風險因子（給藥前應有 3–6 個月生活型態改變）。尚不需立即開立降血脂藥物。</p>
       <p>治療目標：LDL-C ${r.target}（${r.nonhdl==='未另訂次要目標'?'未另訂 non-HDL-C 次要目標':'non-HDL-C '+r.nonhdl}）。</p>
       <p>建議經生活型態改變 3–6 個月後檢測血脂指標，並回到本畫面選擇「生活型態改變 3–6 個月後複查」。</p>`;
+      plainAdvice = `起始進行生活型態改變 3–6 個月並處置心血管風險因子，暫不需立即開立降血脂藥物。\n主要目標 LDL-C ${r.target}${r.nonhdl==='未另訂次要目標'?'':'、次要目標 non-HDL-C '+r.nonhdl}。\n建議生活型態改變 3–6 個月後檢測血脂指標並複查。`;
     }
   }else{
     if(!met){ alert('請選擇本次複查血脂是否達標'); return; }
     if(met==='yes'){
       title = '血脂已達標：維持治療';
+      const followStr = high ? '應每 6 個月追蹤血脂指標。' : '應每 6–12 個月追蹤血脂指標。';
       body = `<p>維持目前治療方案。</p>
-      <p>後續追蹤頻率：${high ? '應每 6 個月追蹤血脂指標。' : '應每 6–12 個月追蹤血脂指標。'}</p>`;
+      <p>後續追蹤頻率：${followStr}</p>`;
+      plainAdvice = `維持目前治療方案。\n後續追蹤：${followStr}`;
     }else{
       if(high && stage==='review1'){
         title = '未達標：調整治療';
@@ -904,14 +1057,17 @@ function computeStep2(){
           <li>同時考慮合併 non-statin 治療，包含：ezetimibe、PCSK9 單株抗體、siRNA、ATP citrate lyase (ACL) 抑制劑。</li>
           <li>更動治療 1–3 個月內需追蹤血脂值是否達標，回到本畫面選擇「更動治療後 1–3 個月複查」。</li>
         </ol>`;
+        plainAdvice = `1. 先檢視服藥狀況與遵從性。\n2. 考慮調整至高強度 statin 或最大耐受 statin 劑量。\n3. 同時考慮合併 non-statin 治療（Ezetimibe、PCSK9 單株抗體、siRNA、ACL 抑制劑等）。\n4. 更動治療 1–3 個月內需追蹤血脂值是否達標。`;
       }else if(high && stage==='review2'){
         title = '未達標：再次調整藥物組合';
         body = `<p>檢視服藥狀況，並考慮調整藥物組合（調整 statin 劑量／種類，或加用／更換 non-statin 藥物）。</p>
         <p>更動治療後 1–3 個月內持續追蹤血脂值直到達標；達標後維持治療並每 6 個月追蹤一次。</p>`;
+        plainAdvice = `檢視服藥狀況，考慮調整藥物組合（調整 statin 劑量/種類，或加用/更換 non-statin 藥物）。\n更動治療後 1–3 個月內持續追蹤血脂值直到達標；達標後維持治療並每 6 個月追蹤一次。`;
       }else if(!high && stage==='review1'){
         title = '未達標：開始中強度 Statin 治療';
         body = `<p>經生活型態改變 3–6 個月後血脂仍未達標，給予<strong>中強度 statin</strong>。</p>
         <p>中強度 statin 治療 6–8 週後追蹤血脂值，回到本畫面選擇「中強度 statin 治療 6–8 週後複查」。</p>`;
+        plainAdvice = `經生活型態改變 3–6 個月後血脂仍未達標，給予中強度 statin 治療。\n中強度 statin 治療 6–8 週後追蹤血脂值。`;
       }else if(!high && stage==='review2'){
         title = '未達標：升級至高強度或合併治療';
         body = `<ol>
@@ -919,17 +1075,43 @@ function computeStep2(){
           <li>可給予高強度 statin 或最大耐受 statin 劑量，或合併 non-statin 治療。</li>
           <li>更動治療後持續追蹤，治療達標後維持治療，並應每 6–12 個月追蹤血脂指標。</li>
         </ol>`;
+        plainAdvice = `1. 檢視服藥狀況。\n2. 可給予高強度 statin 或最大耐受 statin 劑量，或合併 non-statin 治療。\n3. 更動治療後持續追蹤，治療達標後維持治療，並每 6–12 個月追蹤血脂指標。`;
       }else{
         title = '未達標：持續調整藥物組合';
         body = `<p>檢視服藥狀況，並考慮調整藥物組合，持續追蹤至達標，達標後維持治療並每 6–12 個月追蹤血脂指標。</p>`;
+        plainAdvice = `檢視服藥狀況，並考慮調整藥物組合，持續追蹤至達標；達標後維持治療並每 6–12 個月追蹤血脂指標。`;
       }
     }
   }
 
+  // Get current date string YYYY/MM/DD
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  const dateStr = `${year}/${month}/${day}`;
+
   const rationaleBox = buildStep1RationaleHtml(key);
+  const copyText = buildCopyText(dateStr, key, stage, met, title, plainAdvice);
+
+  const adviceBox = `
+  <div style="margin-bottom:16px;">
+    <h4 style="margin:0 0 10px;font-size:15.5px;color:var(--ink);font-weight:700;">💡 Step 2 臨床建議：${title}</h4>
+    ${body}
+  </div>`;
+
+  const copySection = `
+  <div class="copy-section">
+    <div class="copy-header">
+      <span>📋 病歷 / 紀錄快速複製（含評估日期：${dateStr}）</span>
+      <button type="button" class="copy-btn" onclick="copyStep2Summary(this)">📋 複製文字</button>
+    </div>
+    <textarea id="s2CopyText" class="copy-textarea" readonly rows="12">${copyText}</textarea>
+  </div>`;
+
   document.getElementById('s2Dot').style.background = r.color;
-  document.getElementById('s2Title').textContent = title;
-  document.getElementById('s2Body').innerHTML = body + rationaleBox;
+  document.getElementById('s2Title').textContent = '建議與評估結果';
+  document.getElementById('s2Body').innerHTML = rationaleBox + adviceBox + copySection;
   document.getElementById('step2Result').classList.add('show');
   document.getElementById('step2Result').scrollIntoView({behavior:'smooth', block:'nearest'});
 }
