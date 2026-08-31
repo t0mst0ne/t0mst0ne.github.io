@@ -1070,12 +1070,16 @@
     </div>
   </fieldset>
 
-  <fieldset id="trialFieldset">
-    <legend>4. Statin 單一治療是否已達標？治療多久？</legend>
-    <div class="radio-row" style="margin-bottom:12px;">
-      <label><input type="radio" name="atgoal" value="no">未達治療目標</label>
-      <label><input type="radio" name="atgoal" value="yes">已達治療目標</label>
+  <fieldset id="goalFieldset">
+    <legend>4. Statin 單一治療血脂是否已達標？</legend>
+    <div class="radio-row" id="atGoalRow">
+      <label><input type="radio" name="atgoal" value="no" checked>⚠️ 未達治療目標（擬合併或更動治療）</label>
+      <label><input type="radio" name="atgoal" value="yes">✓ 已達治療目標</label>
     </div>
+  </fieldset>
+
+  <fieldset id="durFieldset">
+    <legend>5. Statin 單一治療已持續多久？</legend>
     <div class="radio-row" id="durRow">
       <label><input type="radio" name="dur" value="lt6w">尚未滿 6 週</label>
       <label><input type="radio" name="dur" value="6to8w">已達 6–8 週，未滿 3 個月</label>
@@ -1084,10 +1088,10 @@
   </fieldset>
 
   <fieldset id="listFieldset">
-    <legend>5. 擬使用之品項是否為公告清單中「需滿 3 個月試驗」品項？</legend>
-    <p style="font-size:13px;color:var(--ink-soft);margin:0 0 10px;">此類品項須先經 statin 單一治療滿 3 個月未達標，始得使用或併用（一般品項僅需 6–8 週）。可於下方展開清單核對品項代碼。</p>
+    <legend>6. 擬使用之品項是否為公告清單中「需滿 3 個月試驗」品項？</legend>
+    <p style="font-size:13px;color:var(--ink-soft);margin:0 0 10px;">特定清單品項須先經 statin 單一治療滿 3 個月未達標始得給付（原廠 Ezetrol、Atozet、Tonvasca、Vytorin 等非清單品項僅需滿 6–8 週）。</p>
     <div class="radio-row" id="onListRow">
-      <label><input type="radio" name="onlist" value="no">不在清單內（適用一般 6–8 週規定）</label>
+      <label><input type="radio" name="onlist" value="no" checked>不在清單內（適用一般 6–8 週規定）</label>
       <label><input type="radio" name="onlist" value="yes">在清單內（需滿 3 個月）</label>
     </div>
   </fieldset>
@@ -1909,9 +1913,41 @@ function sendToStep3(drugType){
     const dtRadio = document.querySelector(`input[name="drugtype"][value="${drugType}"]`);
     if(dtRadio){
       dtRadio.checked = true;
-      updateStep3UI();
     }
   }
+
+  // Statin intolerance default to 'no'
+  const intolNo = document.querySelector('input[name="intol"][value="no"]');
+  if(intolNo && !document.querySelector('input[name="intol"]:checked')) intolNo.checked = true;
+
+  // Auto-sync from Step 2's stage and met status
+  const s2Stage = document.getElementById('stageSelect')?.value;
+  const s2Met = document.querySelector('input[name="met"]:checked')?.value;
+
+  if(s2Met === 'yes'){
+    const atGoalYes = document.querySelector('input[name="atgoal"][value="yes"]');
+    if(atGoalYes) atGoalYes.checked = true;
+  } else {
+    const atGoalNo = document.querySelector('input[name="atgoal"][value="no"]');
+    if(atGoalNo) atGoalNo.checked = true;
+  }
+
+  if(s2Stage === 'review1'){
+    const dur6to8 = document.querySelector('input[name="dur"][value="6to8w"]');
+    if(dur6to8) dur6to8.checked = true;
+  } else if(s2Stage === 'review2' || s2Stage === 'review3'){
+    const dur3m = document.querySelector('input[name="dur"][value="ge3m"]');
+    if(dur3m) dur3m.checked = true;
+  } else if(s2Stage === 'pre'){
+    const durLt6 = document.querySelector('input[name="dur"][value="lt6w"]');
+    if(durLt6) durLt6.checked = true;
+  }
+
+  // Onlist default to 'no' if not set
+  const onListNo = document.querySelector('input[name="onlist"][value="no"]');
+  if(onListNo && !document.querySelector('input[name="onlist"]:checked')) onListNo.checked = true;
+
+  updateStep3UI();
   window.scrollTo({top:0, behavior:'smooth'});
 }
 
@@ -1925,33 +1961,31 @@ function updateStep3UI(){
     comboNotice.style.display = (drugtype === 'combo') ? 'block' : 'none';
   }
 
-  const trialFieldset = document.getElementById('trialFieldset');
+  const goalFieldset = document.getElementById('goalFieldset');
+  const durFieldset = document.getElementById('durFieldset');
   const listFieldset = document.getElementById('listFieldset');
   
   if(intol === 'yes' && drugtype === 'mono'){
     // Mono with intolerance qualifies immediately without prior statin trial
-    trialFieldset.style.opacity = '.4';
-    listFieldset.style.opacity = '.4';
+    if(goalFieldset) goalFieldset.style.opacity = '.4';
+    if(durFieldset) durFieldset.style.opacity = '.4';
+    if(listFieldset) listFieldset.style.opacity = '.4';
   } else {
-    trialFieldset.style.opacity = '1';
-    listFieldset.style.opacity = '1';
+    if(goalFieldset) goalFieldset.style.opacity = '1';
+    if(durFieldset) durFieldset.style.opacity = '1';
+    if(listFieldset) listFieldset.style.opacity = '1';
   }
 }
 
-document.querySelectorAll('#drugTypeRow input, #intolRow input').forEach(r=>{
+document.querySelectorAll('#dxRow input, #drugTypeRow input, #intolRow input, #atGoalRow input, #durRow input, #onListRow input').forEach(r=>{
   r.addEventListener('change', updateStep3UI);
 });
 updateStep3UI();
 
 function computeStep3(){
-  const dx = document.querySelector('input[name="dx"]:checked')?.value;
-  const drugtype = document.querySelector('input[name="drugtype"]:checked')?.value;
-  const intol = document.querySelector('input[name="intol"]:checked')?.value;
-
-  if(!dx || !drugtype || !intol){
-    alert('請先完成第 1–3 題');
-    return;
-  }
+  const dx = document.querySelector('input[name="dx"]:checked')?.value || 'primary';
+  const drugtype = document.querySelector('input[name="drugtype"]:checked')?.value || 'mono';
+  const intol = document.querySelector('input[name="intol"]:checked')?.value || 'no';
 
   const dot = document.getElementById('s3Dot');
   const titleEl = document.getElementById('s3Title');
@@ -1987,12 +2021,13 @@ function computeStep3(){
   }
 
   // 3. Statin tolerant path (intol === 'no'): Requires prior statin monotherapy trial not at goal
-  const atgoal = document.querySelector('input[name="atgoal"]:checked')?.value;
+  const atgoal = document.querySelector('input[name="atgoal"]:checked')?.value || 'no';
   const dur = document.querySelector('input[name="dur"]:checked')?.value;
-  const onlist = document.querySelector('input[name="onlist"]:checked')?.value;
+  const onlist = document.querySelector('input[name="onlist"]:checked')?.value || 'no';
 
-  if(!atgoal || !dur || !onlist){
-    alert('病人對 statin 無不耐受情況，請完成第 4、5 題（statin 治療達標情形、治療期間、品項清單）');
+  if(!dur){
+    alert('病人可耐受 statin，請選擇「第 5 題：Statin 單一治療已持續多久？」');
+    document.getElementById('durFieldset')?.scrollIntoView({behavior:'smooth', block:'center'});
     return;
   }
   if(atgoal === 'yes'){
