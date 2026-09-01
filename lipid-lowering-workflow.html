@@ -601,6 +601,67 @@
     border:1px solid var(--line);
     vertical-align:top;
   }
+  
+  .badge-status{
+    display:inline-block;
+    padding:3px 8px;
+    border-radius:4px;
+    font-size:12px;
+    font-weight:700;
+    line-height:1.2;
+    margin-right:6px;
+    vertical-align:middle;
+  }
+  .badge-status.status-preauth{
+    background:#FEF2F2;
+    color:#991B1B;
+    border:1px solid #F87171;
+  }
+  .badge-status.status-selfpay{
+    background:#FFFBEB;
+    color:#92400E;
+    border:1px solid #FCD34D;
+  }
+  .badge-status.status-routine{
+    background:#ECFDF5;
+    color:#065F46;
+    border:1px solid #6EE7B7;
+  }
+  .drug-keypoints.kp-preauth{
+    background:#FFF5F5;
+    border-left:4px solid #DC2626;
+  }
+  .drug-keypoints.kp-selfpay{
+    background:#FFFBEB;
+    border-left:4px solid #D97706;
+  }
+  .drug-keypoints.kp-routine{
+    background:#F0FDF4;
+    border-left:4px solid #059669;
+  }
+  .preauth-summary-table{
+    width:100%;
+    border-collapse:collapse;
+    margin:14px 0 18px;
+    font-size:13px;
+    background:var(--panel);
+  }
+  .preauth-summary-table th{
+    background:var(--paper);
+    color:var(--ink);
+    padding:8px 10px;
+    border:1px solid var(--line);
+    font-weight:700;
+    font-size:12.5px;
+    text-align:left;
+  }
+  .preauth-summary-table td{
+    padding:8px 10px;
+    border:1px solid var(--line);
+    vertical-align:top;
+    line-height:1.5;
+  }
+
   .drug-keypoints{
     background:var(--panel);
     border-left:4px solid var(--ink);
@@ -1141,7 +1202,8 @@
 <!-- ===================== TAB 4 ===================== -->
 <section class="panel" id="t4">
   <h2 class="section-title">Step 4・降血脂各類藥物速查表（Statin & Non-Statin 藥品全覽）</h2>
-  <p class="section-desc">依台灣動脈硬化心血管疾病 (ASCVD) 血脂管理指引、國際臨床試驗與健保給付規範彙整。提供 Statin 各強度劑量、Ezetimibe 單複方、PCSK9 單株抗體、siRNA (Inclisiran)、ACL 抑制劑 (Bempedoic acid) 及其他輔助藥物之機轉、劑量、降幅與臨床特點。</p>
+  <p class="section-desc">依台灣動脈硬化心血管疾病 (ASCVD) 血脂管理指引、國際臨床試驗與健保給付規範彙整。提供 Statin 各強度劑量、Ezetimibe 單複方、PCSK9 單株抗體、siRNA (Inclisiran)、ACL 抑制劑 (Bempedoic acid) 及其他輔助藥物之機轉、劑量、降幅與事前審查管制要點。</p>
+  
   <div class="alert-box alert-warn" style="margin-bottom:16px;"><strong>來源界線：</strong>本附件只足以核對 2.6.1–2.6.3；本頁其他藥物療效、試驗與給付資訊不屬於本附件可驗證範圍，不應單獨作為健保資格判定依據。</div>
 
   <!-- Visual Efficacy Ladder -->
@@ -1191,6 +1253,64 @@
     </div>
   </div>
 
+  <!-- 事前審查與給付地位對照總覽表格 -->
+  <div style="margin:20px 0 16px;">
+    <h3 style="font-size:14px;color:var(--ink);font-weight:700;margin-bottom:6px;">⚠️ 降血脂各類藥物・事前審查管制與開立方式總覽：</h3>
+    <table class="preauth-summary-table">
+      <thead>
+        <tr>
+          <th style="width:24%;">藥物類別 / 成分</th>
+          <th style="width:20%;">是否需事前審查？</th>
+          <th style="width:18%;">健保 / 自費狀態</th>
+          <th style="width:38%;">審查管制與開立方式重點</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>PCSK9 單株抗體</strong><br>Evolocumab / Alirocumab</td>
+          <td><span class="badge-status status-preauth">🔴 必須事前審查</span></td>
+          <td><span class="badge-status status-preauth">健保給付 (2.6.4)</span></td>
+          <td>
+            • 檢附「附表二-D」送健保署事前審查。<br>
+            • 重大心血管事件 1 年內病人：每次核准 <strong>12 個月</strong>。<br>
+            • 續用申請需檢附療效報告（LDL-C 需較治療前下降 <strong>≧ 30%</strong>）。<br>
+            • HoFH 病人每次核准 6 個月（需降 ≧ 18%）。
+          </td>
+        </tr>
+        <tr>
+          <td><strong>siRNA (Inclisiran)</strong><br>Leqvio 樂脂益</td>
+          <td><span class="badge-status status-selfpay">⚪ 免審查（自費）</span></td>
+          <td><span class="badge-status status-selfpay">自費處方項目</span></td>
+          <td>已納入 115/9/1 表一處方指引；目前醫療院所為自費處方，每年僅需注射 2 次，健保給付正待共擬會研議。</td>
+        </tr>
+        <tr>
+          <td><strong>ACL 抑制劑</strong><br>Bempedoic acid (Nilemdo)</td>
+          <td><span class="badge-status status-selfpay">⚪ 免審查（自費）</span></td>
+          <td><span class="badge-status status-selfpay">自費處方項目</span></td>
+          <td>已納入 115/9/1 表一處方指引；口服每日一次，肝臟活化不引發肌肉痠痛，目前為自費處方。</td>
+        </tr>
+        <tr>
+          <td><strong>Ezetimibe (單方/複方)</strong><br>Ezetrol / Atozet / Cretrol 等</td>
+          <td><span class="badge-status status-routine">🟢 不需事前審查</span></td>
+          <td><span class="badge-status status-routine">健保常規給付 (2.6.2/3)</span></td>
+          <td>醫師依規定評估（單用 Statin 6~8 週未達標或 Statin 不耐受）即可直接處方開立，病歷備查。</td>
+        </tr>
+        <tr>
+          <td><strong>Statins 類 (高/中/低強度)</strong><br>Atorva, Rosuva, Pitava 等</td>
+          <td><span class="badge-status status-routine">🟢 不需事前審查</span></td>
+          <td><span class="badge-status status-routine">健保常規給付 (2.6.1)</span></td>
+          <td>依 115/9/1 最新 ASCVD 風險等級分級門檻抽血開立，常規處方事後抽審。</td>
+        </tr>
+        <tr>
+          <td><strong>其他 (Fibrates / 樹脂 / 魚油)</strong><br>Fenofibrate / Cholestyramine / EPA</td>
+          <td><span class="badge-status status-routine">🟢 免審查 (魚油自費)</span></td>
+          <td><span class="badge-status status-routine">Fibrate/樹脂常規</span></td>
+          <td>Fenofibrate/樹脂常規開立；Gemfibrozil 嚴禁與 Statin 併用；高純度 EPA 魚油 Vascepa 多為自費。</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
   <!-- Filter & Search Bar -->
   <div style="margin:20px 0 16px;">
     <input type="text" id="drugRefSearch" class="textlike" placeholder="🔍 輸入學名、商品名（如 Repatha, Leqvio, Atozet, Nexletol, Crestor）或機轉關鍵字過濾..." oninput="filterDrugRefList()" style="margin-bottom:12px;">
@@ -1213,6 +1333,7 @@
       <div class="drug-card-head">
         <div class="drug-card-title">
           <span>💉 PCSK9 單株抗體 (PCSK9 Monoclonal Antibodies)</span>
+          <span class="badge-status status-preauth">🔴 健保給付・需事前審查 (2.6.4)</span>
         </div>
         <span class="drug-efficacy-badge badge-ultra">額外降 LDL-C 50%–60%</span>
       </div>
@@ -1243,11 +1364,13 @@
           </tr>
         </tbody>
       </table>
-      <div class="drug-keypoints">
-        📌 <strong>臨床與健保要點：</strong>
+      <div class="drug-keypoints kp-preauth">
+        📌 <strong>臨床與健保事前審查要點（2.6.4）：</strong>
         <ul style="margin:4px 0 0;padding-left:18px;line-height:1.6;">
-          <li><strong>健保事前審查：</strong>適用於極高/非常高風險 ASCVD 或雜合子家族性高膽固醇血症 (HeFH)，經高強度 statin + ezetimibe 達最大耐受劑量治療 ≧3 個月，LDL-C 仍未達標（如 ≧70 或 ≧100 mg/dL），或對 statin 嚴重不耐受者。</li>
-          <li><strong>給藥優勢：</strong>降幅極大且迅速，皮下注射每 2–4 週一次，病人耐受性極佳（僅少數有注射部位輕微紅腫）。</li>
+          <li><span class="badge-status status-preauth">需事前審查</span> <strong>重大心血管事件成人病人（1年內）：</strong>經使用高強度 statin（如 Rosuvastatin 20mg 或 Atorvastatin 40mg 以上）或最大耐受劑量 statin ≧ 3 個月，且之後再合併使用 ezetimibe 10mg ≧ 3 個月，<strong>LDL-C 仍高於 100 mg/dL</strong> 者；或確診 statin 不耐受並經 ezetimibe 10mg 治療 3 個月且 LDL-C &gt; 100 mg/dL。</li>
+          <li><strong>審查核准效期：</strong>初次申請核准以 <strong>12 個月</strong> 為限（每 2 週 1 支）。</li>
+          <li><strong>續用審查條件：</strong>再次申請時須檢附評估報告，若血中 LDL-C 較藥物開始使用前<strong>下降未達 30%</strong>，即屬療效不佳，健保不再給付。</li>
+          <li><strong>同合子家族性高膽固醇血症 (HoFH)（僅 Evolocumab）：</strong>經最高耐受 statin + ezetimibe 治療 6 個月後 LDL-C 仍 &gt; 130 mg/dL 且基因或臨床確診者，每次核准 6 個月（降幅需 ≧ 18%）。</li>
         </ul>
       </div>
     </div>
@@ -1257,6 +1380,7 @@
       <div class="drug-card-head">
         <div class="drug-card-title">
           <span>🧬 siRNA 小干擾 RNA (PCSK9 基因轉譯抑制劑)</span>
+          <span class="badge-status status-selfpay">⚪ 目前為自費項目 (115/9/1 表一指引納入)</span>
         </div>
         <span class="drug-efficacy-badge badge-ultra">長效降 LDL-C 約 50%</span>
       </div>
@@ -1275,17 +1399,18 @@
         <tbody>
           <tr>
             <td><strong>Inclisiran</strong></td>
-            <td>Leqvio® 樂捷脂 (284mg / 1.5mL 預充填針劑)</td>
+            <td>Leqvio® 樂脂益 / 樂捷脂 (284mg / 1.5mL 預充填針劑)</td>
             <td>皮下注射 (SC)：<br><strong>第 0 個月、第 3 個月各注射一劑，之後每 6 個月注射一次（半年一針）</strong></td>
             <td><strong>ORION-9, 10, 11 試驗</strong><br>維持平穩強效降 LDL-C 約 50%，長期安全性良好。</td>
           </tr>
         </tbody>
       </table>
-      <div class="drug-keypoints">
-        📌 <strong>臨床與順從性優勢：</strong>
+      <div class="drug-keypoints kp-selfpay">
+        📌 <strong>臨床優勢與健保/自費管制要點：</strong>
         <ul style="margin:4px 0 0;padding-left:18px;line-height:1.6;">
-          <li><strong>突破性半年一劑：</strong>每年僅需注射兩次，可配合病人每半年定期門診回診施打，徹底解決傳統每日口服藥或每兩週注射之用藥順從性不佳問題。</li>
-          <li><strong>肝臟專一性標靶：</strong>經由 GalNAc 碳水化合物連接肝臟 ASGPR 受體精準遞送，全身性暴露極低，無肌肉副作用。</li>
+          <li><span class="badge-status status-selfpay">自費處方</span> <strong>健保指引定位：</strong>健保署已於 115/9/1 生效之「給付規定表一」處方流程中，將 <code>siRNA</code> 正式列入極高/非常高/高風險病患 Statin 未達標時之 non-statin 建議合併組合。</li>
+          <li><strong>開立與管制方式：</strong>目前在台灣已領有 TFDA 藥證，屬於<strong>自費藥物</strong>（不需送健保事前審查）。健保常規給付與事前審查作業刻正由健保署共擬會推進中。</li>
+          <li><strong>順從性突破：</strong>每年僅需注射兩次（初次、第 3 個月，之後每 6 個月一次），可配合病患半年回診施打，徹底解決傳統每日口服或雙週注射之用藥中斷問題。</li>
         </ul>
       </div>
     </div>
@@ -1295,6 +1420,7 @@
       <div class="drug-card-head">
         <div class="drug-card-title">
           <span>🔬 ACL 抑制劑 (ATP Citrate Lyase Inhibitor)</span>
+          <span class="badge-status status-selfpay">⚪ 目前為自費項目 (115/9/1 表一指引納入)</span>
         </div>
         <span class="drug-efficacy-badge badge-high">單用降 15%–25% ｜ 合併 Ezetimibe 降 35%–40%</span>
       </div>
@@ -1313,7 +1439,7 @@
         <tbody>
           <tr>
             <td><strong>Bempedoic acid</strong></td>
-            <td>Nexletol® (180mg)</td>
+            <td>Nilemdo® 寧脂德 (180mg) / Nexletol®</td>
             <td>口服：180 mg 每日一次 (QD)，可與或不與食物併服</td>
             <td><strong>CLEAR Outcomes 試驗</strong><br>在 Statin 不耐受病人中顯著降低 MACE 達 13%–15%。</td>
           </tr>
@@ -1325,11 +1451,12 @@
           </tr>
         </tbody>
       </table>
-      <div class="drug-keypoints">
-        📌 <strong>Statin 不耐受患者首選亮點：</strong>
+      <div class="drug-keypoints kp-selfpay">
+        📌 <strong>Statin 不耐受患者首選亮點與管制要點：</strong>
         <ul style="margin:4px 0 0;padding-left:18px;line-height:1.6;">
-          <li><strong>完全無肌肉痠痛副作用：</strong>Bempedoic acid 為前驅藥 (Prodrug)，需要肝臟專屬之極長鏈乙醯輔酶 A 合成酶-1 (ACSVL1) 才能活化成活性代謝物。<strong>人體骨骼肌中缺少 ACSVL1 酵素</strong>，因此藥物在肌肉組織保持無活性狀態，<strong>完全不引發 Statin 常見之肌痛 (Myalgia) 或肌炎 (Myositis)</strong>。</li>
-          <li><strong>注意事項：</strong>可能使血中尿酸濃度微幅升高（痛風病史病患需定期監測尿酸），極少數報告可能有肌腱發炎風險。</li>
+          <li><span class="badge-status status-selfpay">自費處方</span> <strong>健保指引定位：</strong>健保署已於 115/9/1 生效之「給付規定表一」處方規定中將 <code>ATP citrate lyase 抑制劑</code> 列為極高/高風險 Statin 未達標時之 non-statin 建議合併組合。目前為<strong>自費處方</strong>（免事前審查）。</li>
+          <li><strong>完全無肌肉痠痛副作用：</strong>本藥為 Prodrug，需經肝臟專屬之 ACSVL1 活化。因<strong>人體骨骼肌中缺乏 ACSVL1 酵素</strong>，藥物在肌肉組織保持無活性，<strong>完全不引發 Statin 常見之肌痛 (Myalgia) 或肌炎 (Myositis)</strong>。</li>
+          <li><strong>注意事項：</strong>可能使血中尿酸濃度微幅升高（痛風病史病患需定期監測尿酸）。</li>
         </ul>
       </div>
     </div>
@@ -1339,6 +1466,7 @@
       <div class="drug-card-head">
         <div class="drug-card-title">
           <span>🧪 Ezetimibe（NPC1L1 膽固醇吸收抑制劑）</span>
+          <span class="badge-status status-routine">🟢 健保常規給付・不需事前審查 (2.6.2 / 2.6.3)</span>
         </div>
         <span class="drug-efficacy-badge badge-mid">單用降 15%–20% ｜ 合併 Statin 額外再降 15%–25%</span>
       </div>
@@ -1387,9 +1515,15 @@
           </tr>
         </tbody>
       </table>
-      <div class="drug-keypoints">
-        📌 <strong>臨床亮點：「Statin 劑量翻倍原則 vs. 加用 Ezetimibe」</strong>
-        <p style="margin:4px 0 0;line-height:1.6;">Statin 劑量每加倍一次（Rule of 6%），LDL-C 僅多降約 6%，但肌肉與肝功能異常風險增加；<strong>若維持原 Statin 劑量並加上 Ezetimibe 10mg，可立即額外降低 15%–25% LDL-C</strong>，且耐受性極佳，是目前國內外指引極度推崇之首選合併策略。</p>
+      <div class="drug-keypoints kp-routine">
+        📌 <strong>臨床與健保給付要點（2.6.2 / 2.6.3 最新 115/9/1 修訂）：</strong>
+        <ul style="margin:4px 0 0;padding-left:18px;line-height:1.6;">
+          <li><span class="badge-status status-routine">免事前審查</span> <strong>開立與管制方式：</strong>門診或住院醫師評估符合適應症即可直接開立處方（不需事先送健保署審查），抽血數據登載於病歷備查。</li>
+          <li><strong>起始合併給藥：</strong>極高、非常高與高風險病患，起始治療即可直接給予「中至高強度 Statin 或合併 Ezetimibe」。</li>
+          <li><strong>評估期縮短：</strong>經使用 Statin 單一治療 <strong>6～8 週</strong>（原為 3 個月）未達治療目標者，即可合併使用 Ezetimibe 或複方製劑。</li>
+          <li><strong>Statin 不耐受：</strong>對 Statin 發生無法耐受藥物不良反應（如 Severe myalgia、Myositis）者，可單獨開立給付。</li>
+          <li><strong>交互作用禁忌：</strong>含 Ezetimibe 複方製劑<strong>不得與 gemfibrozil 併用</strong>。</li>
+        </ul>
       </div>
     </div>
 
@@ -1398,6 +1532,7 @@
       <div class="drug-card-head">
         <div class="drug-card-title">
           <span>💊 Statin 類藥品（HMG-CoA 還原酶抑制劑）強度劑量分級</span>
+          <span class="badge-status status-routine">🟢 健保常規給付・不需事前審查 (2.6.1)</span>
         </div>
         <span class="drug-efficacy-badge badge-high">高強度 ≧50% ｜ 中強度 30%–49% ｜ 低強度 &lt;30%</span>
       </div>
@@ -1449,9 +1584,10 @@
           </tr>
         </tbody>
       </table>
-      <div class="drug-keypoints">
-        📌 <strong>監測與安全性：</strong>
+      <div class="drug-keypoints kp-routine">
+        📌 <strong>健保給付與監測要點（2.6.1）：</strong>
         <ul style="margin:4px 0 0;padding-left:18px;line-height:1.6;">
+          <li><span class="badge-status status-routine">免事前審查</span> <strong>開立與管制方式：</strong>依 115/9/1 最新 ASCVD 風險分級門檻開立（極高 ≧55、非常高 ≧70、高 ≧100、中 ≧115、低 ≧130、0項 ≧160 mg/dL），無需事前審查。</li>
           <li><strong>安全性監測：</strong>用藥前評估 ALT/AST 與 CK 基準值；若出現不明原因肌肉痠痛、無力或茶色尿，應即刻檢驗 CK 值。</li>
           <li><strong>高風險首選：</strong>極高/非常高/高風險 ASCVD 病患，起始建議直接給予「高強度 statin」或耐受最大劑量，以求迅速達標。</li>
         </ul>
@@ -1463,6 +1599,8 @@
       <div class="drug-card-head">
         <div class="drug-card-title">
           <span>🐟 其他非 Statin 類輔助藥品 (EPA 魚油 / Fibrates / 膽酸結合劑)</span>
+          <span class="badge-status status-routine">🟢 Fibrates / 樹脂：健保常規</span>
+          <span class="badge-status status-selfpay">⚪ EPA 魚油：多為自費</span>
         </div>
         <span class="drug-efficacy-badge badge-mid">針對高 TG、殘餘心血管風險或輔助降 LDL</span>
       </div>
@@ -1480,22 +1618,29 @@
             <td><strong>高純度 EPA 魚油<br>(Icosapent Ethyl)</strong></td>
             <td>Vascepa® (1g/capsule)<br>常用劑量：2 g BID (4g/天) 隨餐服</td>
             <td>高純度二十碳五烯酸乙酯，降低肝臟 VLDL 合成，抗發炎、穩定斑塊與抗血栓。</td>
-            <td><strong>REDUCE-IT 試驗證實：</strong><br>Statin 治療後 TG 仍 135–499 mg/dL 之 ASCVD 或糖尿病合併危險因子病患，可<strong>顯著降低 25% 心血管事件與心血管死亡</strong>。</td>
+            <td><strong>REDUCE-IT 試驗證實：</strong><br>Statin 治療後 TG 仍 135–499 mg/dL 之 ASCVD 或糖尿病合併危險因子病患，可<strong>顯著降低 25% 心血管事件與心血管死亡</strong>。<br><em>(目前多屬自費處方)</em></td>
           </tr>
           <tr>
             <td><strong>Fibrates 纖維酸類<br>(PPAR-α 致效劑)</strong></td>
             <td>Fenofibrate (Lipanthyl® 力平之 160mg, 200mg)<br>Gemfibrozil 600mg BID</td>
             <td>活化 PPAR-α，刺激 LPL 表現，<strong>大幅降低三酸甘油脂 30%–50%</strong>，升高 HDL-C 10%–20%。</td>
-            <td>⚠️ <strong>重要交互作用禁忌：</strong>Gemfibrozil 抑制 statin 葡萄糖醛酸化，<strong>嚴禁與 Statin 或複方製劑併用</strong>（橫紋肌溶解風險大增）；如需併用 Statin 應優先選擇 Fenofibrate。</td>
+            <td>⚠️ <strong>重要交互作用禁忌：</strong>Gemfibrozil 抑制 statin 葡萄糖醛酸化，<strong>嚴禁與 Statin 或複方製劑併用</strong>（橫紋肌溶解風險大增）；如需併用 Statin 應優先選擇 Fenofibrate。<br><em>(健保常規給付，免事前審查)</em></td>
           </tr>
           <tr>
             <td><strong>膽酸結合樹脂<br>(Bile Acid Sequestrants)</strong></td>
             <td>Cholestyramine (Questran® 貴舒特 4g/包)<br>劑量：4–16 g/day 口服懸浮液</td>
             <td>在腸道與膽酸結合形成不溶性錯合物隨糞便排出，阻斷腸肝循環，促使肝臟消耗膽固醇合成膽酸，<strong>降 LDL-C 15%–30%</strong>。</td>
-            <td>不經全身吸收，適合孕婦或 statin 禁忌者；注意可能使 TG 上升（TG ≧300 禁用），且易有胃腸脹氣便秘等副作用。</td>
+            <td>不經全身吸收，適合孕婦或 statin 禁忌者；注意可能使 TG 上升（TG ≧300 禁用），且易有胃腸脹氣便秘等副作用。<br><em>(健保常規給付，免事前審查)</em></td>
           </tr>
         </tbody>
       </table>
+      <div class="drug-keypoints kp-routine">
+        📌 <strong>審查管制與開立要點：</strong>
+        <ul style="margin:4px 0 0;padding-left:18px;line-height:1.6;">
+          <li><span class="badge-status status-routine">免事前審查</span> Fenofibrate、Gemfibrozil、Cholestyramine 等藥品依健保給付規定常規開立處方（免事前審查）。</li>
+          <li><span class="badge-status status-selfpay">自費處方</span> 高純度 EPA 魚油 (Vascepa) 於多數院所屬於自費或專案處方。</li>
+        </ul>
+      </div>
     </div>
 
   </div>
