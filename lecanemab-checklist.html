@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f4f7f6">
+  <title>Lecanemab 治療前評估 Check-List</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{--ink:#18342f;--muted:#687a75;--line:#dce7e2;--green:#16705d;--pale:#edf5f1;--paper:#fff;--bg:#f4f7f6;--amber:#fff6e2}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:"DM Sans","Noto Sans TC",sans-serif;line-height:1.65}
+    header{background:#eaf2ee;border-bottom:1px solid var(--line);padding:32px 20px 28px}.top,main{max-width:980px;margin:0 auto}.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--green);font-weight:700}h1{font-size:clamp(25px,4vw,34px);line-height:1.25;margin:8px 0;color:#163d34}header p{margin:0;color:var(--muted)}
+    main{padding:24px 18px 60px}.notice{border:1px solid #eadcb7;background:var(--amber);color:#655329;padding:13px 16px;border-radius:12px;font-size:13px;margin-bottom:18px}.progress-wrap{display:flex;align-items:center;gap:14px;background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:12px 16px;margin-bottom:18px;position:sticky;top:8px;z-index:3;box-shadow:0 4px 16px #173a3010}.progress{height:8px;background:#e8efeb;border-radius:8px;flex:1;overflow:hidden}.progress span{display:block;height:100%;width:0;background:var(--green);transition:width .2s}.progress-label{font-size:13px;color:var(--muted);white-space:nowrap}
+    .section{background:var(--paper);border:1px solid var(--line);border-radius:16px;margin:14px 0;overflow:hidden}.section-head{padding:16px 20px 12px;border-bottom:1px solid #edf1ef;display:flex;align-items:center;gap:12px}.number{width:30px;height:30px;display:grid;place-items:center;border-radius:9px;background:var(--pale);color:var(--green);font-size:14px;font-weight:700;flex:none}.section h2{font-size:17px;line-height:1.4;margin:0}.items{padding:4px 20px 12px}.item{padding:12px 0;border-bottom:1px solid #eff3f1}.item:last-child{border:0}.checkline{display:flex;gap:11px;align-items:flex-start;cursor:pointer;font-size:14px}.checkline input{accent-color:var(--green);width:17px;height:17px;margin:4px 0 0;flex:none}.sub{color:var(--muted);font-size:12px;margin:4px 0 0 28px}.fields{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:8px 0 0 28px}.fields input,.fields select,.fields textarea{font:inherit;font-size:13px;color:var(--ink);background:#fbfcfb;border:1px solid var(--line);border-radius:8px;padding:7px 9px}.fields input[type=number]{width:100px}.fields input[type=text]{min-width:155px}.fields select{min-width:140px}.fields .wide{flex:1;min-width:200px}.fields label{font-size:12px;color:var(--muted)}.field-row{display:flex;flex-wrap:wrap;gap:14px;margin:8px 0 0 28px}.field-row label{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+    .output{margin-top:22px;background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:20px}.output-top{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}.output h2{margin:0;font-size:19px}.actions{display:flex;gap:8px}.btn{border:1px solid var(--line);border-radius:9px;background:white;padding:9px 14px;color:var(--ink);font:600 13px inherit;cursor:pointer}.btn.primary{background:var(--green);border-color:var(--green);color:#fff}.btn:hover{filter:brightness(.96)}textarea#result{display:block;width:100%;min-height:320px;margin-top:14px;padding:14px;border:1px solid var(--line);border-radius:10px;background:#fbfcfb;color:#29443d;font:13px/1.8 "DM Sans","Noto Sans TC",sans-serif;resize:vertical}.hint{color:var(--muted);font-size:12px;margin:9px 0 0}.copied{color:var(--green);font-size:12px;min-height:18px}footer{text-align:center;color:var(--muted);font-size:12px;padding:20px}
+    @media(max-width:600px){header{padding:25px 17px}.progress-wrap{top:4px}.items{padding-left:15px;padding-right:15px}.section-head{padding-left:15px}.fields{margin-left:28px}.output{padding:16px}}
+  </style>
+</head>
+<body>
+<header><div class="top"><div class="eyebrow">Dementia · Treatment Readiness</div><h1>Lecanemab 治療前評估</h1><p>依《台灣 Lecanemab AUR 手冊》整理｜臨床 Check-List 與病歷文字產生器</p></div></header>
+<main>
+  <div class="notice"><strong>臨床使用提醒：</strong>本表為評估與紀錄輔助工具，請依最新核准適應症、AUR 手冊、院內流程及個別臨床判斷確認。勾選代表已完成評估／符合所列條件；未勾選項目會標示為「未確認／未完成」，不代表自動判定不適用。</div>
+  <div class="progress-wrap" aria-live="polite"><div class="progress"><span id="progressBar"></span></div><div class="progress-label" id="progressLabel">已完成 0 / 0 項</div></div>
+
+  <section class="section"><div class="section-head"><span class="number">1</span><h2>臨床疾病階段與認知功能門檻</h2></div><div class="items">
+    <div class="item"><label class="checkline"><input type="checkbox" data-text="臨床診斷為阿茲海默症引起之輕度認知障礙（MCI due to AD）或輕度失智症（Mild AD）。">適應症疾病階段：AD 引起的 MCI 或輕度失智症（Mild AD）</label><div class="fields"><label>疾病階段</label><select data-value="疾病階段"><option value="">請選擇</option><option>MCI due to AD</option><option>Mild AD</option></select></div></div>
+    <div class="item"><label class="checkline"><input type="checkbox" data-text="MMSE 介於 22–30 分。">MMSE 介於 22–30 分</label><div class="fields"><label>MMSE</label><input type="number" min="0" max="30" data-value="MMSE" placeholder="分數" aria-label="MMSE 分數">分</div></div>
+    <div class="item"><label class="checkline"><input type="checkbox" data-text="CDR 總分為 0.5 或 1.0。">CDR 總分為 0.5 或 1.0</label><div class="fields"><label>CDR 總分</label><select data-value="CDR"><option value="">請選擇</option><option>0.5</option><option>1.0</option></select></div></div>
+  </div></section>
+  <section class="section"><div class="section-head"><span class="number">2</span><h2>APOE 基因型符合性評估</h2></div><div class="items">
+    <div class="item"><label class="checkline"><input type="checkbox" data-text="已完成 APOE 基因檢測並取得結果。">已完成 APOE 基因檢測並取得結果</label><div class="fields"><label>基因型</label><select data-value="APOE 基因型"><option value="">請選擇</option><option>ε2/ε2</option><option>ε2/ε3</option><option>ε2/ε4</option><option>ε3/ε3</option><option>ε3/ε4</option><option>ε4/ε4</option><option>其他</option></select><input class="wide" type="text" data-value="APOE 其他基因型" placeholder="其他基因型（如適用）"></div></div>
+    <div class="item"><label class="checkline"><input type="checkbox" data-text="APOE 基因型符合台灣核准適應症（ε4 異合子或 ε4 非帶原者）。">基因型符合：APOE ε4 異合子帶原者或 ε4 非帶原者</label></div>
+    <div class="item"><label class="checkline"><input type="checkbox" data-text="已排除 APOE ε4 同合子（ε4/ε4）。">已排除 APOE ε4 同合子（ε4/ε4）</label><p class="sub">ε4/ε4 在台灣未納入核准適應症</p></div>
+  </div></section>
+  <section class="section"><div class="section-head"><span class="number">3</span><h2>類澱粉蛋白病理生物標記驗證（Amyloid Positive）</h2></div><div class="items">
+    <div class="item"><label class="checkline"><input type="checkbox" data-text="已具備腦部類澱粉蛋白斑塊沉積之客觀生物標記證據。">已具備腦部類澱粉蛋白斑塊沉積之客觀生物標記證據</label></div>
+    <div class="item"><label class="checkline"><input type="checkbox" data-text="Amyloid PET 陽性（電腦輔助判讀 Centiloid ≥ 30 CL）。">Amyloid PET 陽性（Centiloid ≥ 30 CL）</label><div class="fields"><label>Centiloid</label><input type="number" step="0.1" data-value="Amyloid PET Centiloid" placeholder="CL">CL　<label>檢查日期</label><input type="date" data-value="Amyloid PET 日期"></div></div>
+    <div class="item"><label class="checkline"><input type="checkbox" data-text="CSF 生物標記支持 Aβ 沉積陽性（如 Aβ42/40 比值下降或 p-tau/Aβ42 比值上升）。">CSF 生物標記支持 Aβ 沉積陽性</label><div class="fields"><label>結果／比值</label><input class="wide" type="text" data-value="CSF 結果" placeholder="Aβ42/40、p-tau/Aβ42 或其他"></div></div>
+  </div></section>
+  <section class="section"><div class="section-head"><span class="number">4</span><h2>基線腦部 MRI 結構檢查與影像排查</h2></div><div class="items">
+    <div class="item"><label class="checkline"><input type="checkbox" data-text="已取得 12 個月內基線腦部 MRI。">已取得 12 個月內基線腦部 MRI</label><div class="fields"><label>MRI 日期</label><input type="date" data-value="MRI 日期"><label>磁場</label><input type="number" min="0" step="0.1" data-value="MRI 磁場強度" placeholder="1.5">T <label>切片厚度</label><input type="number" min="0" step="0.1" data-value="MRI 切片厚度" placeholder="5">mm <label>TE</label><input type="number" min="0" data-value="MRI TE" placeholder="20">ms</div></div>
+    <div class="item"><label class="checkline"><input type="checkbox" data-text="MRI 序列包含 2D T2* GRE 或 SWI，以及 T2 FLAIR。">MRI 序列包含 2D T2* GRE 或 SWI，以及 T2 FLAIR</label><div class="field-row"><label><input type="checkbox" data-value="MRI GRE/SWI">2D T2* GRE</label><label><input type="checkbox" data-value="MRI SWI">SWI</label><label><input type="checkbox" data-value="MRI FLAIR">T2 FLAIR</label></div></div>
+    <div class="item"><label class="checkline"><input type="checkbox" data-text="MRI 無血管源性腦水腫（vasogenic edema）。">無血管源性腦水腫（vasogenic edema）</label></div>
+    <div class="item"><label class="checkline"><input type="checkbox" data-text="腦部微出血（CMB）≤ 4 處，且單處直徑均 ≤ 10 mm。">腦部微出血（CMB）≤ 4 處，且單處直徑均 ≤ 10 mm</label><div class="fields"><label>CMB 數量</label><input type="number" min="0" data-value="CMB 數量" placeholder="0">處　<label>最大直徑</label><input type="number" min="0" step="0.1" data-value="CMB 最大直徑" placeholder="mm">mm</div></div>
+    <div class="item"><label class="checkline"><input type="checkbox" data-text="無單處直徑 > 10 mm（1 cm）之腦出血。">無單處直徑 > 10 mm（1 cm）之腦出血</label></div>
+    <div class="item"><label class="checkline"><input type="checkbox" data-text="無皮質表面血鐵質沉積（superficial siderosis）。">無皮質表面血鐵質沉積（superficial siderosis）</label></div>
+    <div class="item"><label class="checkline"><input type="checkbox" data-text="無嚴重皮質下高訊號白質病變（Fazekas 3）。">無嚴重皮質下高訊號白質病變（Fazekas 3）</label><div class="fields"><label>Fazekas</label><select data-value="Fazekas"><option value="">請選擇</option><option>0</option><option>1</option><option>2</option><option>3</option></select></div></div>
+    <div class="item"><label class="checkline"><input type="checkbox" data-text="無涉及主要血管區域之中風，且腔隙性梗塞 ≤ 2 處。">無涉及主要血管區域之中風，且腔隙性梗塞 ≤ 2 處</label><div class="fields"><label>腔隙性梗塞</label><input type="number" min="0" data-value="腔隙性梗塞數量" placeholder="0">處</div></div>
+    <div class="item"><label class="checkline"><input type="checkbox" data-text="無 CAA 相關發炎（CAA-ri）或 Aβ 相關血管炎（ABRA）。">無 CAA 相關發炎（CAA-ri）或 Aβ 相關血管炎（ABRA）</label></div>
+  </div></section>
+  <section class="section"><div class="section-head"><span class="number">5</span><h2>病史、共病與併用藥物安全排查</h2></div><div class="items">
+    <div class="item"><label class="checkline"><input type="checkbox" data-text="既有 AChEI 或 memantine 用藥已穩定 ≥ 12 週（如適用）。">既有 AChEI 或 memantine 用藥已穩定 ≥ 12 週（如適用）</label><div class="fields"><label>藥物／劑量／穩定起始日</label><input class="wide" type="text" data-value="抗失智藥物" placeholder="未使用可填無"></div></div>
+    <div class="item"><label class="checkline"><input type="checkbox" data-text="已評估抗血小板藥物；可併用標準劑量 aspirin（每日最高 325 mg）或單一抗血小板藥物。">已評估抗血小板藥物；如使用，為標準劑量 aspirin（≤ 325 mg/day）或單一抗血小板藥物</label><div class="fields"><label>藥物／劑量</label><input class="wide" type="text" data-value="抗血小板藥物" placeholder="未使用可填無"></div></div>
+    <div class="item"><label class="checkline"><input type="checkbox" data-text="如使用 warfarin、DOAC 或 heparin，已審慎評估出血風險並與家屬完成共享決策（如適用）。">如使用 warfarin、DOAC 或 heparin，已審慎評估出血風險並完成共享決策（如適用）</label><div class="fields"><label>抗凝血藥物／評估</label><input class="wide" type="text" data-value="抗凝血藥物評估" placeholder="未使用可填無"></div></div>
+    <div class="item"><label class="checkline"><input type="checkbox" data-text="未接受抗凝血治療下，血小板 ≥ 50,000 且 INR ≤ 1.5（如適用）。">未接受抗凝血治療下，血小板 ≥ 50,000 且 INR ≤ 1.5（如適用）</label><div class="fields"><label>血小板</label><input type="number" min="0" data-value="血小板" placeholder="/μL"><label>INR</label><input type="number" min="0" step="0.01" data-value="INR" placeholder="值"></div></div>
+    <div class="item"><label class="checkline"><input type="checkbox" data-text="近 12 個月內無 TIA、中風或癲癇發作。">近 12 個月內無 TIA、中風或癲癇發作</label></div>
+    <div class="item"><label class="checkline"><input type="checkbox" data-text="無控制不佳之高血壓，並已討論治療期間血壓控制（目標參考 < 120/80 mmHg）。">無控制不佳之高血壓，並已討論治療期間血壓控制（目標參考 < 120/80 mmHg）</label><div class="fields"><label>血壓</label><input type="text" data-value="血壓" placeholder="收縮壓 / 舒張壓">mmHg</div></div>
+    <div class="item"><label class="checkline"><input type="checkbox" data-text="無妨礙 MRI 檢查之金屬植入物或幽閉恐懼症，且無藥物過敏史；可配合 MRI 追蹤。">已確認 MRI 配合性（植入物／幽閉恐懼症）與藥物過敏史</label><div class="fields"><label>植入物／MRI 配合性／過敏史</label><input class="wide" type="text" data-value="MRI 配合性與過敏史" placeholder="例如：無 MRI 禁忌、無已知藥物過敏"></div></div>
+  </div></section>
+  <section class="section"><div class="section-head"><span class="number">6</span><h2>照顧者支援與共享決策（SDM）</h2></div><div class="items">
+    <div class="item"><label class="checkline"><input type="checkbox" data-text="已確認主要照顧者可協助照護、觀察輸注反應與 ARIA 症狀，並配合定期回診。">已確認主要照顧者可協助照護、觀察輸注反應與 ARIA 症狀，並配合定期回診</label><div class="fields"><label>主要照顧者</label><input type="text" data-value="主要照顧者" placeholder="姓名／關係"></div></div>
+    <div class="item"><label class="checkline"><input type="checkbox" data-text="病人與照顧者了解第 5 次（10 週）、第 7 次（14 週）、第 14 次（28 週）輸注前需安排追蹤 MRI。">病人與照顧者了解第 5 次（10 週）、第 7 次（14 週）、第 14 次（28 週）輸注前需安排追蹤 MRI</label></div>
+    <div class="item"><label class="checkline"><input type="checkbox" data-text="已完成給藥頻率（每兩週靜脈輸注一次，約 1 小時）、輸注反應與 ARIA 風險、可能效益及費用負擔之衛教與共享決策。">已完成給藥頻率、輸注反應與 ARIA 風險、可能效益及費用負擔之衛教與共享決策</label></div>
+    <div class="item"><label class="checkline"><input type="checkbox" data-text="已簽署書面知情同意書。">已簽署書面知情同意書</label><div class="fields"><label>衛教／同意日期</label><input type="date" data-value="衛教及同意日期"></div></div>
+  </div></section>
+
+  <section class="output"><div class="output-top"><h2>病歷文字預覽</h2><div class="actions"><button class="btn" type="button" id="selectAll">全選／清除</button><button class="btn primary" type="button" id="copy">複製病歷文字</button></div></div><textarea id="result" spellcheck="false" aria-label="病歷文字預覽"></textarea><div class="hint">文字會隨勾選與欄位輸入即時更新；複製後可貼入病歷系統，送出前請再核對。</div><div class="copied" id="copied" role="status"></div></section>
+</main><footer>臨床使用前請依最新台灣核准資訊與院內規範確認</footer>
+<script>
+(() => {
+  const allChecks = [...document.querySelectorAll('input[type="checkbox"][data-text]')];
+  const result = document.getElementById('result');
+  const escapeValue = value => value.trim().replace(/\s+/g, ' ');
+  function update() {
+    const done = allChecks.filter(el => el.checked).length;
+    document.getElementById('progressBar').style.width = `${allChecks.length ? done / allChecks.length * 100 : 0}%`;
+    document.getElementById('progressLabel').textContent = `已完成 ${done} / ${allChecks.length} 項`;
+    const lines = ['Lecanemab（樂意保®）治療前評估', `評估日期：${new Date().toLocaleDateString('zh-TW')}`, ''];
+    const sections = [...document.querySelectorAll('.section')];
+    sections.forEach(section => {
+      const title = section.querySelector('h2').textContent;
+      lines.push(`【${title}】`);
+      section.querySelectorAll('.item').forEach(item => {
+        const cb = item.querySelector('input[type="checkbox"][data-text]');
+        if (!cb) return;
+        lines.push(`${cb.checked ? '☑' : '☐'} ${cb.dataset.text}`);
+        const values = [...item.querySelectorAll('[data-value]')].map(el => {
+          let val = el.type === 'checkbox' ? (el.checked ? '是' : '') : escapeValue(el.value || '');
+          return val ? `${el.dataset.value}：${val}` : '';
+        }).filter(Boolean);
+        if (values.length) lines.push(`   ${values.join('；')}`);
+      });
+      lines.push('');
+    });
+    lines.push('註：☐ 項目代表尚未勾選／待確認，不代表已符合或已排除。請依臨床判斷及最新規範確認。');
+    result.value = lines.join('\n');
+  }
+  document.addEventListener('input', update);
+  document.addEventListener('change', update);
+  document.getElementById('selectAll').addEventListener('click', () => {
+    const shouldCheck = allChecks.some(el => !el.checked);
+    allChecks.forEach(el => { el.checked = shouldCheck; });
+    update();
+  });
+  document.getElementById('copy').addEventListener('click', async () => {
+    const status = document.getElementById('copied');
+    try {
+      await navigator.clipboard.writeText(result.value);
+      status.textContent = '已複製病歷文字。';
+    } catch {
+      result.focus(); result.select();
+      status.textContent = '瀏覽器未授權剪貼簿，已選取文字，請按 Ctrl/Cmd+C 複製。';
+    }
+    setTimeout(() => { status.textContent = ''; }, 3000);
+  });
+  update();
+})();
+</script>
+</body>
+</html>
