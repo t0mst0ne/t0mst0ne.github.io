@@ -22,7 +22,7 @@
 <header><div class="top"><div class="eyebrow">Dementia · Treatment Readiness</div><h1>Lecanemab 治療前評估</h1><p>依《台灣 Lecanemab AUR 手冊》整理｜臨床 Check-List 與病歷文字產生器</p></div></header>
 <main>
   <div class="notice"><strong>臨床使用提醒：</strong>本表為評估與紀錄輔助工具，請依最新核准適應症、AUR 手冊、院內流程及個別臨床判斷確認。勾選代表已完成評估／符合所列條件；未勾選項目會標示為「未確認／未完成」，不代表自動判定不適用。</div>
-  <div class="progress-wrap" aria-live="polite"><div class="progress"><span id="progressBar"></span></div><div class="progress-label" id="progressLabel">已完成 0 / 0 項</div></div>
+  <div class="progress-wrap" aria-live="polite"><div class="progress"><span id="progressBar"></span></div><div class="progress-label" id="progressLabel">已完成 0 / 0 項</div><button class="btn" type="button" id="selectAll">全選／清除</button></div>
 
   <section class="section"><div class="section-head"><span class="number">1</span><h2>臨床疾病階段與認知功能門檻</h2></div><div class="items">
     <div class="item"><label class="checkline"><input type="checkbox" data-text="臨床診斷為阿茲海默症引起之輕度認知障礙（MCI due to AD）或輕度失智症（Mild AD）。">適應症疾病階段：AD 引起的 MCI 或輕度失智症（Mild AD）</label><div class="fields"><label>疾病階段</label><select data-value="疾病階段"><option value="">請選擇</option><option>MCI due to AD</option><option>Mild AD</option></select></div></div>
@@ -66,7 +66,7 @@
     <div class="item"><label class="checkline"><input type="checkbox" data-text="已簽署書面知情同意書。">已簽署書面知情同意書</label><div class="fields"><label>衛教／同意日期</label><input type="date" data-value="衛教及同意日期"></div></div>
   </div></section>
 
-  <section class="output"><div class="output-top"><h2>病歷文字預覽</h2><div class="actions"><button class="btn" type="button" id="selectAll">全選／清除</button><button class="btn primary" type="button" id="copy">複製病歷文字</button></div></div><textarea id="result" spellcheck="false" aria-label="病歷文字預覽"></textarea><div class="hint">文字會隨勾選與欄位輸入即時更新；複製後可貼入病歷系統，送出前請再核對。</div><div class="copied" id="copied" role="status"></div></section>
+  <section class="output"><div class="output-top"><h2>病歷文字預覽</h2><div class="actions"><button class="btn primary" type="button" id="copy">複製病歷文字</button></div></div><textarea id="result" spellcheck="false" aria-label="病歷文字預覽"></textarea><div class="hint">文字會隨勾選與欄位輸入即時更新；複製後可貼入病歷系統，送出前請再核對。</div><div class="copied" id="copied" role="status"></div></section>
 </main><footer>臨床使用前請依最新台灣核准資訊與院內規範確認</footer>
 <script>
 (() => {
