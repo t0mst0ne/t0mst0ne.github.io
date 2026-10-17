@@ -7,7 +7,7 @@
 :root {
   --bg: #f1f4f3; --ink: #1b2630; --muted: #55646f; --line: #cbd5da; --panel: #ffffff;
   --sea: #c7dce6; --land: #e5eadf; --coast: #84a1ae; --grid: #aec6d1;
-  --p1: #7a4aa8; --p2: #0f7c6a; --p3: #2a5db5; --p4: #a06c05; --peter: #5b6770;
+  --p1: #7a4aa8; --p2: #0f7c6a; --p3: #2a5db5; --p4: #a06c05; --p5: #b0476d; --p6: #53772b; --peter: #5b6770;
   --on-accent: #ffffff;
   --f-display: "Noto Serif TC", "Songti TC", "PMingLiU", serif;
   --f-body: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
@@ -16,14 +16,14 @@
   :root:not([data-theme="light"]) {
     --bg: #10181e; --ink: #e4ebef; --muted: #9fb0ba; --line: #2b3a44; --panel: #17222a;
     --sea: #12303f; --land: #1d2c2a; --coast: #3d6272; --grid: #244757;
-    --p1: #b78ce0; --p2: #4cc3a9; --p3: #7ea8f0; --p4: #e0b050; --peter: #9fb0ba;
+    --p1: #b78ce0; --p2: #4cc3a9; --p3: #7ea8f0; --p4: #e0b050; --p5: #e888aa; --p6: #a7c97b; --peter: #9fb0ba;
     --on-accent: #10181e; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --bg: #10181e; --ink: #e4ebef; --muted: #9fb0ba; --line: #2b3a44; --panel: #17222a;
   --sea: #12303f; --land: #1d2c2a; --coast: #3d6272; --grid: #244757;
-  --p1: #b78ce0; --p2: #4cc3a9; --p3: #7ea8f0; --p4: #e0b050; --peter: #9fb0ba;
+  --p1: #b78ce0; --p2: #4cc3a9; --p3: #7ea8f0; --p4: #e0b050; --p5: #e888aa; --p6: #a7c97b; --peter: #9fb0ba;
   --on-accent: #10181e; color-scheme: dark;
 }
 * { box-sizing: border-box; }
@@ -62,7 +62,7 @@ h1 { font: 800 clamp(22px, 3vw, 28px)/1.25 var(--f-display); margin: 0; text-wra
 .map-status { color: var(--ink); background: var(--panel); border: 1px solid var(--p4); border-radius: 8px; font-size: 13px; line-height: 1.5; margin: 8px 0; padding: 8px 12px; }
 .current-label { font: 700 15px/1.4 var(--f-body); margin: 0 0 8px; }
 .sea { fill: var(--sea); }
-.land { fill: var(--land); stroke: var(--coast); stroke-width: 1.2; stroke-linejoin: round; }
+.land { fill: var(--land); stroke: var(--land); stroke-width: 1; stroke-linejoin: round; }
 .grid line { stroke: var(--grid); stroke-width: .7; stroke-dasharray: 2 4; }
 .grid text, .regions text, .scale text { font: 500 10px var(--f-body); fill: var(--muted); }
 .regions text { font: 500 13px var(--f-display); letter-spacing: .3em; fill: var(--muted); opacity: .75; }
@@ -77,6 +77,8 @@ h1 { font: 800 clamp(22px, 3vw, 28px)/1.25 var(--f-display); margin: 0; text-wra
 .pt.minor circle { stroke-width: 1.5; }
 .pt.seen circle { fill: var(--ink); stroke: var(--panel); }
 .pt text { font: 700 14px var(--f-body); fill: var(--muted); paint-order: stroke; stroke: var(--land); stroke-width: 3.5px; stroke-linejoin: round; cursor: pointer; }
+.pt text { opacity: 0; pointer-events: none; }
+.pt.now text, .pt:hover text, .pt:focus-visible text { opacity: 1; }
 .pt.minor text { font-weight: 500; font-size: 12px; }
 .pt.seen text, .pt.now text { fill: var(--ink); }
 .pt:focus-visible { outline: none; }
@@ -103,7 +105,7 @@ h1 { font: 800 clamp(22px, 3vw, 28px)/1.25 var(--f-display); margin: 0; text-wra
 .legend i.sea { border-top-style: dashed; }
 .legend i.peter { border-top-style: dotted; }
 
-.phasebar { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; margin-bottom: 10px; }
+.phasebar { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px 8px; margin-bottom: 10px; }
 .phasebar button {
   border: 0; border-top: 5px solid var(--c); background: none; color: var(--muted); cursor: pointer;
   padding: 6px 2px 0; text-align: left; font: 500 12px/1.35 var(--f-body); opacity: .55; min-height: 44px;
@@ -163,9 +165,9 @@ h1 { font: 800 clamp(22px, 3vw, 28px)/1.25 var(--f-display); margin: 0; text-wra
 
 <div class="wrap">
   <header class="top">
-    <div class="eyebrow">使徒行傳 9–15 章</div>
-    <h1>保羅足跡地圖：從大馬士革到耶路撒冷會議</h1>
-    <p class="sub">按時間順序逐站播放，看保羅每一站去了哪裡、發生什麼事，一直走到徒 15 章的會議。</p>
+    <div class="eyebrow">使徒行傳 9–21 章</div>
+    <h1>保羅足跡地圖：從大馬士革到三次宣教旅程</h1>
+    <p class="sub">按時間順序逐站閱讀，從耶路撒冷會議走到馬其頓、希臘、以弗所，再回耶路撒冷。</p>
   </header>
 
   <details class="context"><summary>閱讀前情提要與會議的重要性</summary><div class="context-body">
@@ -180,6 +182,9 @@ h1 { font: 800 clamp(22px, 3vw, 28px)/1.25 var(--f-display); margin: 0; text-wra
         <p class="verse">徒 12:1–25；13:1–52；14:1–28</p>
         <h3>這與耶路撒冷會議有什麼關係？</h3>
         <p>外邦人已經領受聖靈、成為門徒，卻有人主張他們必須受割禮才能得救（徒 15:1）。在會議中，彼得以哥尼流一家為證，指出神藉信潔淨外邦人的心，並說人得救是靠主耶穌的恩（15:7–11）；巴拿巴和保羅述說宣教旅程中神在外邦人中所行的事（15:12），雅各再以先知的話回應（15:13–17）。這場會議要回答的，就是外邦人是否必須先受割禮、遵守摩西律法，才能被接納為主的門徒。</p>
+        <h3>會議的決定，如何連到後面的旅程？</h3>
+        <p>使徒和長老決定不為難歸向神的外邦人，寫信說明他們無須靠割禮得救，並勸他們遠避祭偶像之物、血、勒死的牲畜和淫亂。保羅和西拉在第二次旅程把這決定交給各教會；之後福音跨到馬其頓與希臘。第三次旅程則以以弗所的長期教導、重訪各教會，以及回耶路撒冷為主線。</p>
+        <p class="verse">徒 15:19–41；16:1–5；18:23；19:1–10；20:1–3；21:15–19</p>
       </div></details>
 
   <div class="layout">
@@ -197,7 +202,7 @@ h1 { font: 800 clamp(22px, 3vw, 28px)/1.25 var(--f-display); margin: 0; text-wra
       <p class="map-status" id="map-status" role="status" aria-live="polite" hidden></p>
       <p class="current-label" id="current-label" aria-live="polite"></p>
       <div class="mapbox">
-        <svg id="map" viewBox="0 0 516 630" role="img" aria-label="地中海東部地圖，標示保羅與彼得的路線與各站"></svg>
+        <svg id="map" viewBox="0 0 900 680" role="img" aria-label="希臘、小亞細亞與地中海東部示意圖，標示保羅與彼得的路線與各站"></svg>
         <div id="google-map" role="region" aria-label="Google 地圖上的保羅與彼得路線" hidden></div>
         <div class="map-tile-status" id="map-tile-status" role="status" aria-live="polite" hidden></div>
         <button class="btn focus-map" id="focus-map" type="button" hidden>定位此站</button>
@@ -218,8 +223,8 @@ h1 { font: 800 clamp(22px, 3vw, 28px)/1.25 var(--f-display); margin: 0; text-wra
       </div>
       <article class="card" id="card" aria-live="polite"></article>
 
-      <details class="journey" id="journey"><summary>展開完整路線（21 站）</summary><div class="list" id="list"></div></details>
-      <p class="note">年代與路線取自學界常見的推估，各家略有出入；加拉太書 2 章的耶路撒冷之行究竟對應徒 11:30 還是徒 15 章，學者仍有爭論。路線為經文順序的示意連線，並非精確古代道路或航線；部分古城位置也有爭議。Google 底圖顯示現代地理，載入需要 Maps JavaScript API key。</p>
+      <details class="journey" id="journey"><summary>展開完整路線</summary><div class="list" id="list"></div></details>
+      <p class="note">年代與路線取自學界常見的推估，各家略有出入；加拉太書 2 章的耶路撒冷之行究竟對應徒 11:30 還是徒 15 章，學者仍有爭論。路線為經文順序的示意連線，並非精確古代道路或航線；部分古城位置也有爭議。示意圖採用 <a href="https://www.naturalearthdata.com/about/terms-of-use/" target="_blank" rel="noopener noreferrer">Natural Earth</a> 現代海岸線。Google 底圖顯示現代地理，載入需要 Maps JavaScript API key。</p>
     </div>
   </div>
 </div>
